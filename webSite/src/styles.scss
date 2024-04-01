@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// @import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/themes/NNN/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import "/node_modules/primeflex/primeflex.css";
+// @import 'assets/theme.css';
+// @import "primeng/resources/themes/saga-blue/theme.css";
+// @import "primeng/resources/primeng.min.css";
+// @import "primeicons/primeicons.css";
+
+
+.custom-container >*>*>* {
+    border-radius: 20px !important;
+ }
+
+.delete-item-dialog >*>*>*{
+padding: 20px;
+width: '300px';
+height: '250px';
+}
+.delete-item-dialog p-button{
+    margin: 10px;
+}

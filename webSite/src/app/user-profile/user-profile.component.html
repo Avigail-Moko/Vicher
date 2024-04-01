@@ -1,0 +1,92 @@
+  <div class="flex flex-wrap ">
+    <div class="flex flex-1 flex-column align-items-center lg:flex-none  m-7 " >
+      <p-card class="p-card-header" header="{{userProfile.name}}" subheader="{{ userProfile.email }}" [style]="{ width: '360px',backgroundColor:'var(--surface-900)',border:'1px solid var(--surface-800)'}">
+        <p-rating  class="p-rating mb-3" [(ngModel)]="value" [cancel]="false"></p-rating>
+        <ng-template  pTemplate="header">
+          <img class="profileImage mt-5" [src]="userProfile.profileImage" alt="User Profile">
+        </ng-template> 
+        <p-card class="contant" contant [style]="{backgroundColor:'var(--surface-800)'}">
+          Here you can tell the world about yourself:
+          What is your hobbies, how old are you?
+          Where do you live, how many years did you study?
+          Any detail that will attract potential customers to contact you!
+          <ng-template pTemplate="footer">
+            <p-button  matTooltip="Edit Profile" icon="pi pi-user-edit" ></p-button>
+          </ng-template>
+        </p-card>
+      </p-card>
+
+      <!-- My latest Projects -->
+      <!-- <button mat-stroked-button color="primary"><mat-icon>edit</mat-icon>click here to edit</button> -->
+      <p-card class="p-card-header mt-7" header="My latest Projects" [style]="{ width: '360px',backgroundColor:'var(--surface-900)',border:'1px solid var(--surface-800)'}">
+        <p-card class="contant" contant [style]="{backgroundColor:'var(--surface-800)'}" >
+          Here you can add and show some of your projects to attract customers..
+          <ng-template pTemplate="footer">
+            <p-button matTooltip="Add New Project" icon="pi pi-plus" ></p-button>
+          </ng-template>
+        </p-card>
+      </p-card>
+      <div class="card flex justify-content-center">
+    </div>
+    </div>
+
+
+    
+
+
+    <!-- Want to Become a Seller? -->
+    <div class="flex flex-1 flex-column align-items-center mt-7 " [style]="{width:'50%'}" >
+      <p-card class="p-card-header w-9 mb-5" header="Want to Become a Seller?" [style]="{ backgroundColor:'var(--surface-900)',border:'1px solid var(--surface-800)'}">
+        <p-card class="contant" contant [style]="{height: '200px',backgroundColor:'var(--surface-800)'}">
+          let us see your products
+          <ng-template pTemplate="footer">
+            <p-button matTooltip="Create New Product" (click)="openProductStepper()" icon="pi pi-plus" ></p-button>
+            <p-button matTooltip="Edit Products" (click)="toggleButtonsVisibility()" icon="pi pi-user-edit" ></p-button>
+          </ng-template>
+        </p-card>
+      </p-card>
+
+        <!-- cards of products: -->
+        <!-- <div class="flex  justify-content-evenly flex-row "[style]="{width:'100%'}"> -->
+          
+          <p-carousel class="w-10" [value]="productsArray" [numVisible]="3" [numScroll]="1" [circular]="true" [responsiveOptions]="responsiveOptions">
+            <ng-template let-product pTemplate="item">
+          <mat-card class="product-card m-3">
+            
+            <mat-card-header class="flex flex-column p-0" >
+              <img class="header-image" [src]="product.image.src" width="250px" alt="{{product.image.filename}}">
+              <div class="flex px-2">
+                <div mat-card-avatar class="content-image " [style.background-image]="'url(' + product.userProfileImage + ')'"></div>
+                <mat-card-title class="text-sm ml-2 font-italic "> <span class="text-400">Ad by </span> {{ product.userProfileName }}</mat-card-title>
+              </div>
+            </mat-card-header>
+            <mat-card-content class="p-3">
+              <mat-card-title >{{product.lesson_title}}</mat-card-title>
+              <div class="flex flex-row justify-content-between">
+                <mat-card-subtitle><i class="pi pi-tag text-sm"></i> {{product.category}}</mat-card-subtitle>
+                <span class="font-bold text-100">{{ '₪' +' '+ product.price }}</span>
+              </div>
+              <mat-card-subtitle>lesson length: {{ product.length }} min.</mat-card-subtitle>
+            </mat-card-content>
+            <mat-card-footer class="px-3">
+              <p class=" overflow-hidden text-overflow-ellipsis" >{{product.description}}</p>
+
+              <p-button  icon="pi pi-trash" class="m-2" *ngIf="isButtonsVisible" (click)="confirm(product)" mat-raised-button matTooltip="Delete Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button>
+              <p-button  icon="pi pi-user-edit" class="m-2" *ngIf="isButtonsVisible" (click)="openProductsEditDialog(product,userProfile)"  mat-raised-button matTooltip="Edit Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button>
+            </mat-card-footer>
+          </mat-card>
+        </ng-template>
+      </p-carousel>
+            
+<!-- <div class="card flex justify-content-center gap-2"> -->
+  <!-- <p-messages [(value)]="messages" [enableService]="false" [closable]="false"></p-messages> -->
+  <!-- <p-toast></p-toast>
+</div> -->
+
+        </div>
+    </div>
+  <!-- </div> -->
+
+
+
+

@@ -1,0 +1,51 @@
+<mat-drawer-container class="example-container" autosize >
+  <mat-toolbar class="fixed z-5 shadow-4 py-1" color="primary" >
+    <mat-toolbar-row>
+      <span class="text-2xl">Vicher</span>
+      <span class="example-spacer"></span>      
+        <button mat-flat-button class="btn" color="primary" *ngIf="!newService.isAuthenticated()" (click)="openLoginDialog()">Login</button>
+        <button mat-flat-button class="btn" color="primary" *ngIf="!newService.isAuthenticated()" (click)="openSignupDialog()">Create New Account</button>  
+        <button mat-flat-button class="btn" color="primary" *ngIf="newService.isAuthenticated()" (click)="logout()" ><mat-icon>power_settings_new</mat-icon>Log Out</button>
+      <button mat-icon-button  class="example-icon1" aria-label="Example icon-button with menu icon" *ngIf="newService.isAuthenticated()" (click)="drawer.open()" ><mat-icon>menu</mat-icon></button>  
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <!-- הכנה לתיבת חיפוש, להשתמש ב autocomplete -->
+  <!-- <mat-toolbar *ngIf="newService.isAuthenticated()" class="toolbar2 mt-7 p-0">
+    <input type="search"/>
+  </mat-toolbar> -->
+
+  <!-- tab menu -->
+  <!-- כרגע משאירה בהערה-אין תוכן רלוונטי לאיזור זה בעמוד. בהמשך ניתן להכניס כאן ערכים -->
+  <mat-toolbar *ngIf="newService.isAuthenticated()" class="mt-7 p-0"  >
+        <p-tabMenu class="tabMenu "  [model]="items" (activeItemChange)="onActiveItemChange($event)"></p-tabMenu>
+  </mat-toolbar> 
+
+  <router-outlet *ngIf="newService.isAuthenticated()"></router-outlet>
+  <mat-drawer #drawer  class="example-sidenav" mode="over" position="end"  *ngIf="newService.isAuthenticated()">
+      <mat-card class="example-card">
+        <!-- הוספתי תנאי עבור ראש הכרטיס הזה כדי למנוע שגיאות בזמן הרצה -->
+        <mat-card-header *ngIf="userProfile">
+          <div mat-card-avatar class="example-header-image" [style.background-image]="'url(' + userProfile.profileImage + ')'"></div>
+          <div class="card-title-subtitle" >
+           <mat-card-title >{{ userProfile.name }}</mat-card-title>
+           <mat-card-subtitle>{{userProfile.email}}</mat-card-subtitle>
+          </div>
+          <button mat-icon-button class="example-icon2" aria-label="Example icon-button with menu icon"  (click)="drawer.close()" ><mat-icon >close</mat-icon></button> 
+        </mat-card-header>
+      </mat-card>
+      
+      <button mat-button color="primary" class="menu-item" (click)="navigateToWellcomePage()"><mat-icon>home</mat-icon>Home Page</button>
+      <mat-divider class="divider"></mat-divider>
+       <button mat-button color="primary" class="menu-item" (click)="navigateToUserProfile()"><mat-icon>person</mat-icon>Your Profile</button>
+       <mat-divider class="divider"></mat-divider>
+       <button mat-button color="primary" class="menu-item" (click)="navToCalendar()"><mat-icon>date_range</mat-icon>Meeting schedule</button>
+       <mat-divider class="divider"></mat-divider>
+       <button mat-button color="primary" class="menu-item" (click)="navToSupport()"><mat-icon>settings</mat-icon>Settings</button>
+       
+    <!-- <p *ngIf="showFiller">עכשיו אמור להמחק הקומפוננטה של הפרטים וכפתור העריכה ולהופיע במקומה קומפוננטת עריכת פרטים עם כפתור שמירה שיחזיר את הקומפוננטה הרגילה כולל הדברים החדשים שנשמרו</p> -->
+    <!-- <button mat-stroked-button color="primary"(click)="showFiller = !showFiller"><mat-icon>edit</mat-icon>click here to edit</button> -->
+    <button mat-flat-button class="btn flex flex-1 mt-4 mx-auto" color="primary" *ngIf="newService.isAuthenticated()" (click)="logout()" ><mat-icon>power_settings_new</mat-icon>Log Out</button>
+  </mat-drawer>
+
+</mat-drawer-container>

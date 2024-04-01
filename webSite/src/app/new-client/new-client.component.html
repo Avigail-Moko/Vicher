@@ -1,0 +1,12 @@
+<div *ngIf="newUser">
+    <h2>New User</h2>
+    <p>Name: {{ newUser.user.name }}</p>
+    <p>Subject: {{ newUser.user.subject }}</p>
+    <p>Seniority: {{ newUser.user.seniority }}</p>
+    <p>Email: {{ newUser.user.email }}</p>
+<button type="button">edit details</button>
+  </div>
+  
+  <div *ngIf="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>

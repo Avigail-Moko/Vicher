@@ -1,0 +1,118 @@
+<div [hidden]="displayPart !== 'part2'" class="card flex justify-content-center p-2">
+  <p-knob [(ngModel)]="value" [step]="stepSize" valueTemplate="{value}%" ></p-knob>
+</div>
+
+
+<mat-stepper orientation="vertical" [hidden]="displayPart !== 'part1'" [linear]="true" #stepper (selectionChange)="onStepChange($event)">
+
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Lesson Title</ng-template>
+        <p>give you're lesson a name!</p>
+        <mat-form-field>
+          <mat-label>lesson title</mat-label>
+          <input matInput placeholder="" formControlName="lesson_title" required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Category</ng-template>
+        <p>Choose the category most suitable for your service.</p>
+        <mat-form-field>
+          <mat-label>category</mat-label>
+          <input matInput formControlName="category" placeholder="category"
+                 required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+
+    <mat-step [stepControl]="thirdFormGroup">
+      <form [formGroup]="thirdFormGroup">
+        <ng-template matStepLabel>price</ng-template>
+        <p>write here the price for your lesson.</p>
+        <mat-form-field>
+          <mat-label>price</mat-label>
+          <input type="number" matInput placeholder="price ₪" formControlName="price" required >
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="fourthFormGroup">
+      <form [formGroup]="fourthFormGroup">
+        <ng-template matStepLabel>Length of Lesson </ng-template>
+        <p>write here the price for your lesson.</p>
+        <mat-radio-group formControlName="length">
+          <mat-radio-button value="45" >45 minutes</mat-radio-button>
+          <mat-radio-button value="60" >60 minutes</mat-radio-button>
+        </mat-radio-group>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="fifthFormGroup">
+      <form [formGroup]="fifthFormGroup">
+        <ng-template matStepLabel>Description </ng-template>
+        <p>write here the description for your lesson.</p>
+        <mat-form-field>
+          <mat-label>description</mat-label>
+          <textarea  matInput placeholder="description of lesson" [(ngModel)]="textInput"
+          formControlName="description" #description required maxlength="150"></textarea>
+          <mat-hint align="end" [style]="{ color:'var(--surface-400)'}">{{ description.value.length }}<span [style]="{ color:'var(--surface-200)'}">/150</span></mat-hint>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="sixthFormGroup">
+      <form [formGroup]="sixthFormGroup" >
+        <ng-template matStepLabel>Product Image </ng-template>
+        <p>upload an image to show your product</p>
+        <!-- <mat-form-field> -->
+          <!-- <mat-label>Product Image</mat-label> -->
+          <!-- <input matInput placeholder="Product Image" formControlName="image" required> -->
+           <!-- </mat-form-field> -->
+          <button class="my-3 mr-2" [style]="{ backgroundColor:'var(--surface-700)'}" type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+          <input  hidden formControlName="image" (change)="onFileSelected($event)" #fileInput type="file" accept="image/*" required>
+          <mat-error *ngIf="sixthFormGroup.get('image').hasError('sizeLimitExceeded')">{{ validationMessages.image[0].message }}</mat-error>
+          <span>
+            {{selectedFile?.name.lastIndexOf('.') > 15 ? selectedFile?.name.slice(0, 15) + '...' + getFileExtension(selectedFile?.name) : selectedFile?.name}}
+          </span>
+          <!-- <input type="file" formControlName="image" (change)="onFileSelected($event)" accept="image/*" required> -->
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step >
+      <ng-template matStepLabel >Done</ng-template>
+      <p>You are done now.</p>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button type="submit" (click)="createProduct()">Done</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+  
+  <!-- (click)="stepper.reset()" -->

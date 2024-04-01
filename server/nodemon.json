@@ -1,0 +1,7 @@
+{
+    "env":{
+"MONGO_USERNAME":"avigail",
+"MONGO_PASSWORD":"v1Up26X1hC0YBG43",
+"JWT_KEY":"my secret"
+    }
+}

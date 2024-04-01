@@ -1,0 +1,53 @@
+<div [hidden]="displayPart !== 'part1'" class="h-full">
+
+<mat-card class="product-card w-full ">
+    <form #form="ngForm" [formGroup]="productsForm" >
+          
+    <mat-card-header class="flex flex-column p-0" >
+      <img class="header-image" [src]="product.image.src" width="250px" alt="{{product.image.filename}}">
+      <div class="flex px-2">
+        <div mat-card-avatar class="content-image " [style.background-image]="'url(' + userProfile.profileImage + ')'"></div>
+        <mat-card-title class="text-sm ml-2 font-italic text-100 "> <span class="text-400">Ad by </span> {{ userProfile.name }}</mat-card-title>
+      </div>
+    </mat-card-header>
+    <mat-card-content class="p-3">
+      <mat-card-title >
+          <input pInputText id="lesson_title" formControlName="lesson_title" [value]="product.lesson_title" matTooltip="lesson title" [(ngModel)]="product.lesson_title" class="p-inputtext-sm w-7 surface-900  mb-4"/>
+      </mat-card-title>
+      <div class="flex flex-row justify-content-between">
+        <mat-card-subtitle>
+          <i class="pi pi-tag text-sm mr-2"></i>
+          <input pInputText id="category" formControlName="category" [value]="product.category" matTooltip="category" [(ngModel)]="product.category" class="p-inputtext-sm w-7 surface-900 mb-4" />
+          </mat-card-subtitle>
+        <mat-card-subtitle class="w-4">
+          <span class="font-bold text-100 mr-2">₪</span>
+          <input pInputText id="price" formControlName="price" [value]="product.price" matTooltip="price" [(ngModel)]="product.price" class="p-inputtext-sm w-7 surface-900 "  />
+        </mat-card-subtitle>
+      </div>
+      <mat-card-subtitle>
+            <div matTooltip="lesson length" flex>
+              <p-radioButton flex row name="length" value="60"  formControlName="length"(click)="onRadioChange(60)" [(ngModel)]="product.length" inputId="ingredient1" ></p-radioButton>
+              <label for="ingredient1" class="ml-2 mr-4">60 min.</label>
+              <p-radioButton flex row name="length" value="45"  formControlName="length" (click)="onRadioChange(45)" [(ngModel)]="product.length" inputId="ingredient2"></p-radioButton>
+              <label for="ingredient2" class="ml-2">45 min.</label>
+            </div>
+        </mat-card-subtitle>
+    </mat-card-content>
+<textarea  pInputTextarea id="description" matTooltip="description" [autoResize]="true" formControlName="description" #description [value]="product.description" [(ngModel)]="product.description" class=" surface-900  w-full h-6" maxlength="150" ></textarea>
+    <div class="flex justify-content-end mr-2">
+        <mat-hint  [style]="{ color:'var(--surface-400)'}">{{ description.value.length }}<span [style]="{ color:'var(--surface-200)'}">/150</span></mat-hint>
+      </div>
+  </form>
+  </mat-card>
+
+</div>
+
+<div [hidden]="displayPart !== 'part2'" matTooltip="Save Item" class="part2 p-1">
+  
+  <p-button  icon="pi pi-save"  size="large" (click)="saveChanges(product._id)" mat-raised-button  aria-label="Button that displays a tooltip when focused or hovered over"></p-button>
+
+</div>
+  
+
+
+

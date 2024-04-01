@@ -1,0 +1,39 @@
+<form #form="ngForm" [formGroup]="myForm" (ngSubmit)="onSignup()">
+  <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput name="name" formControlName="name"  required minlength="3">
+      <mat-error *ngIf="myForm.get('name').hasError('required')">{{ validationMessages.name[0].message }}</mat-error>
+      <mat-error *ngIf="myForm.get('name').hasError('minlength')">{{ validationMessages.name[1].message }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Subject</mat-label>
+      <input matInput name="subject" formControlName="subject" required>
+      <mat-error *ngIf="myForm.get('subject').hasError('required')">{{ validationMessages.subject[0].message }}</mat-error>
+    </mat-form-field>
+    <!-- <mat-form-field appearance="outline">
+      <mat-label>Seniority</mat-label>
+      <input matInput name="seniority" formControlName="seniority" required>
+      <mat-error *ngIf="myForm.get('seniority').hasError('required')">{{ validationMessages.seniority[0].message }}</mat-error>
+    </mat-form-field> -->
+    <mat-form-field appearance="outline">
+      <mat-label>Email-Address</mat-label>
+      <input matInput name="email" formControlName="email" required email>
+      <mat-error *ngIf="myForm.get('email').hasError('required')">{{ validationMessages.email[0].message }}</mat-error>
+      <mat-error *ngIf="myForm.get('email').hasError('email')">{{ validationMessages.email[1].message }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>password</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" name="password" formControlName="password" required minlength="6">
+      <mat-error *ngIf="myForm.get('password').hasError('required')">{{ validationMessages.password[0].message }}</mat-error>
+      <mat-error *ngIf="myForm.get('password').hasError('minlength')">{{ validationMessages.password[1].message }}</mat-error>
+      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+    <button mat-flat-button class="btn mt-2" type="submit" color="primary">Sign Up</button>
+    <div class="error-message">{{ errorMessage }}</div>
+    
+  </form>
+  
+
+

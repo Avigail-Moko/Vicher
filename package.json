@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@abacritt/angularx-social-login": "^2.1.0",
+    "angular-oauth2-oidc": "^15.0.1"
+  }
+}
