@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CalendarOptions, DateSelectArg, EventDropArg } from '@fullcalendar/core';
+import { CalendarOptions, DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { EventResizeStartArg } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -8,11 +8,11 @@ import { NewService } from '../new.service';
 // import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-support',
-  templateUrl: './support.component.html',
-  styleUrls: ['./support.component.scss'],
+  selector: 'app-availability-schedule',
+  templateUrl: './availability-schedule.component.html',
+  styleUrls: ['./availability-schedule.component.scss'],
 })
-export class SupportComponent {
+export class AvailabilityScheduleComponent {
   myDate: any;
   timeSpan: any;
   workHours: any;
@@ -32,11 +32,14 @@ constructor(public newServise:NewService){}
       right: '',
     },
     initialView: 'timeGridWeek',
+    selectOverlap: false,
     editable: true,
     selectable: true,
     droppable:true,
     selectMirror: true,
     select: this.handleDateSelect.bind(this),
+    eventClick: this.handleEventClick.bind(this),
+
   };
 
   //קביעת אירוע
@@ -78,6 +81,12 @@ constructor(public newServise:NewService){}
     // this.aaa=JSON.stringify(this.newObj)//המרת המשתנה למחרוזת
     console.log('new obj' + JSON.stringify(this.objectsArray));
     this.myDate = selectInfo.start; // שמירת התאריך שנבחר למשתנה
+  }
+  //מחיקת אירוע
+  handleEventClick(clickInfo: EventClickArg) {
+    if (confirm(`Are you sure you want to delete`)) {
+      clickInfo.event.remove();
+    }
   }
   onSave(){
     this.newServise
