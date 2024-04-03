@@ -2,28 +2,28 @@ const mongoose = require('mongoose');
 const Schedule = require('../models/schedule');
 
 module.exports={
-    createSchedule:(req,res)=>{
-        const { teacher_id ,startTime,endTime,dayOfEvent} = req.body;
-        const schedule = new Schedule({
-            _id: new mongoose.Types.ObjectId(), 
-            teacher_id, 
-            startTime,
-            endTime,
-            dayOfEvent    
-        });
-        schedule.save().then((result) => {
-            console.log(result);
-            res.status(200).json({
-                message: 'schedule created'
+    createSchedule: (req, res) => {
+        const { objectsArray } = req.body;
+        const teacher_id = req.query.teacher_id;
+        
+            const schedule = new Schedule({
+                _id: new mongoose.Types.ObjectId(),
+                teacher_id,
+                objectsArray
             });
-        }).catch(error => {
-            console.error('Error:', error);
-            res.status(500).json({
-                message: 'schedule not saved',
+    
+            schedule.save().then((result) => {
+                console.log(result);
+            }).catch(error => {
+                console.error('Error:', error);
             });
+        
+    
+        res.status(200).json({
+            message: 'schedules created'
         });
-    },
-
+    }
+,    
 getSchedule: (req,res)=>{
     const teacher_id = req.query.userId;
     Schedule.find({ teacher_id })

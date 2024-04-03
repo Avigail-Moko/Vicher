@@ -115,8 +115,9 @@ export class NewService {
     const url = `http://localhost:3000/lessons/getLesson?teacher_id=${teacherId}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
     return this.http.get(url);
   }
-  createSchedule(values: any) {
-    const url = `http://localhost:3000/schedule/createSchedule`;
-    return this.http.post(url, values);
+  createSchedule(objectsArray: any,teacher_id:any) {
+    const url = `http://localhost:3000/schedule/createSchedule?teacher_id=${teacher_id}`;
+    return this.http.post(url, {objectsArray});
   }
+  
 }

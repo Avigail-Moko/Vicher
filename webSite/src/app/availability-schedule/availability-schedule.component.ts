@@ -1,7 +1,14 @@
 import { Component } from '@angular/core';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
+import {
+  CalendarOptions,
+  DateSelectArg,
+  EventClickArg,
+  EventDropArg,
+} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { EventResizeStartArg } from '@fullcalendar/interaction';
+import interactionPlugin, {
+  EventResizeStartArg,
+} from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { NewService } from '../new.service';
 // import { Dropdown, DropdownItem } from 'primeng/dropdown';
@@ -13,16 +20,13 @@ import { NewService } from '../new.service';
   styleUrls: ['./availability-schedule.component.scss'],
 })
 export class AvailabilityScheduleComponent {
-  myDate: any;
-  timeSpan: any;
-  workHours: any;
   objectsArray: { start: number[]; end: number[]; day: number }[] = [];
-  newObj:any;
-  days:any;  
-  startHours:any;
-  endHours:any;
-  mish:any;
-constructor(public newServise:NewService){}
+  newObj: any;
+  // mish: [];
+  indexOfEvent: number;
+  teacher_id = localStorage.getItem('userId');
+
+  constructor(public newServise: NewService) {}
 
   calendarOptions: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
@@ -33,19 +37,18 @@ constructor(public newServise:NewService){}
     },
     initialView: 'timeGridWeek',
     selectOverlap: false,
-    editable: true,
+    // editable: true, //אחראי על הוזזת אירועים
     selectable: true,
-    droppable:true,
+    droppable: true,
     selectMirror: true,
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-
   };
 
   //קביעת אירוע
   handleDateSelect(selectInfo: DateSelectArg) {
     const calendarApi = selectInfo.view.calendar;
-    
+
     calendarApi.unselect(); // clear date selection
     // calendarApi.getEvents().forEach(event => {
     //   event.remove();
@@ -55,42 +58,49 @@ constructor(public newServise:NewService){}
       end: selectInfo.endStr,
       allDay: selectInfo.allDay,
     });
-    this.mish=JSON.stringify(calendarApi.getEvents())
-    console.log("calendar:"+this.mish)
+
+    // console.log("calendar:"+this.mish)
+
     this.newObj = {
       start: [selectInfo.start.getHours(), selectInfo.start.getMinutes()],
       end: [selectInfo.end.getHours(), selectInfo.end.getMinutes()],
       day: selectInfo.start.getDay(),
     };
-    
-    this.objectsArray.push(this.newObj);//הכנסה למערך
-    
-    this.days=JSON.stringify(this.newObj.day+1);
-    if (this.newObj.day==0)
-      this.days='ימי ראשון'
-      if (this.newObj.day==1)
-      this.days='ימי שני'
-      if (this.newObj.day==2)
-      this.days='ימי שלישי'
-      if (this.newObj.day==3)
-      this.days='ימי רביעי'
-      if (this.newObj.day==4)
-      this.days='ימי חמישי'
-    this.startHours=JSON.stringify(this.newObj.start);
-    this.endHours=JSON.stringify(this.newObj.end);
-    // this.aaa=JSON.stringify(this.newObj)//המרת המשתנה למחרוזת
-    console.log('new obj' + JSON.stringify(this.objectsArray));
-    this.myDate = selectInfo.start; // שמירת התאריך שנבחר למשתנה
+
+    this.objectsArray.push(this.newObj); //הכנסה למערך
   }
   //מחיקת אירוע
   handleEventClick(clickInfo: EventClickArg) {
     if (confirm(`Are you sure you want to delete`)) {
+      //מציאת מיקום האירוע במערך האירועים שב objectsArray ומחיקתו 
+      for (let item = 0; item < this.objectsArray.length; item++) {
+        if (
+          this.objectsArray[item].start[0] ==
+            clickInfo.event.start.getHours() &&
+          this.objectsArray[item].start[1] ==
+            clickInfo.event.start.getMinutes() &&
+          this.objectsArray[item].end[0] == clickInfo.event.end.getHours() &&
+          this.objectsArray[item].end[1] == clickInfo.event.end.getMinutes() &&
+          this.objectsArray[item].day == clickInfo.event.start.getDay()
+        ) {
+          this.indexOfEvent = item;
+        }
+      }
+      this.objectsArray.splice(this.indexOfEvent, 1);
+      //מחיקת האירוע מהקלנדר
       clickInfo.event.remove();
     }
   }
-  onSave(){
+  onSave() {
     this.newServise
+      .createSchedule(this.objectsArray, this.teacher_id)
+      .subscribe(
+        (data) => {
+          console.log('Response:', data);
+        },
+        (error) => {
+          console.error('Error:', error.error.message);
+        }
+      );
   }
-  
- 
 }
