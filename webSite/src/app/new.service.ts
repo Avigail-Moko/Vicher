@@ -119,5 +119,8 @@ export class NewService {
     const url = `http://localhost:3000/schedule/createSchedule?teacher_id=${teacher_id}`;
     return this.http.post(url, {objectsArray});
   }
-  
+  // updateSchedule(teacher_id:any,objectsArray: any){
+  //   const url = `http://localhost:3000/schedule/updateSchedule?teacher_id=${teacher_id}`;
+  //   return this.http.patch(url, {objectsArray});
+  // }
 }

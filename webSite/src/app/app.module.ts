@@ -53,6 +53,8 @@ import { DeleteItemComponent } from './delete-item/delete-item.component';
 import { AvailabilityScheduleComponent } from './availability-schedule/availability-schedule.component';
 import { BecomingsellerComponent } from './becomingseller/becomingseller.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MessagesModule } from 'primeng/messages';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -76,6 +78,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
     BecomingsellerComponent,
   ],
   providers: [
+    MessageService,
     LocalStorageService,
     JwtHelperService,
     {
@@ -87,7 +90,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
               '906186434728-g411kdddupn0spcvbscftskilvsl4uge.apps.googleusercontent.com'
-            ),
+            ), 
+            
           },
         ],
         onError: (err) => {
@@ -131,6 +135,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
     FullCalendarModule,
     CarouselModule,
     FieldsetModule,
+    MessagesModule,
+  
   ],
 })
 export class AppModule {}

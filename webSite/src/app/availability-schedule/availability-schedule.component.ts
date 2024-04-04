@@ -11,6 +11,8 @@ import interactionPlugin, {
 } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { NewService } from '../new.service';
+import { Message, MessageService } from 'primeng/api';
+
 // import { Dropdown, DropdownItem } from 'primeng/dropdown';
 // import { DatePipe } from '@angular/common';
 
@@ -25,8 +27,12 @@ export class AvailabilityScheduleComponent {
   // mish: [];
   indexOfEvent: number;
   teacher_id = localStorage.getItem('userId');
+  messages: Message[] | undefined;
 
-  constructor(public newServise: NewService) {}
+  constructor(
+    public newServise: NewService,
+    public messageService: MessageService
+  ) {}
 
   calendarOptions: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
@@ -72,7 +78,7 @@ export class AvailabilityScheduleComponent {
   //מחיקת אירוע
   handleEventClick(clickInfo: EventClickArg) {
     if (confirm(`Are you sure you want to delete`)) {
-      //מציאת מיקום האירוע במערך האירועים שב objectsArray ומחיקתו 
+      //מציאת מיקום האירוע במערך האירועים שב objectsArray ומחיקתו
       for (let item = 0; item < this.objectsArray.length; item++) {
         if (
           this.objectsArray[item].start[0] ==
@@ -91,16 +97,41 @@ export class AvailabilityScheduleComponent {
       clickInfo.event.remove();
     }
   }
+
   onSave() {
     this.newServise
       .createSchedule(this.objectsArray, this.teacher_id)
       .subscribe(
         (data) => {
           console.log('Response:', data);
+          this.messageService.add({
+            severity: 'success',
+            detail: 'Your Details Saved Successfully!',
+          });
         },
         (error) => {
           console.error('Error:', error.error.message);
+          this.messageService.add({
+            severity: 'error',
+            detail: 'error on saving data',
+          });
         }
       );
   }
+  // update() {
+  //   this.newServise
+  //     .updateSchedule(this.teacher_id,this.objectsArray )
+  //     .subscribe((data) => { console.log('Response:', data);
+  //     this.messageService.add({
+  //       severity: 'success',
+  //       detail: 'Your Details Updated Successfully!',
+  //     });
+  //   },
+  //   (error) => {
+  //     console.error('Error:', error.error.message);
+  //     this.messageService.add({
+  //       severity: 'error',
+  //       detail: 'error on updating',
+  //     });});
+  // }
 }
