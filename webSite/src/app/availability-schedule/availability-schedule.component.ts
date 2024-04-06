@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {
   CalendarOptions,
   DateSelectArg,
+  DatesSetArg,
   EventClickArg,
   EventDropArg,
 } from '@fullcalendar/core';
@@ -33,7 +34,6 @@ export class AvailabilityScheduleComponent {
     public newServise: NewService,
     public messageService: MessageService
   ) {}
-
   calendarOptions: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
     headerToolbar: {
@@ -49,6 +49,15 @@ export class AvailabilityScheduleComponent {
     selectMirror: true,
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
+    events: [
+      // הוספת אירוע חוזר כל שבוע
+      {
+        daysOfWeek: [0, 1, 2, 3, 4, 5, 6], // אירוע יתרחש בכל יום
+        startTime: '09:00', // שעת התחלה
+        endTime: '17:00', // שעת סיום
+        // display: 'inverse-background', // תצוגה של הרקע האירוע
+      },
+    ],
   };
 
   //קביעת אירוע
@@ -97,7 +106,21 @@ export class AvailabilityScheduleComponent {
       clickInfo.event.remove();
     }
   }
-
+  ngOnInit(scheduleInfo:DateSelectArg){
+    this.newServise.getSchedule(this.teacher_id).subscribe((data)=>{
+      console.log('Response:',data);
+      const schedule=scheduleInfo.view.calendar;
+      schedule.addEvent({
+        start:data.start,
+        end:data.end,
+        day:data.day
+      });
+    },
+    (error)=>{
+      console.error('Error:', error.error.message);
+    }
+  )
+  }
   onSave() {
     this.newServise
       .createSchedule(this.objectsArray, this.teacher_id)
@@ -118,20 +141,5 @@ export class AvailabilityScheduleComponent {
         }
       );
   }
-  // update() {
-  //   this.newServise
-  //     .updateSchedule(this.teacher_id,this.objectsArray )
-  //     .subscribe((data) => { console.log('Response:', data);
-  //     this.messageService.add({
-  //       severity: 'success',
-  //       detail: 'Your Details Updated Successfully!',
-  //     });
-  //   },
-  //   (error) => {
-  //     console.error('Error:', error.error.message);
-  //     this.messageService.add({
-  //       severity: 'error',
-  //       detail: 'error on updating',
-  //     });});
-  // }
+ 
 }

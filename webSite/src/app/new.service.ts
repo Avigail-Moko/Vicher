@@ -119,6 +119,10 @@ export class NewService {
     const url = `http://localhost:3000/schedule/createSchedule?teacher_id=${teacher_id}`;
     return this.http.post(url, {objectsArray});
   }
+  getSchedule(teacher_id:any): Observable<any>{
+    const url = `http://localhost:3000/schedule/getSchedule?teacher_id=${teacher_id}`;
+    return this.http.get(url);
+  }
   // updateSchedule(teacher_id:any,objectsArray: any){
   //   const url = `http://localhost:3000/schedule/updateSchedule?teacher_id=${teacher_id}`;
   //   return this.http.patch(url, {objectsArray});
