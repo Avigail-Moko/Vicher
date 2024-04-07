@@ -49,15 +49,7 @@ export class AvailabilityScheduleComponent {
     selectMirror: true,
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    events: [
-      // הוספת אירוע חוזר כל שבוע
-      {
-        daysOfWeek: [0, 1, 2, 3, 4, 5, 6], // אירוע יתרחש בכל יום
-        startTime: '09:00', // שעת התחלה
-        endTime: '17:00', // שעת סיום
-        // display: 'inverse-background', // תצוגה של הרקע האירוע
-      },
-    ],
+    events: [],
   };
 
   //קביעת אירוע
@@ -74,12 +66,10 @@ export class AvailabilityScheduleComponent {
       allDay: selectInfo.allDay,
     });
 
-    // console.log("calendar:"+this.mish)
-
     this.newObj = {
-      start: [selectInfo.start.getHours(), selectInfo.start.getMinutes()],
-      end: [selectInfo.end.getHours(), selectInfo.end.getMinutes()],
-      day: selectInfo.start.getDay(),
+      startTime: selectInfo.start.getTime(),
+      endTime: selectInfo.end.getTime(),
+      daysOfWeek: selectInfo.start.getDay(),
     };
 
     this.objectsArray.push(this.newObj); //הכנסה למערך
@@ -106,15 +96,15 @@ export class AvailabilityScheduleComponent {
       clickInfo.event.remove();
     }
   }
-  ngOnInit(scheduleInfo:DateSelectArg){
+  ngOnInit(){
     this.newServise.getSchedule(this.teacher_id).subscribe((data)=>{
       console.log('Response:',data);
-      const schedule=scheduleInfo.view.calendar;
-      schedule.addEvent({
-        start:data.start,
-        end:data.end,
-        day:data.day
-      });
+          this.calendarOptions.events=[{
+          start:data.schedule[0].objectsArray[0].startTime,
+        end:data.schedule[0].objectsArray[0].endTime,
+        days:data.schedule[0].objectsArray[0].daysOfWeek
+        }]                 
+        console.log(this.calendarOptions.events)
     },
     (error)=>{
       console.error('Error:', error.error.message);
@@ -141,5 +131,6 @@ export class AvailabilityScheduleComponent {
         }
       );
   }
- 
+
+  
 }
