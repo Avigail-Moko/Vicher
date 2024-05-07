@@ -11,7 +11,7 @@ export class AuthGuardService {
   constructor(public auth: NewService, public router: Router) { }
   canActivate(): boolean {
     if (!this.auth.isAuthenticated()) {
-      this.router.navigate(['']); // אם המשתמש לא מחובר, הפנה אותו לדף ההתחברות
+      this.router.navigate(['']); 
       return false;
     }
     return true;

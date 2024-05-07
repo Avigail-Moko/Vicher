@@ -9,13 +9,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {Component} from '@angular/core';
-import {MatMenuModule} from '@angular/material/menu';
 import {MatCardModule} from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list'; // הוסף את זה
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import {MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatChipsModule} from '@angular/material/chips';
 
 const modules = [
   MatButtonModule,
@@ -32,8 +32,9 @@ const modules = [
     MatGridListModule,
     MatStepperModule,
     MatRadioModule,
-    MatCheckboxModule
-    
+    MatCheckboxModule,
+    MatSnackBarModule,
+    MatChipsModule
 ]
 
 @NgModule({

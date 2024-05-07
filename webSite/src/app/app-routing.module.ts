@@ -19,7 +19,11 @@ const routes: Routes = [
   { path: 'wellcome', component: WellcomeComponent, canActivate: [AuthGuard] },
   { path: 'about', component: AboutComponent, canActivate: [AuthGuard] },
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
-  { path: 'availability-schedule', component: AvailabilityScheduleComponent, canActivate: [AuthGuard] },
+  {
+    path: 'availability-schedule',
+    component: AvailabilityScheduleComponent,
+    canActivate: [AuthGuard],
+  },
   {
     path: 'seller',
     component: BecomingsellerComponent,

@@ -5,6 +5,7 @@ import {
   DatesSetArg,
   EventClickArg,
   EventDropArg,
+  EventSourceInput,
 } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {
@@ -13,6 +14,8 @@ import interactionPlugin, {
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { NewService } from '../new.service';
 import { Message, MessageService } from 'primeng/api';
+import {MatSnackBar,MatSnackBarHorizontalPosition,MatSnackBarVerticalPosition,} from '@angular/material/snack-bar';
+
 
 // import { Dropdown, DropdownItem } from 'primeng/dropdown';
 // import { DatePipe } from '@angular/common';
@@ -23,16 +26,17 @@ import { Message, MessageService } from 'primeng/api';
   styleUrls: ['./availability-schedule.component.scss'],
 })
 export class AvailabilityScheduleComponent {
-  objectsArray: { start: number[]; end: number[]; day: number }[] = [];
+  objectsArray: { start: any; end: any; day: any }[] = [];
   newObj: any;
-  // mish: [];
+
   indexOfEvent: number;
   teacher_id = localStorage.getItem('userId');
   messages: Message[] | undefined;
 
   constructor(
     public newServise: NewService,
-    public messageService: MessageService
+    public messageService: MessageService,
+    private _snackBar: MatSnackBar
   ) {}
   calendarOptions: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
@@ -42,6 +46,9 @@ export class AvailabilityScheduleComponent {
       right: '',
     },
     initialView: 'timeGridWeek',
+    initialDate: '2024-05-01',
+    dayHeaderFormat: { weekday: 'long' },
+    allDaySlot: false,
     selectOverlap: false,
     // editable: true, //אחראי על הוזזת אירועים
     selectable: true,
@@ -52,41 +59,31 @@ export class AvailabilityScheduleComponent {
     events: [],
   };
 
-  //קביעת אירוע
   handleDateSelect(selectInfo: DateSelectArg) {
     const calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-    // calendarApi.getEvents().forEach(event => {
-    //   event.remove();
-    // });
     calendarApi.addEvent({
       start: selectInfo.startStr,
       end: selectInfo.endStr,
-      allDay: selectInfo.allDay,
     });
 
     this.newObj = {
-      startTime: selectInfo.start.getTime(),
-      endTime: selectInfo.end.getTime(),
-      daysOfWeek: selectInfo.start.getDay(),
+      start: selectInfo.startStr,
+      end: selectInfo.endStr,
     };
 
-    this.objectsArray.push(this.newObj); //הכנסה למערך
+    this.objectsArray.push(this.newObj);
+    console.log('objects array:',this.objectsArray)
+    this.openSnackBar()
   }
-  //מחיקת אירוע
+  
   handleEventClick(clickInfo: EventClickArg) {
     if (confirm(`Are you sure you want to delete`)) {
       //מציאת מיקום האירוע במערך האירועים שב objectsArray ומחיקתו
       for (let item = 0; item < this.objectsArray.length; item++) {
         if (
-          this.objectsArray[item].start[0] ==
-            clickInfo.event.start.getHours() &&
-          this.objectsArray[item].start[1] ==
-            clickInfo.event.start.getMinutes() &&
-          this.objectsArray[item].end[0] == clickInfo.event.end.getHours() &&
-          this.objectsArray[item].end[1] == clickInfo.event.end.getMinutes() &&
-          this.objectsArray[item].day == clickInfo.event.start.getDay()
+          this.objectsArray[item].start ===
+            clickInfo.event.startStr &&
+          this.objectsArray[item].end === clickInfo.event.endStr
         ) {
           this.indexOfEvent = item;
         }
@@ -94,22 +91,22 @@ export class AvailabilityScheduleComponent {
       this.objectsArray.splice(this.indexOfEvent, 1);
       //מחיקת האירוע מהקלנדר
       clickInfo.event.remove();
+      this.openSnackBar()
     }
   }
-  ngOnInit(){
-    this.newServise.getSchedule(this.teacher_id).subscribe((data)=>{
-      console.log('Response:',data);
-          this.calendarOptions.events=[{
-          start:data.schedule[0].objectsArray[0].startTime,
-        end:data.schedule[0].objectsArray[0].endTime,
-        days:data.schedule[0].objectsArray[0].daysOfWeek
-        }]                 
-        console.log(this.calendarOptions.events)
-    },
-    (error)=>{
-      console.error('Error:', error.error.message);
-    }
-  )
+  ngOnInit() {
+    this.newServise.getSchedule(this.teacher_id).subscribe(
+      (data) => {
+        console.log('Response:', data);
+        data.schedule[0].objectsArray.forEach((object) => {
+          this.objectsArray.push(object)
+          this.calendarOptions.events=this.objectsArray;
+        });
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+      }
+    );
   }
   onSave() {
     this.newServise
@@ -131,6 +128,13 @@ export class AvailabilityScheduleComponent {
         }
       );
   }
-
-  
+  openSnackBar() {
+    this._snackBar.open('Changes have been made. Remember to save them. Otherwise, they will not be preserved', 'Save Changes', {
+      horizontalPosition: 'start' ,
+      verticalPosition: 'bottom',
+    }).onAction().subscribe(() => {
+      this.onSave();
+    });
+  }
 }
+

@@ -49,7 +49,7 @@ export class HomePageComponent  {
       { label: 'Calendar', icon: 'pi pi-fw pi-calendar',routerLink:'/calendar' },
       { label: 'Edit Profile', icon: 'pi pi-fw pi-pencil',routerLink:'/user-profile' },
       { label: 'About Us', icon: 'pi pi-fw pi-id-card',routerLink:'/about'},
-      { label: 'Availability Schedule', icon: 'pi pi-fw pi-question-circle',routerLink:'/availability-schedule'},
+      { label: 'Availability', icon: 'pi pi-fw pi-clock',routerLink:'/availability-schedule'},
       { label: 'Become a Seller', icon: 'pi pi-fw pi-dollar',routerLink:'/seller'},
       ];
     this.activeItem = this.items[0];
