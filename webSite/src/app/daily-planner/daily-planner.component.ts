@@ -6,6 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { format, differenceInSeconds } from 'date-fns';
+import { DatePipe, Time } from '@angular/common';
 
 @Component({
   selector: 'app-daily-planner',
@@ -18,17 +19,18 @@ export class DailyPlannerComponent {
   userId = localStorage.getItem('userId');
   errorMessage: any;
   availableStartHours: any;
-  possibleLessonsPerDay: any;
-  availableEndHours:any;
-  lessonsArray: any[];
-  
+  // possibleLessonsPerDay: any;
+  availableEndHours: any;
+  lessonsArray: any[] = [];
+  startRange: any;
+  endRange: any;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialog: MatDialog,
     private newService: NewService
   ) {
     this.product = data.product;
-    this.lessonsArray = [];
   }
 
   calendarOptions: CalendarOptions = {
@@ -54,25 +56,38 @@ export class DailyPlannerComponent {
     const startDate = new Date(start);
     const endDate = new Date(end);
     const lessonLength = length;
-    const startTimeInMinutes =
-      (startDate.getHours() * 60) + startDate.getMinutes();
-    const endTimeInMinutes = (endDate.getHours() * 60) + endDate.getMinutes();
 
-    const amountOfLessons = Math.floor(
+    const startTimeInMinutes =
+      startDate.getHours() * 60 + startDate.getMinutes();
+    const endTimeInMinutes = endDate.getHours() * 60 + endDate.getMinutes();
+
+    const numOfLessons = Math.floor(
       (endTimeInMinutes - startTimeInMinutes + 15) / (lessonLength + 15)
     );
-    // this.lessonsArray = [];
-    // for (let i = 0; i < amountOfLessons; i++) {
-    //   this.lessonsArray.push(i);
-    // }
-        return amountOfLessons;
+    return numOfLessons;
+  }
+
+  saparatedHoursForLessons(numOfLessons, start) {
+    const lessonsPerDay = numOfLessons;
+    const startRange = new Date(start);
+
+    const firstTime = `${startRange.getHours()}:${startRange.getMinutes()}`;
+    this.lessonsArray.push(firstTime);
+
+    for (let index = 1; index < lessonsPerDay; index++) {
+      const newAllMinutes =
+        startRange.getHours() * 60 +
+        startRange.getMinutes() +
+        (this.product.length + 15) * index;
+      const newTime = `${Math.floor(newAllMinutes / 60)}:${newAllMinutes % 60}`;
+      this.lessonsArray[index] = newTime;
+    }
+
+    console.log(this.lessonsArray);
   }
 
   ngOnInit() {
     this.newService.getSchedule(this.product.userId).subscribe((data) => {
-      // this.possibleLessonsPerDay
-      console.log('possible lessons', this.possibleLessonsPerDay);
-
       for (
         let index = 0;
         index < data.schedule[0].objectsArray.length;
@@ -80,26 +95,17 @@ export class DailyPlannerComponent {
       ) {
         this.availableStartHours = data.schedule[0].objectsArray[index].start;
         this.availableEndHours = data.schedule[0].objectsArray[index].end;
-        // const formattedStartHours = this.formatTime(this.availableStartHours);
-        // const formattedEndHours = this.formatTime(this.availableEndHours);
-        // console.log('start time:', formattedStartHours);
-        // console.log('end time:', formattedEndHours);
+
         console.log(
           'calc:',
           this.calculatePossibleLessons(
             data.schedule[0].objectsArray[index].end,
             data.schedule[0].objectsArray[index].start,
-            60
-            //כרגע שולחת 60 במקום אורך השיעור האמיתי כי השליפה שלו לא נכונה כאן:
-            // this.product.length
+            this.product.length
           )
         );
       }
-      // const availableHours=data.schedule[0].objectsArray[0].start
       console.log('Response schedule:', data);
-      // data.schedule[0].objectsArray.forEach((object) => {
-      this.calendarOptions.events = data.schedule[0].objectsArray;
-      // });
     });
   }
 
