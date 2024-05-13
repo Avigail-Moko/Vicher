@@ -48,6 +48,19 @@ export class AvailabilityScheduleComponent {
     initialView: 'timeGridWeek',
     initialDate: '2024-05-01',
     dayHeaderFormat: { weekday: 'long' },
+    slotLabelFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    },
+    eventTimeFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    },
+    selectConstraint: { 
+      daysOfWeek: [1, 2, 3, 4, 5, 6, 0] 
+    },
     allDaySlot: false,
     selectOverlap: false,
     // editable: true, //אחראי על הוזזת אירועים

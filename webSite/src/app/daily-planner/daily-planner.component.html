@@ -1,15 +1,12 @@
-<!-- <app-calendar (dateSelected)="myDate= $event"></app-calendar> -->
 <div class="m-5 ">
 <full-calendar  [options]='calendarOptions'> </full-calendar>
 <div class=" flex justify-content-end mt-3">
     <mat-chip-listbox>
         <ng-container *ngFor="let lesson of lessonsArray">
-<mat-chip-option >{{lesson}}</mat-chip-option>
+<mat-chip-option (click)="choosingTime(lesson)" >{{lesson}}</mat-chip-option>
         </ng-container>
    </mat-chip-listbox>
-   <!-- '2024-05-02T06:30:00+03:00','2024-05-02T14:30:00+03:00' -->
-   
-<!-- <p-button (click)="saparatedHoursForLessons('7','2024-05-03T07:00:00+03:00')">check if working</p-button> -->
-<p-button (click)="createLesson()">save the date</p-button>
+
+<p-button (click)="createLesson()" *ngIf="hasSelectedLessons" >save the date</p-button>
 </div>
 </div>
