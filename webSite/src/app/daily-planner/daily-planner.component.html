@@ -4,7 +4,6 @@
     <mat-chip-listbox  #chipSelected >
         <ng-container *ngFor="let lesson of lessonsArray">
 <mat-chip-option (click)="choosingTime(lesson)" >{{lesson}}</mat-chip-option>
-<!-- [selected]=false -->
         </ng-container>
    </mat-chip-listbox>
 
