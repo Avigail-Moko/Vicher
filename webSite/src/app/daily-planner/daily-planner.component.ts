@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, Output, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { NewService } from '../new.service';
 import { Calendar, CalendarOptions, DateSelectArg } from '@fullcalendar/core';
@@ -7,13 +7,17 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { format, differenceInSeconds } from 'date-fns';
 import { DatePipe, Time } from '@angular/common';
+import { MatChipListbox } from '@angular/material/chips';
 
 @Component({
   selector: 'app-daily-planner',
   templateUrl: './daily-planner.component.html',
   styleUrls: ['./daily-planner.component.scss'],
 })
-export class DailyPlannerComponent {
+export class DailyPlannerComponent implements AfterViewInit {
+
+  @ViewChild('chipSelected',{static:false}) chipSelect: ElementRef;
+  
   hasSelectedLessons: boolean = false;
   lessonsArray: any[]=[];
   myDate: any;
@@ -21,6 +25,8 @@ export class DailyPlannerComponent {
   userId = localStorage.getItem('userId');
   errorMessage: any;
   teacherAvailabilityArray: any[] = [];
+  flag:boolean=false;
+  
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -60,6 +66,7 @@ export class DailyPlannerComponent {
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
+
     const newObjArray: any[] = [];
     const title = 'my lesson';
     const calendarApi = selectInfo.view.calendar;
@@ -82,6 +89,8 @@ export class DailyPlannerComponent {
     }
     this.calculatePossibleLessons(newObjArray);
   }
+    //בעצם הבעיה היא שאם עוברים לתאריך עם אותה שעה- היא נשארת כאילו בחרו אותה. בנוסף הכפתור לא נעלם
+
 
   calculatePossibleLessons(newObjArray) {
     const emptyArray: any[] = [];
@@ -125,7 +134,12 @@ export class DailyPlannerComponent {
   choosingTime(lesson){
     const [hours, minutes] = lesson.split(':').map(Number);
     this.myDate.setHours(hours, minutes);
+    this.flag=!this.flag
   }
+
+ ngAfterViewInit(){
+  this.chipSelect.nativeElement.setAttribute('selected','false')
+ }
 
   createLesson() {
     this.newService
