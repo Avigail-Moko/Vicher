@@ -4,9 +4,11 @@
     <mat-chip-listbox  #chipSelected >
         <ng-container *ngFor="let lesson of lessonsArray">
 <mat-chip-option (click)="choosingTime(lesson)" >{{lesson}}</mat-chip-option>
+<!-- [selected]=false -->
+
         </ng-container>
    </mat-chip-listbox>
 
-<p-button (click)="createLesson()" *ngIf="flag">save the date</p-button>
+<p-button (click)="createLesson()" *ngIf="!(this.lessonsArray.length==this.comparisonArray.length)">save the date</p-button>
 </div>
 </div>
