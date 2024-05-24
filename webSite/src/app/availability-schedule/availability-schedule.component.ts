@@ -32,6 +32,9 @@ export class AvailabilityScheduleComponent {
   indexOfEvent: number;
   teacher_id = localStorage.getItem('userId');
   messages: Message[] | undefined;
+  userId=localStorage.getItem('userId');
+  userProfile = JSON.parse(localStorage.getItem('userProfile'));
+
 
   constructor(
     public newServise: NewService,
@@ -142,12 +145,18 @@ export class AvailabilityScheduleComponent {
       );
   }
   openSnackBar() {
+    if (this.objectsArray.length>0) {
+
     this._snackBar.open('Changes have been made. Remember to save them. Otherwise, they will not be preserved', 'Save Changes', {
       horizontalPosition: 'start' ,
       verticalPosition: 'bottom',
     }).onAction().subscribe(() => {
       this.onSave();
     });
-  }
+}
+else {
+  this._snackBar.dismiss(); // תקרא לפונקציה dismiss כאן
+}
 }
 
+}

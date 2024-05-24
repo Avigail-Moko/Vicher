@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { DailyPlannerComponent } from '../daily-planner/daily-planner.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Message, MessageService } from 'primeng/api';
+
 
 @Component({
   selector: 'app-wellcome',
@@ -14,8 +16,16 @@ import { MatDialog } from '@angular/material/dialog';
 export class WellcomeComponent {
 AllproductsArray: any;
 responsiveOptions: any[] | undefined;
+messages: Message[] | undefined;
+userId=localStorage.getItem('userId');
 
-constructor(private newService: NewService , private http: HttpClient,public dialog:MatDialog,) {}
+
+
+constructor(private newService: NewService ,
+   private http: HttpClient,
+   public dialog:MatDialog,
+   public messageService: MessageService,
+  ) {}
 
 // product: any[] = [];
 // productsArray: any;
@@ -39,7 +49,6 @@ ngOnInit(){
     }
 ];
 
-  // const userId=localStorage.getItem('userId');
 
   // this.newService.getAllProduct().subscribe(
   //   (data) => {
@@ -81,8 +90,8 @@ ngOnInit(){
   }
 
   dailyPlanner(product: any){
-
-    const dialogRef = this.dialog.open(DailyPlannerComponent, {
+if (this.userId!=product.userId) {
+  const dialogRef = this.dialog.open(DailyPlannerComponent, {
       width: '650px',
       height:'650px',
       data: {
@@ -91,9 +100,22 @@ ngOnInit(){
       },
       panelClass: 'daily-planner' // הוספת קלאס לסגנון נוסף
     }); 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed'); 
+
+    dialogRef.componentInstance.dialogClosed.subscribe(() => {
+      this.messageService.add({severity:'success', summary: 'Success', detail: `Your Lesson's details have saved successfully! An email will sent to you in a few minutes.`});
     });
+  }
+
+    // dialogRef.afterClosed().subscribe(result => {
+    //   this.messageService.add({severity:'success', summary: 'Success', detail: `Your Lesson's details have saved successfully! An email will sent to you in a few minutes.`});
+    //   console.log('The dialog was closed'); 
+    // });
+
+else{
+  this.messageService.add({severity:'error', summary: 'Warning!', detail: `There is no option to date a lesson to your own products.`});
+
+}
+    
   }
 
 

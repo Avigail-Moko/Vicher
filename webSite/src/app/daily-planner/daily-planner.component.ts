@@ -18,6 +18,7 @@ import { DatePipe, Time } from '@angular/common';
 import { MatChipListbox } from '@angular/material/chips';
 import { trusted } from 'mongoose';
 
+
 @Component({
   selector: 'app-daily-planner',
   templateUrl: './daily-planner.component.html',
@@ -25,6 +26,8 @@ import { trusted } from 'mongoose';
 })
 export class DailyPlannerComponent {
   @ViewChild('chipSelected', { static: false }) chipSelect: ElementRef;
+  @Output() dialogClosed: EventEmitter<any> = new EventEmitter();
+
 
   hasSelectedLessons: boolean = false;
   lessonsArray: any[] = [];
@@ -36,10 +39,11 @@ export class DailyPlannerComponent {
   comparisonArray: any[] = [];
   flag: boolean = false;
 
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialog: MatDialog,
-    private newService: NewService
+    private newService: NewService,
   ) {
     this.product = data.product;
   }
@@ -96,6 +100,11 @@ export class DailyPlannerComponent {
     }
     this.calculatePossibleLessons(newObjArray);
   }
+  
+  //בעצם הבעיה היא: שאם עוברים לתאריך עם אותה שעה- היא נשארת כאילו בחרו אותה. 
+
+  // (handleDateSelect) הפתרון הוא: שבפונקצייה שאחראית על בחירת התאריך
+  //כלא לחוץ mat-chip-option   צריך להוסיף שורה בהתחלה שעושה את האלמנט 
 
   calculatePossibleLessons(newObjArray) {
     const emptyArray: any[] = [];
@@ -187,6 +196,7 @@ export class DailyPlannerComponent {
         (data) => {
           console.log('date:', this.myDate);
           console.log('Response:', data);
+          this.dialogClosed.emit();
           this.dialog.closeAll();
           // window.location.reload(); // רענון העמוד
         },
