@@ -1,23 +1,10 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { NewService } from '../new.service';
-import { Calendar, CalendarOptions, DateSelectArg } from '@fullcalendar/core';
+import { CalendarOptions, DateSelectArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { format, differenceInSeconds } from 'date-fns';
-import { DatePipe, Time } from '@angular/common';
-import { MatChipListbox } from '@angular/material/chips';
-import { trusted } from 'mongoose';
-
 
 @Component({
   selector: 'app-daily-planner',
@@ -25,9 +12,9 @@ import { trusted } from 'mongoose';
   styleUrls: ['./daily-planner.component.scss'],
 })
 export class DailyPlannerComponent {
-  @ViewChild('chipSelected', { static: false }) chipSelect: ElementRef;
   @Output() dialogClosed: EventEmitter<any> = new EventEmitter();
 
+  selectedLesson: string | null = null; // ניהול שיעור נבחר יחיד
 
   hasSelectedLessons: boolean = false;
   lessonsArray: any[] = [];
@@ -38,12 +25,12 @@ export class DailyPlannerComponent {
   teacherAvailabilityArray: any[] = [];
   comparisonArray: any[] = [];
   flag: boolean = false;
-
+  newObjArray: any[] = [2];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialog: MatDialog,
-    private newService: NewService,
+    private newService: NewService
   ) {
     this.product = data.product;
   }
@@ -64,6 +51,7 @@ export class DailyPlannerComponent {
 
   ngOnInit() {
     this.newService.getSchedule(this.product.userId).subscribe((data) => {
+      const availableDays = new Set<number>();
       for (
         let index = 0;
         index < data.schedule[0].objectsArray.length;
@@ -73,12 +61,20 @@ export class DailyPlannerComponent {
           start: new Date(data.schedule[0].objectsArray[index].start),
           end: new Date(data.schedule[0].objectsArray[index].end),
         };
+        const start = new Date(data.schedule[0].objectsArray[index].start);
+        availableDays.add(start.getDay());
       }
+
+      this.calendarOptions.selectConstraint = {
+        daysOfWeek: Array.from(availableDays),
+      };
+      console.log(availableDays);
     });
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    const newObjArray: any[] = [];
+    this.selectedLesson = null;
+    this.newObjArray = [];
     const title = 'my lesson';
     const calendarApi = selectInfo.view.calendar;
 
@@ -95,16 +91,15 @@ export class DailyPlannerComponent {
         this.teacherAvailabilityArray[index].start.getDay() ===
         this.myDate.getDay()
       ) {
-        newObjArray.push(this.teacherAvailabilityArray[index]);
+        this.newObjArray.push(this.teacherAvailabilityArray[index]);
       }
     }
-    this.calculatePossibleLessons(newObjArray);
+    this.calculatePossibleLessons(this.newObjArray);
   }
-  
-  //בעצם הבעיה היא: שאם עוברים לתאריך עם אותה שעה- היא נשארת כאילו בחרו אותה. 
 
-  // (handleDateSelect) הפתרון הוא: שבפונקצייה שאחראית על בחירת התאריך
-  //כלא לחוץ mat-chip-option   צריך להוסיף שורה בהתחלה שעושה את האלמנט 
+  isSelected(lesson: string): boolean {
+    return this.selectedLesson === lesson;
+  }
 
   calculatePossibleLessons(newObjArray) {
     const emptyArray: any[] = [];
@@ -154,17 +149,22 @@ export class DailyPlannerComponent {
     });
     this.lessonsArray.forEach((person) => {
       this.comparisonArray.push(person);
-      console.log('in the for each:', this.comparisonArray);
     });
   }
 
   choosingTime(lesson) {
+    if (this.selectedLesson === lesson) {
+      this.selectedLesson = null;
+    } else {
+      this.selectedLesson = lesson;
+    }
+
     this.lessonsArray.forEach((person) => {
-      if (person !== lesson && !(this.comparisonArray.includes(person))) {
+      if (person !== lesson && !this.comparisonArray.includes(person)) {
         this.comparisonArray.push(person);
       }
     });
-    
+
     let myFlag: boolean = false;
     const [hours, minutes] = lesson.split(':').map(Number);
     console.log('this is my hour:', lesson);
@@ -179,8 +179,6 @@ export class DailyPlannerComponent {
       console.log('my flag', myFlag);
       this.comparisonArray.push(lesson);
     }
-
-    console.log('the comparison array:', this.comparisonArray);
   }
 
   createLesson() {
@@ -198,7 +196,6 @@ export class DailyPlannerComponent {
           console.log('Response:', data);
           this.dialogClosed.emit();
           this.dialog.closeAll();
-          // window.location.reload(); // רענון העמוד
         },
         (error) => {
           console.error('Error:', error.error.message);
