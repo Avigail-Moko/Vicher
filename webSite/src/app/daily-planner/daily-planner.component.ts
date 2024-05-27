@@ -116,7 +116,6 @@ export class DailyPlannerComponent {
           const newDate = new Date(data.lesson[index].myDate);
           this.takenLessonArray.push(newDate);
         }
-        console.log('רשימה מלאה של כל הזמנים שנתפסו:', this.takenLessonArray);
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -156,8 +155,6 @@ export class DailyPlannerComponent {
         this.dailyTakenArray.push(this.takenLessonArray[index]);
       }
     }
-    console.log('רשימה פר תאריך:', this.dailyTakenArray);
-
     this.calculatePossibleLessons(this.newObjArray);
   }
 
@@ -217,7 +214,6 @@ export class DailyPlannerComponent {
             this.isTaken = true;
           }
           else this.isTaken=false
-          console.log('bn', this.datePipe.transform(person, 'HH:mm'));
         }
       }
     });
