@@ -15,7 +15,7 @@ import { DatePipe } from '@angular/common';
 export class DailyPlannerComponent {
   @Output() dialogClosed: EventEmitter<any> = new EventEmitter();
 
-  selectedLesson: string | null = null; // ניהול שיעור נבחר יחיד
+  selectedLesson: string | null = null; 
   hasSelectedLessons: boolean = false;
   lessonsArray: any[] = [];
   myDate: any;
@@ -26,7 +26,7 @@ export class DailyPlannerComponent {
   comparisonArray: any[] = [];
   flag: boolean = false;
   newObjArray: any[] = [];
-  availableDays: Set<number> = new Set(); // יוזם את המשתנה מחוץ ל-ngOnInit
+  availableDays: Set<number> = new Set(); 
   takenLessonArray: Date[] = [];
   dailyTakenArray: any[] = [];
   isTaken: boolean;
