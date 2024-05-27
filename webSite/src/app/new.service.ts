@@ -1,15 +1,6 @@
-import {
-  BehaviorSubject,
-  Observable,
-  Subject,
-  catchError,
-  tap,
-  throwError,
-} from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Form, NgForm } from '@angular/forms';
-import { INewUser } from './models/new.interface';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
@@ -28,11 +19,11 @@ export class NewService {
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {}
 
-  addDiv(div: any) {
-    const currentDivs = this.divsSource.getValue();
-    const newDivs = [...currentDivs, div];
-    this.divsSource.next(newDivs);
-  }
+  // addDiv(div: any) {
+  //   const currentDivs = this.divsSource.getValue();
+  //   const newDivs = [...currentDivs, div];
+  //   this.divsSource.next(newDivs);
+  // }
 
   Signup(values: any): Observable<any> {
     const url = 'http://localhost:3000/users/signup';
@@ -69,7 +60,7 @@ export class NewService {
     return this.http.get(url);
   }
 
-  getAllUsers() {
+  getAllUsers(): Observable<any> {
     const url = 'http://localhost:3000/users/getAllUsers';
     return this.http.get(url);
   }
@@ -111,15 +102,19 @@ export class NewService {
     const url = 'http://localhost:3000/lessons/createLesson';
     return this.http.post(url, values);
   }
-  getLesson(teacherId: any): Observable<any> {
+  getLessonByTeacher(teacherId: any): Observable<any> {
     const url = `http://localhost:3000/lessons/getLesson?teacher_id=${teacherId}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
     return this.http.get(url);
   }
-  createSchedule(objectsArray: any,teacher_id:any) {
-    const url = `http://localhost:3000/schedule/createSchedule?teacher_id=${teacher_id}`;
-    return this.http.post(url, {objectsArray});
+  getLessonByProduct(productId: any): Observable<any> {
+    const url = `http://localhost:3000/lessons/getLesson?productId=${productId}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
+    return this.http.get(url);
   }
-  getSchedule(teacher_id:any): Observable<any>{
+  createSchedule(objectsArray: any, teacher_id: any) {
+    const url = `http://localhost:3000/schedule/createSchedule?teacher_id=${teacher_id}`;
+    return this.http.post(url, { objectsArray });
+  }
+  getSchedule(teacher_id: any): Observable<any> {
     const url = `http://localhost:3000/schedule/getSchedule?teacher_id=${teacher_id}`;
     return this.http.get(url);
   }

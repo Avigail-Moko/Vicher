@@ -1,6 +1,8 @@
-<div class="m-5 ">
+<div class="m-5 full-calendar-container">
 <full-calendar  [options]='calendarOptions' > </full-calendar>
-<div class=" flex justify-content-end mt-3">
+<div class=" flex justify-content-between mt-3">
+    <h1 *ngIf="isTaken" class="text-base text-white	">there is no open lessons for this date.</h1>
+
     <mat-chip-listbox >
         <ng-container *ngFor="let lesson of lessonsArray">
 <mat-chip-option (click)="choosingTime(lesson)" [selected]="isSelected(lesson)">{{lesson}}</mat-chip-option>
@@ -10,7 +12,7 @@
 
 <p-button (click)="createLesson()" *ngIf="!(this.lessonsArray.length==this.comparisonArray.length)">save the date</p-button>
 
-<!-- <h1 *ngIf="this.newObjArray.length===0">warning</h1> -->
+
 
 </div>
 </div>

@@ -1,13 +1,17 @@
 
- ::ng-deep #fc-dom-1{
-    padding-left:30px ;
-    padding-right: 30px;
-    color: white;
-  }
+//  ::ng-deep #fc-dom-1{
+//     padding-left:30px ;
+//     padding-right: 30px;
+//     color: white;
+//   }
   full-calendar {
     display: block;
-    width: 100%;
+    width: 100%; 
     height: 500px; /* או גובה נדרש */
+}
+
+::ng-deep .fc .fc-non-business {
+  background: hsl(0deg 35.7% 61.55% / 30%);
 }
 
 

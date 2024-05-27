@@ -5,6 +5,7 @@ import { CalendarOptions, DateSelectArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-daily-planner',
@@ -15,7 +16,6 @@ export class DailyPlannerComponent {
   @Output() dialogClosed: EventEmitter<any> = new EventEmitter();
 
   selectedLesson: string | null = null; // ניהול שיעור נבחר יחיד
-
   hasSelectedLessons: boolean = false;
   lessonsArray: any[] = [];
   myDate: any;
@@ -25,12 +25,19 @@ export class DailyPlannerComponent {
   teacherAvailabilityArray: any[] = [];
   comparisonArray: any[] = [];
   flag: boolean = false;
-  newObjArray: any[] = [2];
+  newObjArray: any[] = [];
+  availableDays: Set<number> = new Set(); // יוזם את המשתנה מחוץ ל-ngOnInit
+  takenLessonArray: Date[] = [];
+  dailyTakenArray: any[] = [];
+  isTaken: boolean;
+  startMonth=new Date(new Date().setDate(1))
+  endDate = new Date(this.startMonth.getFullYear(), this.startMonth.getMonth() + 3, 1);
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialog: MatDialog,
-    private newService: NewService
+    private newService: NewService,
+    private datePipe: DatePipe
   ) {
     this.product = data.product;
   }
@@ -38,41 +45,88 @@ export class DailyPlannerComponent {
   calendarOptions: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
     headerToolbar: {
-      left: 'prev,next today',
+      left: 'prev,next',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek',
+      right: 'today',
+    },
+    validRange: {
+      start: this.startMonth,
+      end: this.endDate
     },
     initialView: 'dayGridMonth',
     editable: true,
     selectable: true,
     selectMirror: true,
+    selectAllow:this.selectAllow.bind(this),
     select: this.handleDateSelect.bind(this),
+    dateClick: this.handleDateClick.bind(this),
   };
 
-  ngOnInit() {
-    this.newService.getSchedule(this.product.userId).subscribe((data) => {
-      const availableDays = new Set<number>();
-      for (
-        let index = 0;
-        index < data.schedule[0].objectsArray.length;
-        index++
-      ) {
-        this.teacherAvailabilityArray[index] = {
-          start: new Date(data.schedule[0].objectsArray[index].start),
-          end: new Date(data.schedule[0].objectsArray[index].end),
-        };
-        const start = new Date(data.schedule[0].objectsArray[index].start);
-        availableDays.add(start.getDay());
-      }
+  selectAllow(selectInfo: any) {
+    const selectedDate = selectInfo.startStr;
+    const todayStr = new Date().toISOString().split('T')[0];
 
-      this.calendarOptions.selectConstraint = {
-        daysOfWeek: Array.from(availableDays),
-      };
-      console.log(availableDays);
-    });
+    return selectedDate >= todayStr; 
+  }
+  handleDateClick(arg) {
+    const calendarApi = arg.view.calendar;
+    const selectedDate = new Date(arg.date);
+    const today = new Date();
+    if (selectedDate >= today) {
+          if (this.availableDays.has(selectedDate.getDay())) {
+      if (selectedDate.getMonth() !== calendarApi.getDate().getMonth()) {
+        calendarApi.gotoDate(selectedDate);
+      }
+    }
+    }
+  }
+
+  ngOnInit() {
+    this.newService.getSchedule(this.product.userId).subscribe(
+      (data) => {
+        for (
+          let index = 0;
+          index < data.schedule[0].objectsArray.length;
+          index++
+        ) {
+          this.teacherAvailabilityArray[index] = {
+            start: new Date(data.schedule[0].objectsArray[index].start),
+            end: new Date(data.schedule[0].objectsArray[index].end),
+          };
+          const start = new Date(data.schedule[0].objectsArray[index].start);
+          this.availableDays.add(start.getDay());
+        }
+
+        this.calendarOptions.selectConstraint = {
+          daysOfWeek: Array.from(this.availableDays),
+        };
+        this.calendarOptions.businessHours = {
+          daysOfWeek: Array.from(this.availableDays),
+        };
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+        this.errorMessage = error.error.message;
+      }
+    );
+
+    this.newService.getLessonByProduct(this.product._id).subscribe(
+      (data) => {
+        for (let index = 0; index < data.lesson.length; index++) {
+          const newDate = new Date(data.lesson[index].myDate);
+          this.takenLessonArray.push(newDate);
+        }
+        console.log('רשימה מלאה של כל הזמנים שנתפסו:', this.takenLessonArray);
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+        this.errorMessage = error.error.message;
+      }
+    );
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
+    this.dailyTakenArray = [];
     this.selectedLesson = null;
     this.newObjArray = [];
     const title = 'my lesson';
@@ -94,11 +148,17 @@ export class DailyPlannerComponent {
         this.newObjArray.push(this.teacherAvailabilityArray[index]);
       }
     }
-    this.calculatePossibleLessons(this.newObjArray);
-  }
+    for (let index = 0; index < this.takenLessonArray.length; index++) {
+      if (
+        this.datePipe.transform(this.takenLessonArray[index], 'yyyy-MM-dd') ===
+        this.datePipe.transform(this.myDate, 'yyyy-MM-dd')
+      ) {
+        this.dailyTakenArray.push(this.takenLessonArray[index]);
+      }
+    }
+    console.log('רשימה פר תאריך:', this.dailyTakenArray);
 
-  isSelected(lesson: string): boolean {
-    return this.selectedLesson === lesson;
+    this.calculatePossibleLessons(this.newObjArray);
   }
 
   calculatePossibleLessons(newObjArray) {
@@ -147,9 +207,28 @@ export class DailyPlannerComponent {
         this.lessonsArray.push(newTime);
       }
     });
+    this.dailyTakenArray.forEach((person) => {
+      for (let index = this.lessonsArray.length - 1; index >= 0; index--) {
+        if (
+          this.lessonsArray[index] == this.datePipe.transform(person, 'HH:mm')
+        ) {
+          this.lessonsArray.splice(index, 1);
+          if (this.lessonsArray.length == 0) {
+            this.isTaken = true;
+          }
+          else this.isTaken=false
+          console.log('bn', this.datePipe.transform(person, 'HH:mm'));
+        }
+      }
+    });
+
     this.lessonsArray.forEach((person) => {
       this.comparisonArray.push(person);
     });
+  }
+
+  isSelected(lesson: string): boolean {
+    return this.selectedLesson === lesson;
   }
 
   choosingTime(lesson) {
@@ -167,7 +246,6 @@ export class DailyPlannerComponent {
 
     let myFlag: boolean = false;
     const [hours, minutes] = lesson.split(':').map(Number);
-    console.log('this is my hour:', lesson);
     this.myDate.setHours(hours, minutes);
     for (let i = this.comparisonArray.length - 1; i >= 0; i--) {
       if (this.comparisonArray[i] === lesson) {
@@ -176,7 +254,6 @@ export class DailyPlannerComponent {
       }
     }
     if (!myFlag) {
-      console.log('my flag', myFlag);
       this.comparisonArray.push(lesson);
     }
   }

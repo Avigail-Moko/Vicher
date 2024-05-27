@@ -55,6 +55,8 @@ import { BecomingsellerComponent } from './becomingseller/becomingseller.compone
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
+import { DatePipe } from '@angular/common';  
+
 
 @NgModule({
   declarations: [
@@ -81,6 +83,7 @@ import { MessageService } from 'primeng/api';
     MessageService,
     LocalStorageService,
     JwtHelperService,
+    DatePipe,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

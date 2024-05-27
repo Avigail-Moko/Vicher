@@ -27,7 +27,21 @@ module.exports={
 
 getLesson: (req,res)=>{
     const teacher_id = req.query.userId;
-    Lesson.find({ teacher_id })
+    const product_id = req.query.productId;
+    
+    let query = {};
+
+    if (teacher_id) {
+        query.teacher_id = teacher_id;
+    } else if (product_id) {
+        query.product_id = product_id;
+    } else {
+        return res.status(400).json({
+            message: 'Either teacherId or productId must be provided'
+        });
+    }
+
+    Lesson.find(query)
         .exec().then(lesson => { 
            return res.status(200).json({lesson});
         })
