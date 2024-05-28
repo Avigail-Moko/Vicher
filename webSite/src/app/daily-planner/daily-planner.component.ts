@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { NewService } from '../new.service';
 import { CalendarOptions, DateSelectArg } from '@fullcalendar/core';
@@ -6,6 +12,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { DatePipe } from '@angular/common';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component({
   selector: 'app-daily-planner',
@@ -14,8 +21,9 @@ import { DatePipe } from '@angular/common';
 })
 export class DailyPlannerComponent {
   @Output() dialogClosed: EventEmitter<any> = new EventEmitter();
+  @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
 
-  selectedLesson: string | null = null; 
+  selectedLesson: string | null = null;
   hasSelectedLessons: boolean = false;
   lessonsArray: any[] = [];
   myDate: any;
@@ -26,12 +34,13 @@ export class DailyPlannerComponent {
   comparisonArray: any[] = [];
   flag: boolean = false;
   newObjArray: any[] = [];
-  availableDays: Set<number> = new Set(); 
+  availableDays: Set<number> = new Set();
   takenLessonArray: Date[] = [];
   dailyTakenArray: any[] = [];
   isTaken: boolean;
-  startMonth=new Date(new Date().setDate(1))
-  endDate = new Date(this.startMonth.getFullYear(), this.startMonth.getMonth() + 3, 1);
+  CalendarCounter: number = 0;
+  nextButton: HTMLButtonElement;
+  prevButton: HTMLButtonElement;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -49,35 +58,86 @@ export class DailyPlannerComponent {
       center: 'title',
       right: 'today',
     },
-    validRange: {
-      start: this.startMonth,
-      end: this.endDate
+    customButtons: {
+      prev: {
+        text: 'prev',
+        click: this.handlePrevClick.bind(this),
+      },
+      next: {
+        text: 'next',
+        click: this.handleNextClick.bind(this),
+      },
     },
     initialView: 'dayGridMonth',
     editable: true,
     selectable: true,
     selectMirror: true,
-    selectAllow:this.selectAllow.bind(this),
+    selectAllow: this.selectAllow.bind(this),
     select: this.handleDateSelect.bind(this),
     dateClick: this.handleDateClick.bind(this),
   };
 
-  selectAllow(selectInfo: any) {
-    const selectedDate = selectInfo.startStr;
-    const todayStr = new Date().toISOString().split('T')[0];
-
-    return selectedDate >= todayStr; 
+  ngAfterViewInit() {
+    this.nextButton = document.querySelector(
+      '.fc-next-button'
+    ) as HTMLButtonElement;
+    this.prevButton = document.querySelector(
+      '.fc-prev-button'
+    ) as HTMLButtonElement;
+    this.prevButton.disabled = true;
   }
+  handlePrevClick() {
+    const calendarApi = this.calendarComponent.getApi();
+    if (this.CalendarCounter > 0) {
+      calendarApi.prev();
+      this.CalendarCounter--;
+      this.nextButton.disabled = false;
+      if (this.CalendarCounter === 0) {
+        this.prevButton.disabled = true;
+      }
+    }
+  }
+  handleNextClick() {
+    const calendarApi = this.calendarComponent.getApi();
+    if (this.CalendarCounter < 3) {
+      calendarApi.next();
+      this.CalendarCounter++;
+      this.prevButton.disabled = false;
+      if (this.CalendarCounter === 3) {
+        this.nextButton.disabled = true;
+      }
+    }
+  }
+  selectAllow(selectInfo: any) {
+    const selectedDate = selectInfo.start;
+    const today = new Date();
+    const lastDayOf3Month = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth() + 4,
+      0
+    );
+
+    return selectedDate >= today && selectedDate <= lastDayOf3Month;
+  }
+
   handleDateClick(arg) {
     const calendarApi = arg.view.calendar;
     const selectedDate = new Date(arg.date);
-    const today = new Date();
-    if (selectedDate >= today) {
-          if (this.availableDays.has(selectedDate.getDay())) {
-      if (selectedDate.getMonth() !== calendarApi.getDate().getMonth()) {
-        calendarApi.gotoDate(selectedDate);
+    if (this.availableDays.has(selectedDate.getDay())) {
+      if (selectedDate.getMonth() > calendarApi.getDate().getMonth()) {
+        if (this.CalendarCounter < 3) {
+          calendarApi.gotoDate(selectedDate);
+          this.CalendarCounter++;
+          this.prevButton.disabled = false;
+        } else this.nextButton.disabled = true;
       }
-    }
+      if (selectedDate.getMonth() < calendarApi.getDate().getMonth()) {
+        if (this.CalendarCounter > 0) {
+          calendarApi.gotoDate(selectedDate);
+          this.CalendarCounter--;
+          this.nextButton.disabled = false;
+        } else this.prevButton.disabled = true;
+      }
     }
   }
 
@@ -212,8 +272,7 @@ export class DailyPlannerComponent {
           this.lessonsArray.splice(index, 1);
           if (this.lessonsArray.length == 0) {
             this.isTaken = true;
-          }
-          else this.isTaken=false
+          } else this.isTaken = false;
         }
       }
     });
