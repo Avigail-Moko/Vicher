@@ -4,10 +4,13 @@ const Lesson = require('../models/lessons');
 module.exports={
     createLesson:(req,res)=>{
         const {  myDate,teacher_id, student_id, product_id, length } = req.body;
+        const startDate = new Date(myDate);
+        const endDate = new Date(startDate.getTime() + length * 60000);
         const lesson = new Lesson({
             _id: new mongoose.Types.ObjectId(),
             length,
             myDate, 
+            endDate,
             teacher_id, 
             student_id,
             product_id
@@ -26,8 +29,8 @@ module.exports={
     },
 
 getLesson: (req,res)=>{
-    const teacher_id = req.query.userId;
-    const product_id = req.query.productId;
+    const teacher_id = req.query.teacher_id;
+    const product_id = req.query.product_id;
     
     let query = {};
 

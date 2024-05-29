@@ -102,14 +102,16 @@ export class NewService {
     const url = 'http://localhost:3000/lessons/createLesson';
     return this.http.post(url, values);
   }
-  getLessonByTeacher(teacherId: any): Observable<any> {
-    const url = `http://localhost:3000/lessons/getLesson?teacher_id=${teacherId}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
+  getLessonByTeacher(teacher_id: any): Observable<any> {
+    const url = `http://localhost:3000/lessons/getLesson?teacher_id=${teacher_id}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
     return this.http.get(url);
   }
-  getLessonByProduct(productId: any): Observable<any> {
-    const url = `http://localhost:3000/lessons/getLesson?productId=${productId}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
-    return this.http.get(url);
-  }
+  // במידה ומוחקים את הקוד הזה יש לעדכן בשרת שאין צורך בבדיקה גם של
+  // productId וגם teacher_id
+  // getLessonByProduct(product_id: any): Observable<any> {
+  //   const url = `http://localhost:3000/lessons/getLesson?product_id=${product_id}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
+  //   return this.http.get(url);
+  // }
   createSchedule(objectsArray: any, teacher_id: any) {
     const url = `http://localhost:3000/schedule/createSchedule?teacher_id=${teacher_id}`;
     return this.http.post(url, { objectsArray });

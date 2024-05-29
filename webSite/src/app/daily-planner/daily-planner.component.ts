@@ -35,7 +35,7 @@ export class DailyPlannerComponent {
   flag: boolean = false;
   newObjArray: any[] = [];
   availableDays: Set<number> = new Set();
-  takenLessonArray: Date[] = [];
+  takenLessonArray: any[] = [];
   dailyTakenArray: any[] = [];
   isTaken: boolean;
   CalendarCounter: number = 0;
@@ -170,10 +170,19 @@ export class DailyPlannerComponent {
       }
     );
 
-    this.newService.getLessonByProduct(this.product._id).subscribe(
+    this.newService.getLessonByTeacher(this.product.userId).subscribe(
       (data) => {
+        console.log('is my date is start or end?', data);
         for (let index = 0; index < data.lesson.length; index++) {
-          const newDate = new Date(data.lesson[index].myDate);
+          const startDate = new Date(data.lesson[index].myDate);
+
+          const newDate = {
+            start: new Date(data.lesson[index].myDate),
+            end: new Date(
+              startDate.getTime() + data.lesson[index].length * 60000
+            ),
+          };
+
           this.takenLessonArray.push(newDate);
         }
       },
@@ -209,12 +218,80 @@ export class DailyPlannerComponent {
     }
     for (let index = 0; index < this.takenLessonArray.length; index++) {
       if (
-        this.datePipe.transform(this.takenLessonArray[index], 'yyyy-MM-dd') ===
-        this.datePipe.transform(this.myDate, 'yyyy-MM-dd')
+        this.datePipe.transform(
+          this.takenLessonArray[index].start,
+          'yyyy-MM-dd'
+        ) === this.datePipe.transform(this.myDate, 'yyyy-MM-dd')
       ) {
         this.dailyTakenArray.push(this.takenLessonArray[index]);
       }
     }
+    this.removeOverlappingTimes();
+  }
+
+  removeOverlappingTimes() {
+    console.log('הזמנים הפנויים', this.newObjArray);
+    console.log('השיעורים התפוסים', this.dailyTakenArray);
+
+    let updatedArray2: any[] = [];
+    this.newObjArray.forEach((event) => {
+      let eventStart = new Date(event.start);
+      let eventEnd = new Date(event.end);
+
+      this.dailyTakenArray.forEach((removeEvent) => {
+        const removeStart = new Date(
+          event.start.getFullYear(),
+          event.start.getMonth(),
+          event.start.getDay(),
+          removeEvent.start.getHours(),
+          removeEvent.start.getMinutes()
+        );
+        const removeEnd = new Date(
+          event.end.getFullYear(),
+          event.end.getMonth(),
+          event.end.getDay(),
+          removeEvent.end.getHours(),
+          removeEvent.end.getMinutes()
+        );
+
+        // if (removeEnd <= eventStart || removeStart >= eventEnd) {
+        //   // No overlap
+        //   return;
+        // }
+
+        if (removeStart <= eventStart && removeEnd < eventEnd) {
+          console.log('removeStart <= eventStart && removeEnd < eventEnd');
+          // Overlap at the beginning
+          eventStart = removeEnd;
+        } else if (removeStart > eventStart && removeEnd >= eventEnd) {
+          console.log('removeStart > eventStart && removeEnd >= eventEnd');
+          // Overlap at the end
+          eventEnd = removeStart;
+        } else if (removeStart > eventStart && removeEnd < eventEnd) {
+          console.log('removeStart > eventStart && removeEnd < eventEn');
+          // Overlap in the middle
+          updatedArray2.push({
+            start: eventStart,
+            end: removeStart,
+          });
+          eventStart = removeEnd;
+        } else if (removeStart <= eventStart && removeEnd >= eventEnd) {
+          console.log('removeStart <= eventStart && removeEnd >= eventEnd');
+          // Whole event is overlapped
+          eventStart = eventEnd; // This will skip adding the event
+        }
+      });
+
+      if (eventStart < eventEnd) {
+        updatedArray2.push({
+          start: new Date(eventStart),
+          end: new Date(eventEnd),
+        });
+      }
+    });
+
+    this.newObjArray = updatedArray2;
+    console.log('הזמנים הפנויים אחרי מחיקת השיעורים התפוסים', updatedArray2);
     this.calculatePossibleLessons(this.newObjArray);
   }
 
@@ -264,18 +341,18 @@ export class DailyPlannerComponent {
         this.lessonsArray.push(newTime);
       }
     });
-    this.dailyTakenArray.forEach((person) => {
-      for (let index = this.lessonsArray.length - 1; index >= 0; index--) {
-        if (
-          this.lessonsArray[index] == this.datePipe.transform(person, 'HH:mm')
-        ) {
-          this.lessonsArray.splice(index, 1);
-          if (this.lessonsArray.length == 0) {
-            this.isTaken = true;
-          } else this.isTaken = false;
-        }
-      }
-    });
+    // this.dailyTakenArray.forEach((person) => {
+    //   for (let index = this.lessonsArray.length - 1; index >= 0; index--) {
+    //     if (
+    //       this.lessonsArray[index] == this.datePipe.transform(person, 'HH:mm')
+    //     ) {
+    //       this.lessonsArray.splice(index, 1);
+    //       if (this.lessonsArray.length == 0) {
+    //         this.isTaken = true;
+    //       } else this.isTaken = false;
+    //     }
+    //   }
+    // });
 
     this.lessonsArray.forEach((person) => {
       this.comparisonArray.push(person);

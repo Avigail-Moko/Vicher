@@ -4,11 +4,12 @@
 //     padding-right: 30px;
 //     color: white;
 //   }
+
+// ספק אם נצרך
  full-calendar   {
-    // background-color: transparent;
-    // display: block;
-    // width: 100%; 
-    // height: 500px; /* או גובה נדרש */
+    display: block;
+    width: 100%; 
+    height: 500px; /* או גובה נדרש */
 }
 
 ::ng-deep .fc .fc-non-business {
