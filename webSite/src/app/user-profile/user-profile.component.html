@@ -5,13 +5,20 @@
         <ng-template  pTemplate="header">
           <img class="profileImage mt-5" [src]="userProfile.profileImage" alt="User Profile">
         </ng-template> 
-        <p-card class="contant" contant [style]="{backgroundColor:'var(--surface-800)'}">
+        <p-card class="contant" contant [style]="{backgroundColor:'var(--surface-800)'}" >
+          <p *ngIf="!userProfile.description">
           Here you can tell the world about yourself:
           What is your hobbies, how old are you?
           Where do you live, how many years did you study?
-          Any detail that will attract potential customers to contact you!
+          Any detail that will attract potential customers to contact you!</p>
+          <p>{{ userProfile.description }}</p>
+          <div>
+            <input [(ngModel)]="inputValue" placeholder="your description" />
+
+          </div>
           <ng-template pTemplate="footer">
-            <p-button  matTooltip="Edit Profile" icon="pi pi-user-edit" ></p-button>
+            
+            <p-button  matTooltip="Edit your description" icon="pi pi-user-edit" (click)="save()" ></p-button>
           </ng-template>
         </p-card>
       </p-card>

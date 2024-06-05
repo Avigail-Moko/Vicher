@@ -55,7 +55,8 @@ import { BecomingsellerComponent } from './becomingseller/becomingseller.compone
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
-import { DatePipe } from '@angular/common';  
+import { DatePipe } from '@angular/common';
+import { UserViewComponent } from './user-view/user-view.component';  
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { DatePipe } from '@angular/common';
     DeleteItemComponent,
     AvailabilityScheduleComponent,
     BecomingsellerComponent,
+    UserViewComponent,
   ],
   providers: [
     MessageService,

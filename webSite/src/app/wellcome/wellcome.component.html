@@ -1,7 +1,11 @@
-<h1 >Wellcome to Vicher!</h1>
+<h1>Wellcome to Vicher!</h1>
 <div class="flex row div1">
-<h2>How can we help you today?</h2>
-<img style="width: 800px; opacity: 0.5;" class="image9" src="assets/image (9).png"/>
+  <h2>How can we help you today?</h2>
+  <img
+    style="width: 800px; opacity: 0.5"
+    class="image9"
+    src="assets/image (9).png"
+  />
 </div>
 
 <!-- <div class="flex  justify-content-evenly flex-row "[style]="{width:'100%'}">
@@ -29,38 +33,105 @@
   </mat-card>
 </div> -->
 
-
 <div class="card">
   <!-- <p-fieldset  legend="Header"> -->
 
-  <p-carousel  [value]="AllproductsArray" [numVisible]="4" [numScroll]="3" [circular]="true" [responsiveOptions]="responsiveOptions"  [autoplayInterval]="6000">    >
-      <ng-template let-product pTemplate="item">
-          <mat-card class="product-card m-2 " (click)="dailyPlanner(product)">
-            <mat-card-header class="flex flex-column p-0" >
-              <img class="header-image" [src]="product.image.src" width="250px" alt="{{product.image.filename}}">
-              <div class="flex px-2">
-                <div mat-card-avatar class="content-image " [style.background-image]="'url(' + product.userProfileImage + ')'"></div>
-                <mat-card-title class="text-sm ml-2 font-italic "> <span class="text-400">Ad by </span> {{ product.userProfileName }}</mat-card-title>
-              </div>
-            </mat-card-header>
-            <mat-card-content class="p-3">
-              <mat-card-title >{{product.lesson_title}}</mat-card-title>
-              <div class="flex flex-row justify-content-between">
-                <mat-card-subtitle><i class="pi pi-tag text-sm"></i> {{product.category}}</mat-card-subtitle>
-                <span class="font-bold text-100">{{ '₪' +' '+ product.price }}</span>
-              </div>
-              <mat-card-subtitle>lesson length: {{ product.length }} min.</mat-card-subtitle>
-            </mat-card-content>
-            <mat-card-footer class="px-3">
-              <p class=" overflow-hidden text-overflow-ellipsis" >{{product.description}}</p>
-              <!-- <p-button  icon="pi pi-trash" class="m-2" *ngIf="isButtonsVisible" (click)="deleteProduct(product._id)" mat-raised-button matTooltip="Delete Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button>
+  <p-carousel
+    [value]="AllproductsArray"
+    [numVisible]="4"
+    [numScroll]="3"
+    [circular]="true"
+    [responsiveOptions]="responsiveOptions"
+    [autoplayInterval]="6000"
+  >
+    >
+    <ng-template let-product pTemplate="item">
+      <mat-card class="product-card m-2" (click)="openDailyPlanner(product)">
+        <mat-card-header class="flex flex-column p-0">
+          <img
+            class="header-image"
+            [src]="product.image.src"
+            width="250px"
+            alt="{{ product.image.filename }}"
+          />
+          <div class="flex px-2">
+            <div
+              mat-card-avatar
+              class="content-image"
+              [style.background-image]="'url(' + product.userProfileImage + ')'"
+            ></div>
+            <mat-card-title class="text-sm ml-2 font-italic">
+              <span class="text-400">Ad by </span>
+              {{ product.userProfileName }}</mat-card-title
+            >
+          </div>
+        </mat-card-header>
+        <mat-card-content class="p-3">
+          <mat-card-title>{{ product.lesson_title }}</mat-card-title>
+          <div class="flex flex-row justify-content-between">
+            <mat-card-subtitle
+              ><i class="pi pi-tag text-sm"></i>
+              {{ product.category }}</mat-card-subtitle
+            >
+            <span class="font-bold text-100">{{
+              "₪" + " " + product.price
+            }}</span>
+          </div>
+          <mat-card-subtitle
+            >lesson length: {{ product.length }} min.</mat-card-subtitle
+          >
+        </mat-card-content>
+        <mat-card-footer class="px-3">
+          <p class="overflow-hidden text-overflow-ellipsis">
+            {{ product.description }}
+          </p>
+          <!-- <p-button  icon="pi pi-trash" class="m-2" *ngIf="isButtonsVisible" (click)="deleteProduct(product._id)" mat-raised-button matTooltip="Delete Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button>
               <p-button  icon="pi pi-user-edit" class="m-2" *ngIf="isButtonsVisible" (click)="openProductsEditDialog(product,userProfile)"  mat-raised-button matTooltip="Edit Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button> -->
-            </mat-card-footer>
-          </mat-card>
-      </ng-template>
+        </mat-card-footer>
+      </mat-card>
+    </ng-template>
   </p-carousel>
-<!-- </p-fieldset> -->
+  <!-- </p-fieldset> -->
 </div>
+<div class="card">
+  <!-- <p-fieldset  legend="Header"> -->
+
+  <p-carousel
+    [value]="AllusersArray"
+    [numVisible]="4"
+    [numScroll]="3"
+    [circular]="true"
+    [responsiveOptions]="responsiveOptions"
+    [autoplayInterval]="6000"
+  >
+    >
+    <ng-template let-users pTemplate="item">
+      <mat-card class="product-card m-2" (click)="openUserView(users)">
+        <mat-card-header class="flex flex-column p-2">
+          <div
+            class="header-image"
+            [style.background-image]="'url(' + users.profileImage + ')'"
+            width="250px"
+          ></div>
+          <mat-card-content class="p-3">
+          <p class="overflow-hidden text-overflow-ellipsis">
+            {{ users.name }}
+          </p>
+        </mat-card-content>
+          <div class="flex px-2">
+            <mat-card-title class="text-sm ml-2 font-italic">
+              <span class="text-400">Email: </span>
+              {{ users.email }}</mat-card-title
+            >
+          </div>
+        </mat-card-header>
+        
+      </mat-card>
+    </ng-template>
+  </p-carousel>
+  <!-- </p-fieldset> -->
+</div>
+
 <div class="card">
   <p-toast [life]="5000"></p-toast>
 </div>

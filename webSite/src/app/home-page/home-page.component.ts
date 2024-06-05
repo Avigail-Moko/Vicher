@@ -46,11 +46,11 @@ export class HomePageComponent  {
      // tab menu
      this.items = [
       { label: 'Home', icon: 'pi pi-fw pi-home',routerLink:'/wellcome'},
-      { label: 'Calendar', icon: 'pi pi-fw pi-calendar',routerLink:'/calendar' },
-      { label: 'Edit Profile', icon: 'pi pi-fw pi-pencil',routerLink:'/user-profile' },
+      // { label: 'Calendar', icon: 'pi pi-fw pi-calendar',routerLink:'/calendar' },
+      // { label: 'Edit Profile', icon: 'pi pi-fw pi-pencil',routerLink:'/user-profile' },
       { label: 'About Us', icon: 'pi pi-fw pi-id-card',routerLink:'/about'},
-      { label: 'Availability', icon: 'pi pi-fw pi-clock',routerLink:'/availability-schedule'},
-      { label: 'Become a Seller', icon: 'pi pi-fw pi-dollar',routerLink:'/seller'},
+      // { label: 'Availability', icon: 'pi pi-fw pi-clock',routerLink:'/availability-schedule'},
+      // { label: 'Become a Seller', icon: 'pi pi-fw pi-dollar',routerLink:'/seller'},
       ];
     this.activeItem = this.items[0];
     }

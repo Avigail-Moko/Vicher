@@ -65,7 +65,7 @@ function createBlueProfileImage(name) {
 
 module.exports = {
     signup: (req, res) => {
-        const { name, subject, seniority, email, password } = req.body;
+        const { name, subject, email, password } = req.body;
 
         User.find({ email }).then((users) => {
             if (users.length >= 1) {
@@ -90,7 +90,6 @@ module.exports = {
                     password: hash,
                     name,
                     subject,
-                    seniority,
                     profileImage
                 });
                 user.save().then((result) => {
@@ -145,8 +144,8 @@ module.exports = {
                             name: user.name,
                             email: user.email,
                             subject: user.subject,
-                            seniority: user.seniority,
                             profileImage: user.profileImage,
+                            description:user.description
                         }
                     })
                 }
@@ -161,7 +160,7 @@ module.exports = {
         const userId = req.userData.id; // Use the data from the middleware
 
         User.findById(userId)
-            .select('name email subject seniority profileImage') // Select the fields you want to retrieve
+            .select('name email subject profileImage description') // Select the fields you want to retrieve
             .exec()
             .then(user => {
                 if (!user) {
@@ -175,7 +174,7 @@ module.exports = {
     },
     getAllUsers: (req, res) => {
         User.find()
-            .select('email profileImage') // בחר את השדות שתרצה להחזיר
+            .select('_id email profileImage name subject description') // בחר את השדות שתרצה להחזיר
             .exec()
             .then(users => {
                 if (!users || users.length === 0) {
@@ -185,6 +184,10 @@ module.exports = {
                 const formattedUsers = users.map(user => ({
                     email: user.email,
                     profileImage: user.profileImage,
+                    name:user.name,
+                    subject:user.subject,
+                    _id:user._id,
+                    description:user.description
                 }));
 
                 res.status(200).json({ message: 'Users retrieved successfully', users: formattedUsers });
@@ -193,6 +196,23 @@ module.exports = {
                 res.status(500).json({ error: 'Server error' });
             });
     }
-    
+    ,
+    updateDescription: (req, res) => {
+        const userId = req.query.id;
+        const { description } = req.body;
+
+        User.findByIdAndUpdate(userId, { description: description }, { new: true })
+            .select('description') // החזרת השדות שאתה רוצה
+            .exec()
+            .then(user => {
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+                res.status(200).json({ message: 'Description updated successfully', user: user });
+            })
+            .catch(err => {
+                res.status(500).json({ error: 'Server error' });
+            });
+    }
 }
 

@@ -1,6 +1,6 @@
-import { Component,OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NewService } from '../new.service';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProductStepperComponent } from '../product-stepper/product-stepper.component';
 import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { FileUploader } from 'ng2-file-upload';
@@ -11,8 +11,8 @@ import {
   DayPilot,
   DayPilotCalendarComponent,
   DayPilotMonthComponent,
-  DayPilotNavigatorComponent
-} from "@daypilot/daypilot-lite-angular";
+  DayPilotNavigatorComponent,
+} from '@daypilot/daypilot-lite-angular';
 import { DataService } from '../data.service';
 import { DeleteItemComponent } from '../delete-item/delete-item.component';
 
@@ -20,135 +20,95 @@ import { DeleteItemComponent } from '../delete-item/delete-item.component';
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
-  providers: [MessageService]
-
- 
+  providers: [MessageService],
 })
-export class UserProfileComponent  {
-  //האם ניתן למחוק משתנה זה?
-  // date: Date | undefined;
+export class UserProfileComponent {
   value!: number;
-  lesson_title: string | undefined;
-  category: string | undefined;
-  description: string | undefined;
-  price: string | undefined;
-  _id:any
   productsArray: any;
-  userProfile = JSON.parse(localStorage.getItem('userProfile'));
-  form:NgForm;
+  userProfile :any;
+  form: NgForm;
+  inputValue: string = '';
+  message = '';
+  isButtonsVisible: boolean = false;
+  responsiveOptions: any[] | undefined;
+
   
-isContentEditable = false;
-errorMessage='';
-message='';
-isButtonsVisible: boolean = false;
-responsiveOptions: any[] | undefined;
-
-
-
-// description: new FormControl('', Validators.maxLength(2)) 
-
-  constructor (private newService:NewService,public dialog: MatDialog,private messageService: MessageService,
-    public confirmDialog:MatDialog) {
+  constructor(
+    private newService: NewService,
+    public dialog: MatDialog,
+    private messageService: MessageService,
+    public confirmDialog: MatDialog
+  ) {}
+  showSuccess() {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Message Content',
+    });
   }
-showSuccess() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Message Content' });
-}
- 
-openProductStepper() {
-  const dialogRef = this.dialog.open(ProductStepperComponent,{
-    
-    data:{
-      displayPart: 'part1' // כאן אתה יכול לקבוע איזה חלק מהקומפוננטה להציג
-    }
-    
-  });
-  
 
-  // const dialogRef2 = this.dialog.open(ProductStepperComponent,{
-  //   autoFocus: false,
-  //     hasBackdrop: false,
-  //     // panelClass: 'custom-container', // הוספת קלאס לתיבת הדיאלוג
-  //     position: {
-  //       bottom: '25px', 
-  //       right:`calc(50% - 750px)`,
-  //     },
-  //     data:{
-  //       displayPart: 'part2' // כאן אתה יכול לקבוע איזה חלק מהקומפוננטה להציג
-  //     }
-  // });
-
-  dialogRef.afterClosed().subscribe(result => {
-    // dialogRef2.close();
-    console.log(`Dialog result: ${result}`);
-  });
-}
-
-ngOnInit(){
-  this.responsiveOptions = [
-    {
-        breakpoint: '1199px',
-        numVisible: 1,
-        numScroll: 1
-    },
-    {
-        breakpoint: '991px',
-        numVisible: 2,
-        numScroll: 1
-    },
-    {
-        breakpoint: '767px',
-        numVisible: 1,
-        numScroll: 1
-    }
-];
-
-  const userId=localStorage.getItem('userId');
-  this.newService.getProduct(userId).subscribe((data)=>{
-    console.log('Response:', data);
-
-    //שמירה לתוך משתנה מערך לוקאלי
-    localStorage.setItem('productsArray', JSON.stringify(data.product));
-    // localStorage.setItem('product_image', JSON.stringify(data.product_image));
-    // const product_image=localStorage.getItem('product_image');
-
-    window.dispatchEvent(new Event('localArrayUpdated'));
-    this.productsArray = JSON.parse(localStorage.getItem('productsArray') || '[]');
-    // האזנה לאירוע
-    window.addEventListener('productsArrayUpdated', () => {
-    this.productsArray = JSON.parse(localStorage.getItem('productsArray') || '[]');
+  openProductStepper() {
+    const dialogRef = this.dialog.open(ProductStepperComponent, {
+      data: {
+        displayPart: 'part1', // כאן אתה יכול לקבוע איזה חלק מהקומפוננטה להציג
+      },
     });
 
-    // this.messages = [{ severity: 'success', summary: 'Success', detail: 'Message Content' }];
+    dialogRef.afterClosed().subscribe((result) => {
+      // dialogRef2.close();
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
-  },
-  (error)=>{
-    console.error('Error:',error.error.message);
-  })
-}
+  ngOnInit() {
+    this.responsiveOptions = [
+      {
+        breakpoint: '1199px',
+        numVisible: 1,
+        numScroll: 1,
+      },
+      {
+        breakpoint: '991px',
+        numVisible: 2,
+        numScroll: 1,
+      },
+      {
+        breakpoint: '767px',
+        numVisible: 1,
+        numScroll: 1,
+      },
+    ];
 
-// deleteProduct(_id:any):void{
-//     this.newService.deleteProduct(_id).subscribe((data)=>{
-//       console.log('_id',_id)
-//     console.log('Response:', data);
-//     window.location.reload(); // רענון העמוד
-//   },
-//   (error)=>{
-//     console.error('Error:',error.error.message);
-//   })
-//  }
+    this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
+    // האזנה לאירוע
+    window.addEventListener('userProfileUpdated', () => {
+    this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
+    });
 
- 
- validationMessages = {
-  description: [
-    { type: 'maxlength', message: 'שדה התיאור יכול להכיל עד 2 תווים' }
-  ],}
+
+    const userId = localStorage.getItem('userId');
+    this.newService.getProduct(userId).subscribe(
+      (data) => {
+        console.log('Response:', data);
+        this.productsArray=data.product
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+      }
+    );
+  }
+
+  validationMessages = {
+    description: [
+      { type: 'maxlength', message: 'שדה התיאור יכול להכיל עד 2 תווים' },
+    ],
+  };
 
   toggleButtonsVisibility() {
     this.isButtonsVisible = !this.isButtonsVisible;
   }
 
-  openProductsEditDialog(product: any,userProfile:any): void {
-    
+  openProductsEditDialog(product: any, userProfile: any): void {
     const dialogRef = this.dialog.open(ProductsEditDialogComponent, {
       width: '300px',
       height: '640px',
@@ -156,40 +116,47 @@ ngOnInit(){
       data: {
         product: product,
         userProfile: userProfile,
-        displayPart: 'part1' 
-      }
-      
-    }); 
+        displayPart: 'part1',
+      },
+    });
 
     const dialogRef2 = this.dialog.open(ProductsEditDialogComponent, {
       autoFocus: false,
       hasBackdrop: false,
       // panelClass: 'custom-container', // הוספת קלאס לתיבת הדיאלוג
       position: {
-        bottom: '25px', 
-        right:`calc(50% - 250px)`,
+        bottom: '25px',
+        right: `calc(50% - 250px)`,
       },
       data: {
         product: product,
         userProfile: userProfile,
-        displayPart: 'part2' 
-      }
+        displayPart: 'part2',
+      },
     });
 
-      dialogRef.afterClosed().subscribe(result => {
-        dialogRef2.close();
+    dialogRef.afterClosed().subscribe((result) => {
+      dialogRef2.close();
       console.log('The dialog was closed');
     });
-
   }
-// אישור מחיקה
-  confirm(product: any){
-  const confirmDialog= this.dialog.open(DeleteItemComponent,{
-    
-    data: { product: product },
-    panelClass: 'delete-item-dialog'
-  })
- }
-
+  // אישור מחיקה
+  confirm(product: any) {
+    const confirmDialog = this.dialog.open(DeleteItemComponent, {
+      data: { product: product },
+      panelClass: 'delete-item-dialog',
+    });
+  }
+  save() {
+    const data = { description: this.inputValue };
+    const userId = localStorage.getItem('userId');
+    this.newService.updateDescription(userId, data).subscribe(
+      (response) => {
+        console.log('Data updated', response);
+      },
+      (error) => {
+        console.error('Error updating data', error);
+      }
+    );
+  }
 }
-

@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -16,6 +17,9 @@ export class LoginDialogComponent {
 myLoginForm:FormGroup;
 errorMessage='';
 
+private usersSubject = new Subject<any[]>();
+  users$ = this.usersSubject.asObservable();
+  
 constructor(private http: HttpClient,
   private newService: NewService,
   public dialog: MatDialog,
@@ -33,10 +37,10 @@ constructor(private http: HttpClient,
     this.newService.Login(body).subscribe(
       (data) => {
         console.log('Response:', data);
-
         localStorage.setItem('token', data.token);
         localStorage.setItem('userId', data.userId);
         localStorage.setItem('userProfile', JSON.stringify(data.user));
+        
         window.dispatchEvent(new Event('userProfileUpdated')); //פותח אירוע כדי שיהיה אפשרות להאזנה במקום אחר 
 
         this.dialog.closeAll();

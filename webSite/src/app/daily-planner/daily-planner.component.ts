@@ -67,6 +67,10 @@ export class DailyPlannerComponent {
         text: 'next',
         click: this.handleNextClick.bind(this),
       },
+      today: {
+        text: 'today',
+        click: this.handleTodayClick.bind(this),
+      },
     },
     initialView: 'dayGridMonth',
     editable: true,
@@ -85,6 +89,13 @@ export class DailyPlannerComponent {
       '.fc-prev-button'
     ) as HTMLButtonElement;
     this.prevButton.disabled = true;
+  }
+  handleTodayClick() {
+    const calendarApi = this.calendarComponent.getApi();
+    calendarApi.today();
+    this.CalendarCounter = 0;
+    this.prevButton.disabled = true;
+    this.nextButton.disabled = false;
   }
   handlePrevClick() {
     const calendarApi = this.calendarComponent.getApi();
@@ -172,15 +183,12 @@ export class DailyPlannerComponent {
 
     this.newService.getLessonByTeacher(this.product.userId).subscribe(
       (data) => {
-        console.log('is my date is start or end?', data);
         for (let index = 0; index < data.lesson.length; index++) {
           const startDate = new Date(data.lesson[index].myDate);
 
           const newDate = {
             start: new Date(data.lesson[index].myDate),
-            end: new Date(
-              startDate.getTime() + data.lesson[index].length * 60000
-            ),
+            end: new Date(data.lesson[index].endDate),
           };
 
           this.takenLessonArray.push(newDate);
@@ -213,6 +221,17 @@ export class DailyPlannerComponent {
         this.teacherAvailabilityArray[index].start.getDay() ===
         this.myDate.getDay()
       ) {
+        this.teacherAvailabilityArray[index].start.setFullYear(
+          this.myDate.getFullYear(),
+          this.myDate.getMonth(),
+          this.myDate.getDate()
+        );
+        this.teacherAvailabilityArray[index].end.setFullYear(
+          this.myDate.getFullYear(),
+          this.myDate.getMonth(),
+          this.myDate.getDate()
+        );
+
         this.newObjArray.push(this.teacherAvailabilityArray[index]);
       }
     }
@@ -226,72 +245,68 @@ export class DailyPlannerComponent {
         this.dailyTakenArray.push(this.takenLessonArray[index]);
       }
     }
+
     this.removeOverlappingTimes();
   }
 
   removeOverlappingTimes() {
-    console.log('הזמנים הפנויים', this.newObjArray);
-    console.log('השיעורים התפוסים', this.dailyTakenArray);
-
     let updatedArray2: any[] = [];
-    this.newObjArray.forEach((event) => {
+    let eventsToCheck = [...this.newObjArray];
+
+    for (let i = 0; i < eventsToCheck.length; i++) {
+      let event = eventsToCheck[i];
       let eventStart = new Date(event.start);
       let eventEnd = new Date(event.end);
 
       this.dailyTakenArray.forEach((removeEvent) => {
         const removeStart = new Date(
-          event.start.getFullYear(),
-          event.start.getMonth(),
-          event.start.getDay(),
-          removeEvent.start.getHours(),
-          removeEvent.start.getMinutes()
+          new Date(removeEvent.start.getTime() - 15 * 60000)
         );
         const removeEnd = new Date(
-          event.end.getFullYear(),
-          event.end.getMonth(),
-          event.end.getDay(),
-          removeEvent.end.getHours(),
-          removeEvent.end.getMinutes()
+          new Date(removeEvent.end.getTime() + 15 * 60000)
         );
 
-        // if (removeEnd <= eventStart || removeStart >= eventEnd) {
-        //   // No overlap
-        //   return;
-        // }
-
-        if (removeStart <= eventStart && removeEnd < eventEnd) {
-          console.log('removeStart <= eventStart && removeEnd < eventEnd');
+        if (
+          removeStart <= eventStart &&
+          removeEnd < eventEnd &&
+          removeEnd > eventStart
+        ) {
           // Overlap at the beginning
           eventStart = removeEnd;
-        } else if (removeStart > eventStart && removeEnd >= eventEnd) {
-          console.log('removeStart > eventStart && removeEnd >= eventEnd');
+        } else if (
+          removeStart > eventStart &&
+          removeEnd >= eventEnd &&
+          removeStart < eventEnd
+        ) {
           // Overlap at the end
           eventEnd = removeStart;
         } else if (removeStart > eventStart && removeEnd < eventEnd) {
-          console.log('removeStart > eventStart && removeEnd < eventEn');
           // Overlap in the middle
-          updatedArray2.push({
-            start: eventStart,
-            end: removeStart,
+          eventsToCheck.push({
+            start: removeEnd,
+            end: eventEnd,
           });
-          eventStart = removeEnd;
+          eventEnd = removeStart;
         } else if (removeStart <= eventStart && removeEnd >= eventEnd) {
-          console.log('removeStart <= eventStart && removeEnd >= eventEnd');
           // Whole event is overlapped
           eventStart = eventEnd; // This will skip adding the event
         }
       });
+      const eventDuration = (eventEnd.getTime() - eventStart.getTime()) / 60000; // אורך השיעור בדקות
 
-      if (eventStart < eventEnd) {
+      if (eventDuration >= this.product.length) {
         updatedArray2.push({
           start: new Date(eventStart),
           end: new Date(eventEnd),
         });
       }
-    });
+    }
+
+    if (updatedArray2.length === 0) {
+      this.isTaken = true;
+    } else this.isTaken = false;
 
     this.newObjArray = updatedArray2;
-    console.log('הזמנים הפנויים אחרי מחיקת השיעורים התפוסים', updatedArray2);
     this.calculatePossibleLessons(this.newObjArray);
   }
 
@@ -341,18 +356,6 @@ export class DailyPlannerComponent {
         this.lessonsArray.push(newTime);
       }
     });
-    // this.dailyTakenArray.forEach((person) => {
-    //   for (let index = this.lessonsArray.length - 1; index >= 0; index--) {
-    //     if (
-    //       this.lessonsArray[index] == this.datePipe.transform(person, 'HH:mm')
-    //     ) {
-    //       this.lessonsArray.splice(index, 1);
-    //       if (this.lessonsArray.length == 0) {
-    //         this.isTaken = true;
-    //       } else this.isTaken = false;
-    //     }
-    //   }
-    // });
 
     this.lessonsArray.forEach((person) => {
       this.comparisonArray.push(person);
@@ -401,7 +404,6 @@ export class DailyPlannerComponent {
       })
       .subscribe(
         (data) => {
-          console.log('date:', this.myDate);
           console.log('Response:', data);
           this.dialogClosed.emit();
           this.dialog.closeAll();

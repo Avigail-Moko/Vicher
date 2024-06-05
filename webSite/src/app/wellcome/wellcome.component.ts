@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { NewService } from '../new.service';
-import { DataViewModule } from 'primeng/dataview';
 import { HttpClient } from '@angular/common/http';
-import { CalendarComponent } from '../calendar/calendar.component';
 import { DailyPlannerComponent } from '../daily-planner/daily-planner.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Message, MessageService } from 'primeng/api';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-wellcome',
@@ -14,6 +13,7 @@ import { Message, MessageService } from 'primeng/api';
 })
 export class WellcomeComponent {
   AllproductsArray: any;
+  AllusersArray: any;
   responsiveOptions: any[] | undefined;
   messages: Message[] | undefined;
   userId = localStorage.getItem('userId');
@@ -22,11 +22,11 @@ export class WellcomeComponent {
     private newService: NewService,
     private http: HttpClient,
     public dialog: MatDialog,
-    public messageService: MessageService
+    public messageService: MessageService,
+    public router: Router
   ) {}
 
-  // product: any[] = [];
-  // productsArray: any;
+
 
   ngOnInit() {
     this.responsiveOptions = [
@@ -47,43 +47,20 @@ export class WellcomeComponent {
       },
     ];
 
-    // this.newService.getAllProduct().subscribe(
-    //   (data) => {
-    //     this.product = data['product']; // אני מניח פה שהמידע מתקבל בתוך אובייקט והמערך נמצא ב- data.users
-    //     console.log('product:', data); // לשים לב - כאן אני מדפיס את הנתונים שחזרו מהשרת לקונסולה
-
-    //     window.dispatchEvent(new Event('localArrayUpdated'));
-    //     this.productsArray = JSON.parse(localStorage.getItem('productsArray') || '[]');
-    //     // האזנה לאירוע
-    //     window.addEventListener('productsArrayUpdated', () => {
-    //     this.productsArray = JSON.parse(localStorage.getItem('productsArray') || '[]');
-    //     });
-    //   },
-    //   (error) => {
-    //     console.error('Error:', error);
-    //   }
-    // );
     this.newService.getAllProduct().subscribe(
       (data) => {
         console.log('Response:', data);
+        this.AllproductsArray = data.product;
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+      }
+    );
 
-        //שמירה לתוך משתנה מערך לוקאלי
-        localStorage.setItem('AllproductsArray', JSON.stringify(data.product));
-        // localStorage.setItem('product_image', JSON.stringify(data.product_image));
-        // const product_image=localStorage.getItem('product_image');
-
-        window.dispatchEvent(new Event('localArrayUpdated'));
-        this.AllproductsArray = JSON.parse(
-          localStorage.getItem('AllproductsArray') || '[]'
-        );
-        // האזנה לאירוע
-        window.addEventListener('AllproductsArrayUpdated', () => {
-          this.AllproductsArray = JSON.parse(
-            localStorage.getItem('AllproductsArray') || '[]'
-          );
-        });
-
-        // this.messages = [{ severity: 'success', summary: 'Success', detail: 'Message Content' }];
+    this.newService.getAllUsers().subscribe(
+      (data) => {
+        console.log('Response:', data);
+        this.AllusersArray = data.users;
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -91,8 +68,8 @@ export class WellcomeComponent {
     );
   }
 
-  dailyPlanner(product: any) {
-    if (this.userId != product.userId) {
+  openDailyPlanner(product: any) {
+    if (this.userId && this.userId != product.userId) {
       const dialogRef = this.dialog.open(DailyPlannerComponent, {
         width: '650px',
         height: '650px',
@@ -110,6 +87,12 @@ export class WellcomeComponent {
           detail: `Your Lesson's details have saved successfully! An email will sent to you in a few minutes.`,
         });
       });
+    } else if (!this.userId) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Attention!',
+        detail: `Before dating a lesson, you must first log in. Please log in to proceed with dating a lesson.`,
+      });
     } else {
       this.messageService.add({
         severity: 'error',
@@ -117,5 +100,13 @@ export class WellcomeComponent {
         detail: `There is no option to date a lesson to your own products.`,
       });
     }
+  }
+  openUserView(userProfile: any[]) {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        exampleData: userProfile,
+      },
+    };
+    this.router.navigate(['/user-view'], navigationExtras);
   }
 }

@@ -71,7 +71,6 @@ export class NewService {
   }
   updateProduct(_id: any, values: any): Observable<any> {
     const url = `http://localhost:3000/products/updateProduct?_id=${_id}`;
-    console.log(values, 'this is the service');
     return this.http.patch(url, values);
   }
 
@@ -94,7 +93,6 @@ export class NewService {
         // alert('Wellcome ');
       }
     }
-
     return !isTokenExpired;
   }
 
@@ -124,4 +122,9 @@ export class NewService {
   //   const url = `http://localhost:3000/schedule/updateSchedule?teacher_id=${teacher_id}`;
   //   return this.http.patch(url, {objectsArray});
   // }
+  updateDescription(id:any,values:any):Observable<any>{
+    const url = `http://localhost:3000/users/updateDescription?id=${id}`;
+    console.log('im updating the description:',values)
+    return this.http.patch(url,values);
+  }
 }

@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+
 mongoose.connect(
   `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.5rd1vlt.mongodb.net/?retryWrites=true&w=majority`,
   {

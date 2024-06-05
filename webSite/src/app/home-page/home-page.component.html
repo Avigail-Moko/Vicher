@@ -17,11 +17,11 @@
 
   <!-- tab menu -->
   <!-- כרגע משאירה בהערה-אין תוכן רלוונטי לאיזור זה בעמוד. בהמשך ניתן להכניס כאן ערכים -->
-  <mat-toolbar *ngIf="newService.isAuthenticated()" class="mt-7 p-0"  >
+  <mat-toolbar  class="mt-7 p-0"  >
         <p-tabMenu class="tabMenu "  [model]="items" (activeItemChange)="onActiveItemChange($event)"></p-tabMenu>
   </mat-toolbar> 
 
-  <router-outlet *ngIf="newService.isAuthenticated()"></router-outlet>
+  <router-outlet></router-outlet>
   <mat-drawer #drawer  class="example-sidenav" mode="over" position="end"  *ngIf="newService.isAuthenticated()">
       <mat-card class="example-card">
         <!-- הוספתי תנאי עבור ראש הכרטיס הזה כדי למנוע שגיאות בזמן הרצה -->
