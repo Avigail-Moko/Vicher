@@ -71,13 +71,11 @@ export class WellcomeComponent {
   openDailyPlanner(product: any) {
     if (this.userId && this.userId != product.userId) {
       const dialogRef = this.dialog.open(DailyPlannerComponent, {
-        width: '650px',
-        height: '650px',
+        // width: '95%',
+        // height: '650px',
         data: {
-          product: product,
-          padding: '3px',
+          product: product
         },
-        panelClass: 'daily-planner', // הוספת קלאס לסגנון נוסף
       });
 
       dialogRef.componentInstance.dialogClosed.subscribe(() => {

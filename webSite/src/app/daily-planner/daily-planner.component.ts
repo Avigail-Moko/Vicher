@@ -41,6 +41,9 @@ export class DailyPlannerComponent {
   CalendarCounter: number = 0;
   nextButton: HTMLButtonElement;
   prevButton: HTMLButtonElement;
+  timeRanges: string[] = ['morning', 'noon', 'afternoon', 'evening'];
+  appointmentGuid: number = 1;
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -202,6 +205,7 @@ export class DailyPlannerComponent {
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
+    this.appointmentGuid=2
     this.dailyTakenArray = [];
     this.selectedLesson = null;
     this.newObjArray = [];
@@ -361,6 +365,21 @@ export class DailyPlannerComponent {
       this.comparisonArray.push(person);
     });
   }
+  getTimeOfDay(lesson: string): string {
+    const hour = +lesson.split(':')[0];
+    if (hour >= 0 && hour < 6) {
+        return 'morning';
+    } else if (hour >= 6 && hour < 12) {
+        return 'noon';
+    } else if (hour >= 12 && hour < 18) {
+        return 'afternoon';
+    } else {
+        return 'evening';
+    }
+}
+areThereLessonsInTimeRange(timeRange: string): boolean {
+  return this.lessonsArray.some(lesson => this.getTimeOfDay(lesson) === timeRange);
+}
 
   isSelected(lesson: string): boolean {
     return this.selectedLesson === lesson;

@@ -8,12 +8,49 @@
 // ספק אם נצרך
  full-calendar   {
     display: block;
-    width: 100%; 
-    height: 500px; /* או גובה נדרש */
+    margin-top: 15px;
+    min-width: 550px; 
+    // height: 800px; /* או גובה נדרש */
 }
 
 ::ng-deep .fc .fc-non-business {
   background: hsla(0, 5%, 29%, 0.621);
 }
+
+
+// 00
+
+
+.profileImage{
+  border-radius: 50%;
+  width: 50%;
+}
+
+.product-card{
+background-color:var(--surface-900);
+border:1px solid var(--surface-800);
+border-radius:20px;
+width: 220px;
+min-width: 220px;
+height: 480px;
+}
+
+.header-image{
+width: 100%;
+height: 200px;
+border-radius: 20px;
+padding: 10px ;
+}
+
+.content-image {
+background-size: cover;
+margin: 0;
+height: 32px;
+width: 32px;
+}
+
+
+
+
 
 
