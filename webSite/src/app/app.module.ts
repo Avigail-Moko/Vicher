@@ -57,6 +57,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { UserViewComponent } from './user-view/user-view.component';  
+import { BadgeModule } from 'primeng/badge';
 
 
 @NgModule({
@@ -80,6 +81,7 @@ import { UserViewComponent } from './user-view/user-view.component';
     AvailabilityScheduleComponent,
     BecomingsellerComponent,
     UserViewComponent,
+    
   ],
   providers: [
     MessageService,
@@ -141,7 +143,7 @@ import { UserViewComponent } from './user-view/user-view.component';
     CarouselModule,
     FieldsetModule,
     MessagesModule,
-  
+    BadgeModule
   ],
 })
 export class AppModule {}

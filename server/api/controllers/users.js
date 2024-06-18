@@ -160,7 +160,7 @@ module.exports = {
         const userId = req.userData.id; // Use the data from the middleware
 
         User.findById(userId)
-            .select('name email subject profileImage description') // Select the fields you want to retrieve
+            .select('name email subject profileImage description _id') // Select the fields you want to retrieve
             .exec()
             .then(user => {
                 if (!user) {

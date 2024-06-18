@@ -7,6 +7,8 @@ import { ProductsEditDialogComponent } from '../products-edit-dialog/products-ed
 import { MessageService } from 'primeng/api';
 import { DeleteItemComponent } from '../delete-item/delete-item.component';
 import { Router } from '@angular/router';
+import { DailyPlannerComponent } from '../daily-planner/daily-planner.component';
+import { Message } from 'primeng/api';
 
 @Component({
   selector: 'app-user-view',
@@ -30,6 +32,7 @@ export class UserViewComponent {
   message = '';
   responsiveOptions: any[] | undefined;
   userProfile:any
+  userId = localStorage.getItem('userId');
 
 
   // description: new FormControl('', Validators.maxLength(2))
@@ -81,5 +84,35 @@ export class UserViewComponent {
           });
   }
 
+  openDailyPlanner(product: any) {
+    if (this.userId && this.userId != product.userId) {
+      const dialogRef = this.dialog.open(DailyPlannerComponent, {
+        // width: '95%',
+        // height: '650px',
+        data: {
+          product: product
+        },
+      });
 
+      dialogRef.componentInstance.dialogClosed.subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `Your Lesson's details have saved successfully! An email will sent to you in a few minutes.`,
+        });
+      });
+    } else if (!this.userId) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Attention!',
+        detail: `Before dating a lesson, you must first log in. Please log in to proceed with dating a lesson.`,
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Attention!',
+        detail: `There is no option to date a lesson to your own products.`,
+      });
+    }
+  }
   }

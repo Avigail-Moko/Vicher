@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Lesson = require('../models/lessons');
-
+const {createNote} = require('./notification')
 
 module.exports={
     createLesson:(req,res)=>{
@@ -27,6 +27,11 @@ module.exports={
                 message: 'lesson not saved',
             });
         });
+        createNote(myDate, 
+            endDate,
+            teacher_id, 
+            student_id,
+            product_id);
     },
 
 getLesson: (req,res)=>{

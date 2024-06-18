@@ -127,4 +127,8 @@ export class NewService {
     console.log('im updating the description:',values)
     return this.http.patch(url,values);
   }
+  getNote(userId:any):Observable<any>{
+const url=`http://localhost:3000/notification/getNote?userId=${userId}`;
+return this.http.get(url)
+  }
 }
