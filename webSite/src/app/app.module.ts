@@ -1,21 +1,17 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomePageComponent } from './home-page/home-page.component';
-// import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { SignupDialogComponent } from './signup-dialog/signup-dialog.component';
-import { NewClientComponent } from './new-client/new-client.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   GoogleSigninButtonModule,
   SocialAuthServiceConfig,
   SocialLoginModule,
 } from '@abacritt/angularx-social-login';
-// import { GoogleSigninComponent } from './google-signin/google-signin.component';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
@@ -51,23 +47,20 @@ import { CarouselModule } from 'primeng/carousel';
 import { FieldsetModule } from 'primeng/fieldset';
 import { DeleteItemComponent } from './delete-item/delete-item.component';
 import { AvailabilityScheduleComponent } from './availability-schedule/availability-schedule.component';
-import { BecomingsellerComponent } from './becomingseller/becomingseller.component';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { UserViewComponent } from './user-view/user-view.component';  
 import { BadgeModule } from 'primeng/badge';
-
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomePageComponent,
-    // NavBarComponent,
     SignupDialogComponent,
     LoginDialogComponent,
-    NewClientComponent,
     UserProfileComponent,
     WellcomeComponent,
     ProductStepperComponent,
@@ -75,11 +68,9 @@ import { BadgeModule } from 'primeng/badge';
     ProductsEditDialogComponent,
     CalendarComponent,
     DailyPlannerComponent,
-    // GoogleSigninComponent,
     CalendarComponent,
     DeleteItemComponent,
     AvailabilityScheduleComponent,
-    BecomingsellerComponent,
     UserViewComponent,
     
   ],
@@ -143,7 +134,10 @@ import { BadgeModule } from 'primeng/badge';
     CarouselModule,
     FieldsetModule,
     MessagesModule,
-    BadgeModule
+    BadgeModule,
+    OverlayPanelModule,
+    TagModule,
+  
   ],
 })
 export class AppModule {}

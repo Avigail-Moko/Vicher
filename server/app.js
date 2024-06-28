@@ -17,8 +17,7 @@ mongoose.connection.on("connected", () => {
   console.log("MongoDB Connected!");
 });
 
-const articalesRoutes = require("./api/routes/articales");
-const categoryRoutes = require("./api/routes/categories");
+
 const usersRoutes = require("./api/routes/users");
 const productsRoutes = require("./api/routes/products");
 const lessonsRoutes = require("./api/routes/lessons");
@@ -54,8 +53,7 @@ app.use(
 
 
 //Routes
-app.use("/articales", articalesRoutes);
-app.use("/categories", checkAuth, categoryRoutes);
+
 app.use("/users", usersRoutes);
 app.use("/products", productsRoutes);
 app.use("/lessons", lessonsRoutes);

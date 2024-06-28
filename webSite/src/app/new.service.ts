@@ -2,40 +2,84 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { SocketService } from './socket.service';
+import { tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NewService {
-  private currentUser: any;
-
-  private divsSource = new BehaviorSubject<any[]>([]);
-
-  divs$ = this.divsSource.asObservable();
-
+  private authStatusListener = new Subject<boolean>();
   private previousAuthenticationState: boolean = true; // המשתנה הזה ישמור את המצב הקודם של ההתחברות
 
-  public isAuthenticatedSubject = new Subject<boolean>();
+  constructor(
+    private http: HttpClient,
+    private jwtHelper: JwtHelperService,
+    private socketService: SocketService,
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
 
-  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {}
+  getAuthStatusListener() {
+    return this.authStatusListener.asObservable();
+  }
 
-  // addDiv(div: any) {
-  //   const currentDivs = this.divsSource.getValue();
-  //   const newDivs = [...currentDivs, div];
-  //   this.divsSource.next(newDivs);
-  // }
+  isAuthenticated(): boolean {
+    const token = localStorage.getItem('token');
+    const isTokenExpired = this.jwtHelper.isTokenExpired(token || '');
 
+    
+    if (isTokenExpired !== this.previousAuthenticationState) {
+      this.previousAuthenticationState = isTokenExpired;
+
+      if (isTokenExpired) {
+        this.logout();
+        this.socketService.disconnect();
+        // alert('Good bye');
+      } else {
+        this.socketService.connect();
+        // alert('Wellcome ');
+      }
+    }
+    return !isTokenExpired;
+  }
+
+
+  Login(values: any): Observable<any> {
+    const url = 'http://localhost:3000/users/login';
+    return this.http.post(url, values).pipe(
+      tap((data: any) => {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('userProfile', JSON.stringify(data.user));
+
+        this.authStatusListener.next(true); // עדכון על התחברות
+      })
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userProfile');
+    this.dialog.closeAll();
+    this.router.navigate(['']);
+    // window.location.reload();
+
+    this.authStatusListener.next(false); // עדכון על התנתקות
+  }
+
+ 
   Signup(values: any): Observable<any> {
     const url = 'http://localhost:3000/users/signup';
     return this.http.post(url, values);
   }
-  Login(values: any): Observable<any> {
-    const url = 'http://localhost:3000/users/login';
-    return this.http.post(url, values);
-  }
+
 
   getUserProfile(): Observable<any> {
-    const url = 'http://localhost:3000/users/profile';
+    const url = 'http://localhost:3000/users/getProfile';
     const token = localStorage.getItem('token');
     let headers = new HttpHeaders();
     if (token) {
@@ -74,36 +118,15 @@ export class NewService {
     return this.http.patch(url, values);
   }
 
-  isAuthenticated(): boolean {
-    const token = localStorage.getItem('token');
-    const isTokenExpired = this.jwtHelper.isTokenExpired(token || '');
-
-    if (isTokenExpired !== this.previousAuthenticationState) {
-      this.previousAuthenticationState = isTokenExpired;
-
-      if (isTokenExpired) {
-        window.dispatchEvent(new Event('userTokenExpired'));
-        localStorage.removeItem('userProfile');
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('localArray');
-        location.reload();
-        // alert('Good bye');
-      } else {
-        // alert('Wellcome ');
-      }
-    }
-    return !isTokenExpired;
-  }
-
   createLesson(values: any) {
     const url = 'http://localhost:3000/lessons/createLesson';
     return this.http.post(url, values);
   }
   getLessonByTeacher(teacher_id: any): Observable<any> {
-    const url = `http://localhost:3000/lessons/getLesson?teacher_id=${teacher_id}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
+    const url = `http://localhost:3000/lessons/getLesson?teacher_id=${teacher_id}`;
     return this.http.get(url);
   }
+  // שים לב !!!!!!!
   // במידה ומוחקים את הקוד הזה יש לעדכן בשרת שאין צורך בבדיקה גם של
   // productId וגם teacher_id
   // getLessonByProduct(product_id: any): Observable<any> {
@@ -118,17 +141,21 @@ export class NewService {
     const url = `http://localhost:3000/schedule/getSchedule?teacher_id=${teacher_id}`;
     return this.http.get(url);
   }
-  // updateSchedule(teacher_id:any,objectsArray: any){
-  //   const url = `http://localhost:3000/schedule/updateSchedule?teacher_id=${teacher_id}`;
-  //   return this.http.patch(url, {objectsArray});
-  // }
-  updateDescription(id:any,values:any):Observable<any>{
+  updateDescription(id: any, values: any): Observable<any> {
     const url = `http://localhost:3000/users/updateDescription?id=${id}`;
-    console.log('im updating the description:',values)
-    return this.http.patch(url,values);
+    console.log('im updating the description:', values);
+    return this.http.patch(url, values);
   }
-  getNote(userId:any):Observable<any>{
-const url=`http://localhost:3000/notification/getNote?userId=${userId}`;
-return this.http.get(url)
+  getNote(userId: any): Observable<any> {
+    const url = `http://localhost:3000/notification/getNote?userId=${userId}`;
+    return this.http.get(url);
+  }
+  deleteNote(_id: any): Observable<any> {
+    const url = `http://localhost:3000/notification/deleteNote?_id=${_id}`;
+    return this.http.delete(url);
+  }
+  markNotificationsAsRead(_id: any): Observable<any> {
+    const url = `http://localhost:3000/notification/markNotificationsAsRead?_id=${_id}`;
+    return this.http.patch(url, {});
   }
 }

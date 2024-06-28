@@ -3,7 +3,6 @@ const Product = require('../models/products');
 
 module.exports={
     createProduct:(req,res)=>{
-            // const { path: image } = req.file; //gets info on file that uploaded
             const { lesson_title, category, price, length, description, userId,userProfileName,userProfileImage } = req.body;
             if (!req.file) {
                 return res.status(400).json({ message: 'לא נבחר קובץ' });
@@ -18,12 +17,10 @@ module.exports={
                 userId,
                 userProfileName,
                 userProfileImage,
-                // image: image.replace('\\','/')
                 image: {
                     filename: req.file.filename,
                     path: req.file.path,
                     src:`http://${req.get('host')}/${req.file.path}`
-                   // ייתכן שתרצי להוסיף גם את שאר המידע שמחזיק multer על הקובץ, כמו size וכו'
                 }
             });
             product.save().then((result) => {

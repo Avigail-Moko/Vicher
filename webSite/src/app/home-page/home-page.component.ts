@@ -17,6 +17,7 @@ import {Observable} from 'rxjs';
 import {startWith, map, switchMap} from 'rxjs/operators';
 import {NgFor, AsyncPipe, DatePipe} from '@angular/common';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { SocketService } from '../socket.service';
 
 
 
@@ -38,28 +39,39 @@ export class HomePageComponent  {
   showFiller = false;
   // user:String;
   // userProfileName=localStorage.getItem('userProfileName');
-  userProfile: any; // המשתנה לשמירת פרטי המשתמש
   alerts: any[] = [];
   toppings = new FormControl('');
 
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+
+  userProfile=JSON.parse(localStorage.getItem('userProfile')); // המשתנה לשמירת פרטי המשתמש
   userId = localStorage.getItem('userId');
+
 
   constructor(public dialog:MatDialog,
     private router: Router,
-    public newService: NewService){
+    public newService: NewService,
+     private socketService: SocketService){
+      this.socketService.alerts$.subscribe(alerts => {
+        this.alerts = alerts;
+      });
     }
 
     ngOnInit() {
-
-      this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
-      // האזנה לאירוע
-      window.addEventListener('userProfileUpdated', () => {
-      this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
+this.getNotifications()
+      this.newService.getAuthStatusListener().subscribe(isAuthenticated => {
+        if (isAuthenticated) {
+          this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
+          this.userId = localStorage.getItem('userId');
+          this.getNotifications();
+        }
+        else{
+          this.userProfile = '';
+          this.userId = '';
+          this.alerts = [];
+        }
       });
-      // this.newService.getAllUsers().subscribe((data)=>{
-      //   this.streets=data
-      // })
+
 
       //searching chart:
       this.filteredUsers = this.control.valueChanges.pipe(
@@ -81,26 +93,21 @@ export class HomePageComponent  {
       // { label: 'Become a Seller', icon: 'pi pi-fw pi-dollar',routerLink:'/seller'},
       ];
     this.activeItem = this.items[0];
-    if(this.newService.isAuthenticated()){
-      this.userId=localStorage.getItem('userId')
-      this.newService.getNote(this.userId).subscribe(
-        (data)=>{
-        // console.log('this first notification:',data.notification[0])
-        for (let index = 0; index < data.notification.length; index++) {
-          this.alerts[index]=data.notification[index]
-          console.log(index,this.alerts[index])
-        }
-      },
-      (error) => {
-        console.error('Error:', error.error.message);
-        this.errorMessage = error.error.message;
-      })
+    // if(this.newService.isAuthenticated()){
+    //   this.userId=localStorage.getItem('userId')
+    //   this.newService.getNote(this.userId).subscribe(
+    //     (data)=>{
+    //     for (let index = 0; index < data.notification.length; index++) {
+    //       this.alerts.unshift(data.notification[index]); // הוספת התראה חדשה בראש המערך
+    //     }
+    //   },
+    //   (error) => {
+    //     console.error('Error:', error.error.message);
+    //     this.errorMessage = error.error.message;
+    //   })
+    // }
     }
-    
-    }
-
  
-
     //searching chart:
     private _filter(users: any[], value: string): string[] {
       const filterValue = this._normalizeValue(value);
@@ -141,11 +148,14 @@ export class HomePageComponent  {
       });
     }
 
-    public logout():void{
-      localStorage.removeItem('token');
-      console.log('התנתקת בהצלחה');
-      this.router.navigate(['']);
-    }
+    // public logout():void{
+    //   localStorage.removeItem('token');
+    //   console.log('התנתקת בהצלחה');
+    //   this.router.navigate(['']);
+    // }
+    // logout(): void {
+    //   this.router.navigate(['']);
+    // }
     @ViewChild('drawer') drawer: MatDrawer;
     
     navigateToUserProfile() {
@@ -160,6 +170,36 @@ export class HomePageComponent  {
     }
     navToAvailabilitySchedule(){
       this.router.navigate(['/availability-schedule'])
+
+    }
+    getNotifications() {
+      this.newService.getNote(this.userId).subscribe(
+        (data)=>{
+        for (let index = 0; index < data.notification.length; index++) {
+          this.alerts.unshift(data.notification[index]); // הוספת התראה חדשה בראש המערך
+        }
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+        this.errorMessage = error.error.message;
+      })
+    }
+    delNote(_id:any){
+      this.newService.deleteNote(_id).subscribe((data)=>{
+        console.log('Response:', data);
+
+      }, (error) => {
+        console.error('Error:', error.error.message);
+        this.errorMessage = error.error.message;
+      })
+    }
+    readNote(_id:any){
+      this.newService.markNotificationsAsRead(_id).subscribe((data)=>{
+        console.log('Response:', data);
+       }, (error) => {
+        console.error('Error:', error.error.message);
+        this.errorMessage = error.error.message;
+      })
 
     }
 }

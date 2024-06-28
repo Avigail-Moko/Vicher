@@ -21,17 +21,52 @@
       >
         Create New Account
       </button>
-       <!-- notification box: -->
-       <i class="pi pi-bell text-xl" pBadge style="font-size: 200px" value="50" *ngIf="newService.isAuthenticated()"></i>
-       <mat-select multiple >
-         <mat-option *ngFor="let alert of alerts" [value]="alert">hi, you have a new lesson at:<pre>{{ alert.myDate | date }}</pre>
-         with:<pre>{{alert.student_id}}</pre>
-         <p *ngIf="userId==alert.teacher_id">teacher</p>
-         <p *ngIf="userId==alert.student_id">student</p>
-         </mat-option>
-       </mat-select>
-       
+      <!-- notification box: -->
       <button
+        mat-icon-button
+        class="mr-3 p-0 pt-1"
+        *ngIf="newService.isAuthenticated()"
+        (click)="op.toggle($event)"
+      >
+        <i
+          class="pi pi-bell"
+          pBadge
+          style="font-size: 30px"
+          [value]="alerts.length.toString()"
+        ></i>
+      </button>
+      <!-- <mat-select multiple > -->
+      <p-overlayPanel #op [style]="{ width: '450px'}">
+        <div *ngFor="let alert of alerts"  >
+          <button
+          (click)="alert.read? delNote(alert._id) : readNote(alert._id)"
+            [color]="alert.read ? 'primary' : 'inherit'"
+            [ngStyle]="{ 'color': alert.read ? 'gray' : 'white' }"
+            [matTooltip]="alert.read ? 'Click to delete' : ''"
+            mat-button
+            class="btn-note"
+            *ngIf="userId == alert.teacher_id" 
+          >
+            New Lesson Alert: A student has scheduled a lesson with you. Check
+            your calendar for details. Happy teaching!
+          </button>
+
+          <button
+          (click)="alert.read? delNote(alert._id) : readNote(alert._id)"
+          [color]="alert.read ? 'primary' : 'inherit'"
+          [ngStyle]="{ 'color': alert.read ? 'gray' : 'white' }"
+          [matTooltip]="alert.read ? 'Click to delete' : ''"
+          mat-button
+            class="btn-note"
+            *ngIf="userId == alert.student_id"
+          >
+            Success! Your lesson has been scheduled. <br />
+            We look forward to seeing you soon
+          </button>
+        </div>
+      </p-overlayPanel>
+
+      <!-- <button
         mat-flat-button
         class="btn"
         color="primary"
@@ -39,26 +74,19 @@
         (click)="logout()"
       >
         <mat-icon>power_settings_new</mat-icon>Log Out
-      </button>
-      
-     
+      </button> -->
 
       <button
         mat-icon-button
-        class="example-icon1"
-        aria-label="Example icon-button with menu icon"
+        class="example-header-image"
+        [style.background-image]="'url(' + userProfile.profileImage + ')'"
         *ngIf="newService.isAuthenticated()"
-        (click)="drawer.open()">
+        (click)="drawer.open()"
+      >
         <mat-icon>menu</mat-icon>
       </button>
-
-       
-
     </mat-toolbar-row>
   </mat-toolbar>
-
- 
-
 
   <!-- הכנה לתיבת חיפוש, להשתמש ב autocomplete -->
   <!-- <mat-toolbar *ngIf="newService.isAuthenticated()" class="toolbar2 mt-7 p-0">
@@ -99,7 +127,6 @@
     *ngIf="newService.isAuthenticated()"
   >
     <mat-card class="example-card">
-      <!-- הוספתי תנאי עבור ראש הכרטיס הזה כדי למנוע שגיאות בזמן הרצה -->
       <mat-card-header *ngIf="userProfile">
         <div
           mat-card-avatar
@@ -110,12 +137,7 @@
           <mat-card-title>{{ userProfile.name }}</mat-card-title>
           <mat-card-subtitle>{{ userProfile.email }}</mat-card-subtitle>
         </div>
-        <button
-          mat-icon-button
-          class="example-icon2"
-          aria-label="Example icon-button with menu icon"
-          (click)="drawer.close()"
-        >
+        <button mat-icon-button (click)="drawer.close()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-card-header>
@@ -164,7 +186,7 @@
       class="btn flex flex-1 mt-4 mx-auto"
       color="primary"
       *ngIf="newService.isAuthenticated()"
-      (click)="logout()"
+      (click)="this.newService.logout()"
     >
       <mat-icon>power_settings_new</mat-icon>Log Out
     </button>

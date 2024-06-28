@@ -1,19 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NewService } from '../new.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ProductStepperComponent } from '../product-stepper/product-stepper.component';
-import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
-import { FileUploader } from 'ng2-file-upload';
+import { NgForm } from '@angular/forms';
 import { ProductsEditDialogComponent } from '../products-edit-dialog/products-edit-dialog.component';
-import { Message } from 'primeng/api';
 import { MessageService } from 'primeng/api';
-import {
-  DayPilot,
-  DayPilotCalendarComponent,
-  DayPilotMonthComponent,
-  DayPilotNavigatorComponent,
-} from '@daypilot/daypilot-lite-angular';
-import { DataService } from '../data.service';
 import { DeleteItemComponent } from '../delete-item/delete-item.component';
 
 @Component({
@@ -25,14 +16,13 @@ import { DeleteItemComponent } from '../delete-item/delete-item.component';
 export class UserProfileComponent {
   value!: number;
   productsArray: any;
-  userProfile :any;
+  userProfile: any;
   form: NgForm;
   inputValue: string = '';
   message = '';
   isButtonsVisible: boolean = false;
   responsiveOptions: any[] | undefined;
 
-  
   constructor(
     private newService: NewService,
     public dialog: MatDialog,
@@ -50,12 +40,11 @@ export class UserProfileComponent {
   openProductStepper() {
     const dialogRef = this.dialog.open(ProductStepperComponent, {
       data: {
-        displayPart: 'part1', // כאן אתה יכול לקבוע איזה חלק מהקומפוננטה להציג
+        displayPart: 'part1',
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      // dialogRef2.close();
       console.log(`Dialog result: ${result}`);
     });
   }
@@ -80,17 +69,13 @@ export class UserProfileComponent {
     ];
 
     this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
-    // האזנה לאירוע
-    window.addEventListener('userProfileUpdated', () => {
-    this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
-    });
-
+    // כאן חסר שינוי בזמן אמת על מנת ש description יתעדכן
 
     const userId = localStorage.getItem('userId');
     this.newService.getProduct(userId).subscribe(
       (data) => {
         console.log('Response:', data);
-        this.productsArray=data.product
+        this.productsArray = data.product;
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -142,7 +127,7 @@ export class UserProfileComponent {
   }
   // אישור מחיקה
   confirm(product: any) {
-    const confirmDialog = this.dialog.open(DeleteItemComponent, {
+    this.dialog.open(DeleteItemComponent, {
       data: { product: product },
       panelClass: 'delete-item-dialog',
     });

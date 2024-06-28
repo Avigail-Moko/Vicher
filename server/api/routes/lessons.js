@@ -8,8 +8,8 @@ router.post('/createLesson', createLesson);
 
 router.get("/getLesson", getLesson);
 
-router.delete("/deleteLesson", deleteLesson);
+// router.delete("/deleteLesson", deleteLesson);
 
-router.patch("/updateLesson", updateLesson);
+// router.patch("/updateLesson", updateLesson);
 
 module.exports = router;

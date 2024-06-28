@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 
@@ -24,7 +23,7 @@ constructor(private http: HttpClient,
   private newService: NewService,
   public dialog: MatDialog,
   private fb: FormBuilder,
-  private router: Router) { 
+) { 
   this.myLoginForm = this.fb.group({
   email: [''],
   password: [''],
@@ -37,14 +36,8 @@ constructor(private http: HttpClient,
     this.newService.Login(body).subscribe(
       (data) => {
         console.log('Response:', data);
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userId', data.userId);
-        localStorage.setItem('userProfile', JSON.stringify(data.user));
-        
-        window.dispatchEvent(new Event('userProfileUpdated')); //פותח אירוע כדי שיהיה אפשרות להאזנה במקום אחר 
-
         this.dialog.closeAll();
-        this.router.navigate(['/user-profile']);
+        // this.router.navigate(['/user-profile']);
       },
       (error) => {
         console.error('Error:', error.error.message);

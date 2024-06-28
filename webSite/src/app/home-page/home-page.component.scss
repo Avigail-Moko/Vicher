@@ -20,7 +20,7 @@ border-radius: 5px;
 width: 94%;
 margin: 3%;
 border-radius: 5px;
-justify-content: flex-start; /* יישור לשמאל */
+justify-content: flex-start; 
 }
 
 // example-icon background-color
@@ -83,4 +83,17 @@ align-items: center;
 .example-input {
   max-width: 100%;
   width: 300px;
+}
+.btn-note{
+border-radius: 5px;
+width: 96%;
+margin:0 2%;
+border-radius: 5px;
+justify-content: flex-start; /* יישור לשמאל */
+height: 70px;
+text-align: left;
+}
+
+::ng-deep .p-overlaypanel {
+  z-index: 999 !important;
 }

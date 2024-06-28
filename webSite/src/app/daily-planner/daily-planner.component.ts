@@ -43,6 +43,7 @@ export class DailyPlannerComponent {
   prevButton: HTMLButtonElement;
   timeRanges: string[] = ['morning', 'noon', 'afternoon', 'evening'];
   appointmentGuid: number = 1;
+  userProfile = JSON.parse(localStorage.getItem('userProfile'));
 
 
   constructor(
@@ -156,6 +157,7 @@ export class DailyPlannerComponent {
   }
 
   ngOnInit() {
+
     this.newService.getSchedule(this.product.userId).subscribe(
       (data) => {
         for (
@@ -413,9 +415,12 @@ areThereLessonsInTimeRange(timeRange: string): boolean {
   }
 
   createLesson() {
+
     this.newService
       .createLesson({
         student_id: this.userId,
+        teacher_name:this.product.userProfileName,
+        student_name:this.userProfile.name,
         product_id: this.product._id,
         teacher_id: this.product.userId,
         length: this.product.length,

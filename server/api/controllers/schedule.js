@@ -62,8 +62,7 @@ module.exports = {
   //     })
   // },
   updateSchedule: (teacher_id,{objectsArray},res) => {
-    //   const teacher_id = req.query.te acher_id;
-      const updateFields  = {objectsArray}; // אובייקט שיכיל את כל השדות שברצונך לעדכן
+      const updateFields  = {objectsArray}; 
 
     Schedule.updateOne({ teacher_id: teacher_id }, { $set:  updateFields  })
       .exec()

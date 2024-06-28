@@ -29,6 +29,14 @@ export class WellcomeComponent {
 
 
   ngOnInit() {
+    this.newService.getAuthStatusListener().subscribe(isAuthenticated => {
+      if (isAuthenticated) {
+        this.userId = localStorage.getItem('userId');
+      }else{
+        this.userId = null;
+      }
+    });
+
     this.responsiveOptions = [
       {
         breakpoint: '1199px',
