@@ -10,7 +10,7 @@ router.post("/createNote", createNote);
 
 router.patch("/markNotificationsAsRead", markNotificationsAsRead);
 
-router.delete("/deleteNote", deleteNote);
+router.patch("/deleteNote", deleteNote);
 
 
 module.exports = router;

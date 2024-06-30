@@ -184,17 +184,17 @@ this.getNotifications()
         this.errorMessage = error.error.message;
       })
     }
-    delNote(_id:any){
-      this.newService.deleteNote(_id).subscribe((data)=>{
+    deleteNote(_id:any){
+      this.newService.deleteNote(_id,this.userId).subscribe((data)=>{
         console.log('Response:', data);
-
-      }, (error) => {
+       }, (error) => {
         console.error('Error:', error.error.message);
         this.errorMessage = error.error.message;
       })
+
     }
     readNote(_id:any){
-      this.newService.markNotificationsAsRead(_id).subscribe((data)=>{
+      this.newService.markNotificationsAsRead(_id,this.userId).subscribe((data)=>{
         console.log('Response:', data);
        }, (error) => {
         console.error('Error:', error.error.message);

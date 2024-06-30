@@ -36,32 +36,50 @@
         ></i>
       </button>
       <!-- <mat-select multiple > -->
-      <p-overlayPanel #op [style]="{ width: '450px'}">
-        <div *ngFor="let alert of alerts"  >
+      <p-overlayPanel #op [style]="{ width: '450px' }">
+        <div *ngFor="let alert of alerts">
+          <!-- reminder: -->
           <button
-          (click)="alert.read? delNote(alert._id) : readNote(alert._id)"
-            [color]="alert.read ? 'primary' : 'inherit'"
-            [ngStyle]="{ 'color': alert.read ? 'gray' : 'white' }"
-            [matTooltip]="alert.read ? 'Click to delete' : ''"
+            *ngIf="alert.startLesson"
+            [matTooltip]="'Click to move to the lesson'"
+            mat-button
+            class="btn-note text-yellow-200"
+          >
+            <span *ngIf="userId == alert.teacher_id"
+              >Hello Teacher, just a reminder that your class will begin in 15
+              minutes. Please prepare accordingly</span
+            >
+            <span *ngIf="userId == alert.student_id"
+              >Hello Student, this is a reminder that your class will start in
+              15 minutes. Please be ready to join the session.</span
+            >
+          </button>
+          <!-- notifications:-->
+          <button
+            *ngIf="!alert.startLesson && userId===alert.student_id &&alert.studentStatus!='delete'"
+            (click)="alert.studentStatus === 'unread' ? readNote(alert._id) : (alert.studentStatus === 'read' ? deleteNote(alert._id) : deleteNote(alert._id))"
+            [color]="alert.studentStatus === 'read' ? 'primary' : (alert.studentStatus === 'unread' ? 'inherit' : 'inherit')"
+            [ngStyle]="{ color: alert.studentStatus === 'read' ? 'grey' : (alert.studentStatus === 'unread' ? 'white' : 'white')}"
+            [matTooltip]="alert.studentStatus === 'read' ? 'Click to delete' : (alert.studentStatus === 'unread' ? '' : '')"
             mat-button
             class="btn-note"
-            *ngIf="userId == alert.teacher_id" 
           >
-            New Lesson Alert: A student has scheduled a lesson with you. Check
-            your calendar for details. Happy teaching!
+              Success! Your lesson has been scheduled. <br />
+              We look forward to seeing you soon
+            
           </button>
-
           <button
-          (click)="alert.read? delNote(alert._id) : readNote(alert._id)"
-          [color]="alert.read ? 'primary' : 'inherit'"
-          [ngStyle]="{ 'color': alert.read ? 'gray' : 'white' }"
-          [matTooltip]="alert.read ? 'Click to delete' : ''"
-          mat-button
+          *ngIf="!alert.startLesson && userId===alert.teacher_id&& alert.teacherStatus!='delete'"
+          (click)="alert.teacherStatus === 'unread' ? readNote(alert._id) : (alert.teacherStatus === 'read' ? deleteNote(alert._id) : deleteNote(alert._id))"
+          [color]="alert.teacherStatus === 'read' ? 'primary' : (alert.teacherStatus === 'unread' ? 'inherit' : 'inherit')"
+          [ngStyle]="{ color: alert.teacherStatus === 'read' ? 'grey' : (alert.teacherStatus === 'unread' ? 'white' : 'white')}"
+          [matTooltip]="alert.teacherStatus === 'read' ? 'Click to delete' : (alert.teacherStatus === 'unread' ? '' : '')"
+            mat-button
             class="btn-note"
-            *ngIf="userId == alert.student_id"
           >
-            Success! Your lesson has been scheduled. <br />
-            We look forward to seeing you soon
+              New Lesson Alert: A student has scheduled a lesson with you.
+              Check your calendar for details. Happy teaching!
+
           </button>
         </div>
       </p-overlayPanel>

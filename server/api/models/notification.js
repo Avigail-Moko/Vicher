@@ -10,8 +10,11 @@ const notificationSchema = new mongoose.Schema({
     product_id:{ type:String, require: true}, 
     teacher_name:{ type:String, require: true},
     student_name:{ type:String, require: true},
-    read: { type: Boolean, default: false }
+    studentStatus: { type: String, require:true },
+    teacherStatus: { type: String, require:true },
+    startLesson: { type: Boolean, default: false }
 });
+
 notificationSchema.index({ endDate: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = mongoose.model('Notification', notificationSchema);
