@@ -29,9 +29,12 @@ export class SocketService {
 
   private handleNotification(notification: any): void {
     let alerts = this.alertsSubject.getValue();
+    const userId = localStorage.getItem('userId');
+
     switch (notification.type) {
       case 'new':
-        alerts.unshift(notification.note);
+        if (notification.note.student_id === userId || notification.note.teacher_id === userId){
+        alerts.unshift(notification.note);}
         break;
       case 'studentReadStatus':
         const studentReadStatusAlert = alerts.find(
@@ -49,20 +52,14 @@ export class SocketService {
           teacherReadStatusAlert.teacherStatus = notification.teacherStatus;
         }
         break;
-      case 'studentdeleteStatus':
-        const studentdeleteStatusAlert = alerts.find(
-          (alert) => alert._id === notification._id
-        );
-        if (studentdeleteStatusAlert) {
-          studentdeleteStatusAlert.studentStatus = notification.studentStatus;
-        }
+      case 'studentDeleteStatus':
+        if (notification.studentId === userId){
+        alerts = alerts.filter(alert => alert._id !== notification._id);
+      }
         break;
-      case 'teacherdeleteStatus':
-        const teacherdeleteStatusAlert = alerts.find(
-          (alert) => alert._id === notification._id
-        );
-        if (teacherdeleteStatusAlert) {
-          teacherdeleteStatusAlert.teacherStatus = notification.teacherStatus;
+      case 'teacherDeleteStatus':
+        if (notification.teacherId === userId){
+          alerts = alerts.filter(alert => alert._id !== notification._id);
         }
         break;
       case 'startLesson':
@@ -71,9 +68,13 @@ export class SocketService {
         );
         if (startLessonAlert) {
           startLessonAlert.startLesson = notification.startLesson;
+        }else if (notification.note.student_id === userId || notification.note.teacher_id === userId) {
+          alerts.unshift(notification.note);
         }
         break;
+      
     }
     this.alertsSubject.next(alerts);
   }
+
 }

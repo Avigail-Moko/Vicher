@@ -158,4 +158,10 @@ export class NewService {
     const url = `http://localhost:3000/notification/markNotificationsAsRead?_id=${_id}`;
     return this.http.patch(url, { userId });
   }
+  rateUser(values: any):Observable<any>{
+    const url=`http://localhost:3000/users/rateUser`;
+    return this.http.post(url, values)
+  }
+
+
 }

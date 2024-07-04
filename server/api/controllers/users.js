@@ -213,6 +213,39 @@ module.exports = {
             .catch(err => {
                 res.status(500).json({ error: 'Server error' });
             });
+    },
+    rateUser: (req, res) => {
+        const { userId, rating } = req.body;
+        const raterId = req.userData.id;
+
+        if (rating < 1 || rating > 5) {
+            return res.status(400).json({ message: 'Rating should be between 1 and 5' });
+        }
+
+        User.findById(userId).then(user => {
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            const existingRatingIndex = user.ratings.findIndex(r => r.user.toString() === raterId);
+
+            if (existingRatingIndex >= 0) {
+                user.ratings[existingRatingIndex].rating = rating;
+            } else {
+                user.ratings.push({ rating, user: raterId });
+            }
+
+            const totalRating = user.ratings.reduce((acc, r) => acc + r.rating, 0);
+            user.averageRating = totalRating / user.ratings.length;
+
+            user.save().then(updatedUser => {
+                res.status(200).json({ message: 'User rated successfully', averageRating: updatedUser.averageRating });
+            }).catch(err => {
+                res.status(500).json({ error: 'Server error' });
+            });
+        }).catch(err => {
+            res.status(500).json({ error: 'Server error' });
+        });
     }
 }
 

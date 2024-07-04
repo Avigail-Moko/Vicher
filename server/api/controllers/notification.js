@@ -66,7 +66,13 @@ module.exports = {
   getNote: (req, res) => {
     const userId = req.query.userId;
 
-    Notification.find({ $or: [{ student_id: userId }, { teacher_id: userId }] })
+    Notification.find
+    ({
+      $or: [
+        { student_id: userId, studentStatus: { $ne: 'delete' } },
+        { teacher_id: userId, teacherStatus: { $ne: 'delete' } }
+      ]
+    })
       .exec()
       .then((notification) => {
         return res.status(200).json({ notification });
@@ -146,7 +152,7 @@ module.exports = {
             { _id: _id },
             { $set: {  studentStatus: 'delete' } }
           ).exec().then(result => {
-            io.emit("notification", { type: "studentdeleteStatus", _id, studentStatus: 'delete' });
+            io.emit("notification", { type: "studentDeleteStatus", _id, studentId  });
             return result;
           });
         } else if (userId === teacherId) {
@@ -155,7 +161,7 @@ module.exports = {
             { _id: _id },
             { $set: { teacherStatus: 'delete' } }
           ).exec().then(result => {
-            io.emit("notification", { type: "teacherdeleteStatus", _id, teacherStatus: 'delete' });
+            io.emit("notification", { type: "teacherDeleteStatus", _id, teacherId });
             return result;
           });
         }
@@ -176,11 +182,12 @@ module.exports = {
   startLesson: (_id, res) => {
     Notification.updateOne({ _id: _id }, { $set: { startLesson: true } })
       .exec()
-      .then((result) => {
+      .then((notification) => {
         io.emit("notification", {
           type: "startLesson",
           _id,
           startLesson: true,
+          note: notification
         });
 
         res.status(200).json({
