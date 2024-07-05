@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Product = require('../models/products');
+const fs = require('fs');
 
 module.exports={
     createProduct:(req,res)=>{
@@ -50,17 +51,35 @@ module.exports={
               });
     },
     deleteProduct: (req, res) => {
-        const _id = req.query._id; 
+        const _id = req.query._id;
 
-        Product.deleteOne({_id: _id }).then(()=>{
-            res.status(200).json({
-                message: 'product deleted'
-            })
-        }).catch(error=>{
+        Product.findOneAndDelete({ _id: _id }).then(product => {
+            if (!product) {
+                return res.status(404).json({
+                    message: 'Product not found'
+                });
+            }
+
+            const imagePath = `./${product.image.path}`;
+
+    
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                    return res.status(500).json({
+                        message: 'Error deleting file'
+                    });
+                }
+
+                res.status(200).json({
+                    message: 'product deleted'
+                });
+            });
+        }).catch(error => {
             res.status(500).json({
                 error
-            })
-        })
+            });
+        });
     },
     updateProduct: (req, res) => {
         const _id = req.query._id; 
