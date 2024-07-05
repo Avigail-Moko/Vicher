@@ -20,11 +20,24 @@ agenda.define("update startLesson", async (job) => {
     { _id: notificationId },
     { $set: { startLesson: true } }
   );
+  const updatedNotification = await Notification.findById(notificationId);
+
   io.emit("notification", {
     type: "startLesson",
     _id: notificationId,
     startLesson: true,
+    note: updatedNotification
+
   });
+});
+agenda.on('complete', async (job) => {
+  await job.remove();
+  console.log(`Job ${job.attrs.name} completed and removed`);
+});
+
+agenda.on('fail', async (err, job) => {
+  await job.remove();
+  console.log(`Job ${job.attrs.name} failed and removed`);
 });
 
 agenda.start();
@@ -70,7 +83,9 @@ module.exports = {
     ({
       $or: [
         { student_id: userId, studentStatus: { $ne: 'delete' } },
-        { teacher_id: userId, teacherStatus: { $ne: 'delete' } }
+        { teacher_id: userId, teacherStatus: { $ne: 'delete' } },
+        { student_id: userId, startLesson: true },
+        { teacher_id: userId, startLesson: true }
       ]
     })
       .exec()
@@ -132,7 +147,7 @@ module.exports = {
         });
       });
   },
-  deleteNote: (req, res) => {
+  markNotificationsAsDelete: (req, res) => {
     const _id = req.query._id;
     const userId = req.body.userId;
 
@@ -169,29 +184,6 @@ module.exports = {
       .then((result) => {
         res.status(200).json({
           message: "Note updated successfully",
-          result: result,
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        res.status(500).json({
-          error: error,
-        });
-      });
-  },
-  startLesson: (_id, res) => {
-    Notification.updateOne({ _id: _id }, { $set: { startLesson: true } })
-      .exec()
-      .then((notification) => {
-        io.emit("notification", {
-          type: "startLesson",
-          _id,
-          startLesson: true,
-          note: notification
-        });
-
-        res.status(200).json({
-          message: "startLesson successfully",
           result: result,
         });
       })

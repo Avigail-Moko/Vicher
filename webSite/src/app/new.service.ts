@@ -150,8 +150,8 @@ export class NewService {
     const url = `http://localhost:3000/notification/getNote?userId=${userId}`;
     return this.http.get(url);
   }
-  deleteNote(_id: any,userId:any): Observable<any> {
-    const url = `http://localhost:3000/notification/deleteNote?_id=${_id}`;
+  markNotificationsAsDelete(_id: any,userId:any): Observable<any> {
+    const url = `http://localhost:3000/notification/markNotificationsAsDelete?_id=${_id}`;
     return this.http.patch(url, { userId });
   }
   markNotificationsAsRead(_id: any,userId:any): Observable<any> {
@@ -162,6 +162,5 @@ export class NewService {
     const url=`http://localhost:3000/users/rateUser`;
     return this.http.post(url, values)
   }
-
 
 }

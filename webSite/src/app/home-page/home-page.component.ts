@@ -1,22 +1,14 @@
-import {MatDrawer, MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
-// import {MatButtonModule} from '@angular/material/button';
-// import {NgIf} from '@angular/common';
+import {MatDrawer} from '@angular/material/sidenav';
 import { Component, ViewChild} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SignupDialogComponent } from '../signup-dialog/signup-dialog.component';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { Router } from '@angular/router';
 import { NewService } from '../new.service';
-// import { MatGridListModule } from '@angular/material/grid-list';
-// import { json } from 'express';
-// import { Observable } from 'rxjs';
 import { MenuItem } from 'primeng/api';
-import {OnInit} from '@angular/core';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {startWith, map, switchMap} from 'rxjs/operators';
-import {NgFor, AsyncPipe, DatePipe} from '@angular/common';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { SocketService } from '../socket.service';
 
 
@@ -35,16 +27,14 @@ export class HomePageComponent  {
   errorMessage='';
   users: string[] = [];
   filteredUsers: Observable<string[]>;
-  // userId:any;
   showFiller = false;
-  // user:String;
-  // userProfileName=localStorage.getItem('userProfileName');
+
   alerts: any[] = [];
   toppings = new FormControl('');
 
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
-  userProfile=JSON.parse(localStorage.getItem('userProfile')); // המשתנה לשמירת פרטי המשתמש
+  userProfile=JSON.parse(localStorage.getItem('userProfile')); 
   userId = localStorage.getItem('userId');
 
 
@@ -93,19 +83,6 @@ this.getNotifications()
       // { label: 'Become a Seller', icon: 'pi pi-fw pi-dollar',routerLink:'/seller'},
       ];
     this.activeItem = this.items[0];
-    // if(this.newService.isAuthenticated()){
-    //   this.userId=localStorage.getItem('userId')
-    //   this.newService.getNote(this.userId).subscribe(
-    //     (data)=>{
-    //     for (let index = 0; index < data.notification.length; index++) {
-    //       this.alerts.unshift(data.notification[index]); // הוספת התראה חדשה בראש המערך
-    //     }
-    //   },
-    //   (error) => {
-    //     console.error('Error:', error.error.message);
-    //     this.errorMessage = error.error.message;
-    //   })
-    // }
     }
  
     //searching chart:
@@ -148,14 +125,7 @@ this.getNotifications()
       });
     }
 
-    // public logout():void{
-    //   localStorage.removeItem('token');
-    //   console.log('התנתקת בהצלחה');
-    //   this.router.navigate(['']);
-    // }
-    // logout(): void {
-    //   this.router.navigate(['']);
-    // }
+
     @ViewChild('drawer') drawer: MatDrawer;
     
     navigateToUserProfile() {
@@ -185,7 +155,7 @@ this.getNotifications()
       })
     }
     deleteNote(_id:any){
-      this.newService.deleteNote(_id,this.userId).subscribe((data)=>{
+      this.newService.markNotificationsAsDelete(_id,this.userId).subscribe((data)=>{
         console.log('Response:', data);
        }, (error) => {
         console.error('Error:', error.error.message);
