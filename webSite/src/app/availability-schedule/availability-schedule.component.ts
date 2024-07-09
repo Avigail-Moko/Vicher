@@ -14,8 +14,12 @@ import interactionPlugin, {
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { NewService } from '../new.service';
 import { Message, MessageService } from 'primeng/api';
-import {MatSnackBar,MatSnackBarHorizontalPosition,MatSnackBarVerticalPosition,} from '@angular/material/snack-bar';
-
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 // import { Dropdown, DropdownItem } from 'primeng/dropdown';
 // import { DatePipe } from '@angular/common';
@@ -28,19 +32,25 @@ import {MatSnackBar,MatSnackBarHorizontalPosition,MatSnackBarVerticalPosition,} 
 export class AvailabilityScheduleComponent {
   objectsArray: { start: any; end: any; day: any }[] = [];
   newObj: any;
-
+  myForm: FormGroup;
+  errorMessage = '';
   indexOfEvent: number;
   teacher_id = localStorage.getItem('userId');
   messages: Message[] | undefined;
-  userId=localStorage.getItem('userId');
+  userId = localStorage.getItem('userId');
   userProfile = JSON.parse(localStorage.getItem('userProfile'));
 
-
   constructor(
-    public newServise: NewService,
+    public newService: NewService,
     public messageService: MessageService,
-    private _snackBar: MatSnackBar
-  ) {}
+    private _snackBar: MatSnackBar,
+    private fb: FormBuilder
+  ) {
+    this.myForm = this.fb.group({
+      endDate: Date,
+      startDate: Date,
+    });
+  }
   calendarOptions: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
     headerToolbar: {
@@ -54,15 +64,15 @@ export class AvailabilityScheduleComponent {
     slotLabelFormat: {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
     },
     eventTimeFormat: {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
     },
-    selectConstraint: { 
-      daysOfWeek: [1, 2, 3, 4, 5, 6, 0] 
+    selectConstraint: {
+      daysOfWeek: [1, 2, 3, 4, 5, 6, 0],
     },
     allDaySlot: false,
     selectOverlap: false,
@@ -88,17 +98,16 @@ export class AvailabilityScheduleComponent {
     };
 
     this.objectsArray.push(this.newObj);
-    console.log('objects array:',this.objectsArray)
-    this.openSnackBar()
+    console.log('objects array:', this.objectsArray);
+    this.openSnackBar();
   }
-  
+
   handleEventClick(clickInfo: EventClickArg) {
     if (confirm(`Are you sure you want to delete`)) {
       //מציאת מיקום האירוע במערך האירועים שב objectsArray ומחיקתו
       for (let item = 0; item < this.objectsArray.length; item++) {
         if (
-          this.objectsArray[item].start ===
-            clickInfo.event.startStr &&
+          this.objectsArray[item].start === clickInfo.event.startStr &&
           this.objectsArray[item].end === clickInfo.event.endStr
         ) {
           this.indexOfEvent = item;
@@ -107,16 +116,16 @@ export class AvailabilityScheduleComponent {
       this.objectsArray.splice(this.indexOfEvent, 1);
       //מחיקת האירוע מהקלנדר
       clickInfo.event.remove();
-      this.openSnackBar()
+      this.openSnackBar();
     }
   }
   ngOnInit() {
-    this.newServise.getSchedule(this.teacher_id).subscribe(
+    this.newService.getSchedule(this.teacher_id).subscribe(
       (data) => {
         console.log('Response:', data);
         data.schedule[0].objectsArray.forEach((object) => {
-          this.objectsArray.push(object)
-          this.calendarOptions.events=this.objectsArray;
+          this.objectsArray.push(object);
+          this.calendarOptions.events = this.objectsArray;
         });
       },
       (error) => {
@@ -125,7 +134,7 @@ export class AvailabilityScheduleComponent {
     );
   }
   onSave() {
-    this.newServise
+    this.newService
       .createSchedule(this.objectsArray, this.teacher_id)
       .subscribe(
         (data) => {
@@ -145,18 +154,36 @@ export class AvailabilityScheduleComponent {
       );
   }
   openSnackBar() {
-    if (this.objectsArray.length>0) {
+    if (this.objectsArray.length > 0) {
+      this._snackBar
+        .open(
+          'Changes have been made. Remember to save them. Otherwise, they will not be preserved',
+          'Save Changes',
+          {
+            horizontalPosition: 'start',
+            verticalPosition: 'bottom',
+          }
+        )
+        .onAction()
+        .subscribe(() => {
+          this.onSave();
+        });
+    } else {
+      this._snackBar.dismiss(); // תקרא לפונקציה dismiss כאן
+    }
+  }
 
-    this._snackBar.open('Changes have been made. Remember to save them. Otherwise, they will not be preserved', 'Save Changes', {
-      horizontalPosition: 'start' ,
-      verticalPosition: 'bottom',
-    }).onAction().subscribe(() => {
-      this.onSave();
-    });
-}
-else {
-  this._snackBar.dismiss(); // תקרא לפונקציה dismiss כאן
-}
-}
-
+  createBusyEvent() {
+    const teacher_id = this.userId;
+    const body = this.myForm.value;
+    this.newService.createBusyEvent({ teacher_id, body }).subscribe(
+      (data) => {
+        console.log('Response:', data);
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+        this.errorMessage = error.error.message;
+      }
+    );
+  }
 }

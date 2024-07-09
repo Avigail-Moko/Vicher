@@ -24,6 +24,22 @@
   If you have any one-time important events that will prevent you from holding lessons on specific days, please add them here.
   This will ensure that no lessons are scheduled during those times. Remember to specify the exact date and time of these events to avoid any conflicts in your schedule.
 </h3>
+<form #form="ngForm" [formGroup]="myForm" (ngSubmit)="createBusyEvent()">
+  <mat-form-field appearance="outline">
+    <mat-label>startDate</mat-label>
+    <input matInput name="startDate" formControlName="startDate" required>
+    <!-- <mat-error *ngIf="startDate.invalid">{{getErrorMessage()}}</mat-error> -->
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>endtDate</mat-label>
+    <input matInput name="endtDate" formControlName="endtDate" required>
+    <!-- <mat-error *ngIf="startDate.invalid">{{getErrorMessage()}}</mat-error> -->
+  </mat-form-field>
+
+  <button mat-flat-button class="btn mt-2" type="submit" color="primary">Create busy event</button>
+  <!-- <div class="error-message">{{ errorMessage }}</div> -->
+  
+</form>
 <!-- </div> -->
 <div class="card">
   <p-toast></p-toast>

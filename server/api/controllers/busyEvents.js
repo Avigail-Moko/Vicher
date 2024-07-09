@@ -3,13 +3,14 @@ const BusyEvent = require("../models/busyEvents");
 
 module.exports = {
   createBusyEvent: (req, res) => {
-    const { myDate, endDate, teacher_id } = req.body;
+    const { teacher_id, startDate, endDate } = req.body;
+
     if (!req.file) {
       return res.status(400).json({ message: "לא נבחר קובץ" });
     }
     const busyEvent = new BusyEvent({
       _id: new mongoose.Types.ObjectId(),
-      myDate,
+      startDate,
       endDate,
       teacher_id,
     });

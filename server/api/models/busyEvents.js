@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const busyEventSchema= mongoose.Schema({
     _id:mongoose.Types.ObjectId,
-    myDate:Date,
+    startDate:Date,
     endDate:Date,
     teacher_id:String, 
 })

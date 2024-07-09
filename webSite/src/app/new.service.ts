@@ -162,5 +162,9 @@ export class NewService {
     const url=`http://localhost:3000/users/rateUser`;
     return this.http.post(url, values)
   }
-
+  createBusyEvent(values: any) {
+    const url = `http://localhost:3000/busyEvents/createBusyEvent`;
+    return this.http.post(url, values );
+  }
+  
 }

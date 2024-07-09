@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductStepperComponent } from '../product-stepper/product-stepper.component';
-import { NgForm } from '@angular/forms';
 import { ProductsEditDialogComponent } from '../products-edit-dialog/products-edit-dialog.component';
 import { MessageService } from 'primeng/api';
 import { DeleteItemComponent } from '../delete-item/delete-item.component';
@@ -17,7 +16,6 @@ export class UserProfileComponent {
   value!: number;
   productsArray: any;
   userProfile: any;
-  form: NgForm;
   inputValue: string = '';
   message = '';
   isButtonsVisible: boolean = false;
