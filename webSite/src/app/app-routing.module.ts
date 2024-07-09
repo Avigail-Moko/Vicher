@@ -8,6 +8,7 @@ import { AboutComponent } from './about/about.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { AvailabilityScheduleComponent } from './availability-schedule/availability-schedule.component';
 import { UserViewComponent } from './user-view/user-view.component';
+import { VideoChatComponent } from './video-chat/video-chat.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'wellcome', pathMatch: 'full' }, // נתיב ריק מוביל לדף הבית
@@ -24,6 +25,11 @@ const routes: Routes = [
   {
     path: 'availability-schedule',
     component: AvailabilityScheduleComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'video-chat',
+    component: VideoChatComponent,
     canActivate: [AuthGuard],
   },
   

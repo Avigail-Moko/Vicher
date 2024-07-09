@@ -189,7 +189,6 @@ export class DailyPlannerComponent {
     this.newService.getLessonByTeacher(this.product.userId).subscribe(
       (data) => {
         for (let index = 0; index < data.lesson.length; index++) {
-          const startDate = new Date(data.lesson[index].myDate);
 
           const newDate = {
             start: new Date(data.lesson[index].myDate),

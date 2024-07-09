@@ -1,9 +1,30 @@
-<h1>Hello {{userProfile.name}} !</h1>
-<h3>Here you can set your faivorate hours to work at, please choose the hours you want.</h3>
-<h3>To delete, click on it.</h3>
-<h3>And dont forget to click 'save'</h3>
+<!-- <h1>Hello {{userProfile.name}} !</h1> -->
+<!-- <div class="p-7"> -->
+<h1  class="mb-4 text-3xl">Availability Schedule</h1>
+
+<h3 class="mb-2 text-lg text-300" >
+  Please set your weekly availability schedule by indicating the time slots you are free for lesson bookings.
+  This will help students know when they can schedule their lessons with you.
+</h3>
+<h3 class="mb-2 text-lg text-300">
+  To delete a time slot, simply click on it.
+</h3>
+<h3 class="mb-2 text-lg text-300">
+  Don’t forget to click 'Save' to confirm your schedule.
+</h3>
+<h3 class="mb-4 text-lg text-300">
+  For any exceptional events and specific dates when you are unavailable, please see the "Exceptional Events" section below the availability schedule.
+</h3>
+
 <full-calendar  [options]='calendarOptions' > </full-calendar>  
 
+<h1 class="mb-4 mt-6 text-3xl">Exceptional Events</h1>
+
+<h3 class="mb-4 text-lg text-300">
+  If you have any one-time important events that will prevent you from holding lessons on specific days, please add them here.
+  This will ensure that no lessons are scheduled during those times. Remember to specify the exact date and time of these events to avoid any conflicts in your schedule.
+</h3>
+<!-- </div> -->
 <div class="card">
   <p-toast></p-toast>
 </div>

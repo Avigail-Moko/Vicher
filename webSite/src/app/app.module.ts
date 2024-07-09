@@ -54,6 +54,7 @@ import { UserViewComponent } from './user-view/user-view.component';
 import { BadgeModule } from 'primeng/badge';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TagModule } from 'primeng/tag';
+import { VideoChatComponent } from './video-chat/video-chat.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { TagModule } from 'primeng/tag';
     DeleteItemComponent,
     AvailabilityScheduleComponent,
     UserViewComponent,
+    VideoChatComponent,
     
   ],
   providers: [
