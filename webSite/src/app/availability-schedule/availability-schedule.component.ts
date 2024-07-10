@@ -39,6 +39,9 @@ export class AvailabilityScheduleComponent {
   messages: Message[] | undefined;
   userId = localStorage.getItem('userId');
   userProfile = JSON.parse(localStorage.getItem('userProfile'));
+  today: Date;
+  lastDayOf3Month: Date;
+  loading: boolean = false;
 
   constructor(
     public newService: NewService,
@@ -51,6 +54,13 @@ export class AvailabilityScheduleComponent {
       startDate: Date,
     });
   }
+  load() {
+    this.loading = true;
+
+    setTimeout(() => {
+        this.loading = false
+    }, 2000);
+}
   calendarOptions: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
     headerToolbar: {
@@ -120,6 +130,12 @@ export class AvailabilityScheduleComponent {
     }
   }
   ngOnInit() {
+    this.today = new Date();
+    this.lastDayOf3Month = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth() + 4,
+      0
+    );
     this.newService.getSchedule(this.teacher_id).subscribe(
       (data) => {
         console.log('Response:', data);

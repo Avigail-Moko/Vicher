@@ -166,5 +166,8 @@ export class NewService {
     const url = `http://localhost:3000/busyEvents/createBusyEvent`;
     return this.http.post(url, values );
   }
-  
+  getAllTeacherBusyEvents(teacher_id: any): Observable<any> {
+    const url = `http://localhost:3000/busyEvents/getAllTeacherBusyEvents?teacher_id=${teacher_id}`;
+    return this.http.get(url);
+  }
 }

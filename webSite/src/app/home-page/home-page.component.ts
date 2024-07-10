@@ -6,9 +6,9 @@ import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { Router } from '@angular/router';
 import { NewService } from '../new.service';
 import { MenuItem } from 'primeng/api';
-import {FormControl} from '@angular/forms';
+// import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {startWith, map, switchMap} from 'rxjs/operators';
+// import {startWith, map, switchMap} from 'rxjs/operators';
 import { SocketService } from '../socket.service';
 
 
@@ -23,16 +23,16 @@ export class HomePageComponent  {
   items: MenuItem[] | undefined;
   activeItem: MenuItem | undefined;
 //searching chart:
-  control = new FormControl('');
+  // control = new FormControl('');
   errorMessage='';
   users: string[] = [];
   filteredUsers: Observable<string[]>;
   showFiller = false;
 
   alerts: any[] = [];
-  toppings = new FormControl('');
+  // toppings = new FormControl('');
 
-  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+  // toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   userProfile=JSON.parse(localStorage.getItem('userProfile')); 
   userId = localStorage.getItem('userId');
@@ -63,15 +63,16 @@ this.getNotifications()
       });
 
 
-      //searching chart:
-      this.filteredUsers = this.control.valueChanges.pipe(
-        startWith(''),switchMap(value => this.newService.getAllUsers().pipe(
-        map(users =>{
-          console.log('Users from API:', users); // בדוק שהנתונים מגיעים
-          return this._filter(users, value || '');
-        })
-      )),
-    );
+    //   //searching chart:
+    //   this.filteredUsers = this.control.valueChanges.pipe(
+    //     startWith(''),switchMap(value => this.newService.getAllUsers().pipe(
+    //     map(users =>{
+    //       console.log('Users from API:', users); // בדוק שהנתונים מגיעים
+    //       return this._filter(users, value || '');
+    //     })
+    //   )),
+    // );
+
      // tab menu
      this.items = [
       { label: 'Home', icon: 'pi pi-fw pi-home',routerLink:'/wellcome'},
@@ -85,23 +86,23 @@ this.getNotifications()
     this.activeItem = this.items[0];
     }
  
-    //searching chart:
-    private _filter(users: any[], value: string): string[] {
-      const filterValue = this._normalizeValue(value);
-      console.log('filter Value:',filterValue)
-      return users.filter(user => {
-        const normalizedUser = this._normalizeValue(user.name);
-        console.log('Normalized user:', normalizedUser); // בדוק את המשתמש המנורמל
-        return normalizedUser.includes(filterValue);
-      });
-    }
+    // //searching chart:
+    // private _filter(users: any[], value: string): string[] {
+    //   const filterValue = this._normalizeValue(value);
+    //   console.log('filter Value:',filterValue)
+    //   return users.filter(user => {
+    //     const normalizedUser = this._normalizeValue(user.name);
+    //     console.log('Normalized user:', normalizedUser); // בדוק את המשתמש המנורמל
+    //     return normalizedUser.includes(filterValue);
+    //   });
+    // }
   
-    private _normalizeValue(value: any): string {
-      if (typeof value !== 'string') {
-        return '';
-      }
-      return value.toLowerCase().replace(/\s/g, '');
-    }
+    // private _normalizeValue(value: any): string {
+    //   if (typeof value !== 'string') {
+    //     return '';
+    //   }
+    //   return value.toLowerCase().replace(/\s/g, '');
+    // }
 
   onActiveItemChange(event: MenuItem) {
    this.activeItem = event;

@@ -5,9 +5,6 @@ module.exports = {
   createBusyEvent: (req, res) => {
     const { teacher_id, startDate, endDate } = req.body;
 
-    if (!req.file) {
-      return res.status(400).json({ message: "לא נבחר קובץ" });
-    }
     const busyEvent = new BusyEvent({
       _id: new mongoose.Types.ObjectId(),
       startDate,

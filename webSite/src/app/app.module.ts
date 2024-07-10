@@ -75,6 +75,7 @@ import { VideoChatComponent } from './video-chat/video-chat.component';
     UserViewComponent,
     VideoChatComponent,
     
+    
   ],
   providers: [
     MessageService,

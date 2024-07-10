@@ -203,6 +203,26 @@ export class DailyPlannerComponent {
         this.errorMessage = error.error.message;
       }
     );
+    this.newService.getAllTeacherBusyEvents(this.product.userId).subscribe(
+      (data) => {
+        for (let index = 0; index < data.busyEvent.length; index++) {
+
+          const newDate = {
+            start: new Date(data.busyEvent[index].startDate),
+            end: new Date(data.busyEvent[index].endDate),
+          };
+
+          this.takenLessonArray.push(newDate);
+        }
+        console.log(data)
+
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+        this.errorMessage = error.error.message;
+      }
+    );
+
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {

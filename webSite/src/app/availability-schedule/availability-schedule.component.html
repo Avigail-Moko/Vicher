@@ -24,21 +24,37 @@
   If you have any one-time important events that will prevent you from holding lessons on specific days, please add them here.
   This will ensure that no lessons are scheduled during those times. Remember to specify the exact date and time of these events to avoid any conflicts in your schedule.
 </h3>
-<form #form="ngForm" [formGroup]="myForm" (ngSubmit)="createBusyEvent()">
-  <mat-form-field appearance="outline">
-    <mat-label>startDate</mat-label>
-    <input matInput name="startDate" formControlName="startDate" required>
-    <!-- <mat-error *ngIf="startDate.invalid">{{getErrorMessage()}}</mat-error> -->
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>endtDate</mat-label>
-    <input matInput name="endtDate" formControlName="endtDate" required>
-    <!-- <mat-error *ngIf="startDate.invalid">{{getErrorMessage()}}</mat-error> -->
-  </mat-form-field>
-
-  <button mat-flat-button class="btn mt-2" type="submit" color="primary">Create busy event</button>
+<form [formGroup]="myForm" (ngSubmit)="createBusyEvent()">
+  <fieldset class=" border-500 border-round-md inline p-4  ">
+    <legend class=" text-xl">Create busy event</legend>
+    <div class="flex flex-column md:flex-row md:align-items-end">
+    <div class="inline-block">
+  <label for="startDate" class="font-bold block mb-1"> When your event starts? </label>
+  <!-- [touchUI]="true" -->
+  <p-calendar
+  inputId="startDate"
+   formControlName="startDate"
+   [minDate]="today" 
+   [maxDate]="lastDayOf3Month" 
+   [showIcon]="true"
+   [showTime]="true" 
+   />
+</div>
+<div class="inline-block md:mr-6 md:ml-4 mt-4 mb-5 md:my-0 md:mb-0">
+   <label for="endDate" class="font-bold block mb-1"> When your event ends? </label>
+   <p-calendar
+   inputId="endDate" 
+   formControlName="endDate"
+   [minDate]="today" 
+   [maxDate]="lastDayOf3Month" 
+   [showIcon]="true"
+   [showTime]="true" 
+   />
+  </div>
+  <p-button label="Create busy event" [loading]="loading" (onClick)="load()"></p-button>
   <!-- <div class="error-message">{{ errorMessage }}</div> -->
-  
+</div>
+</fieldset>
 </form>
 <!-- </div> -->
 <div class="card">

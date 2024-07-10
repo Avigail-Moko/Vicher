@@ -1,5 +1,5 @@
   <div class="flex flex-wrap ">
-    <div class="flex flex-1 flex-column align-items-center lg:flex-none " >
+    <div class="flex flex-1 flex-column align-items-center  lg:flex-none " >
       <p-card class="p-card-header" header="{{userProfile.name}}" subheader="{{ userProfile.email }}" [style]="{ width: '360px',backgroundColor:'var(--surface-900)',border:'1px solid var(--surface-800)'}">
         <p-rating  class="p-rating mb-3" [(ngModel)]="value" [cancel]="false"></p-rating>
         <ng-template  pTemplate="header">
@@ -26,7 +26,7 @@
 
       <!-- My latest Projects -->
       <!-- <button mat-stroked-button color="primary"><mat-icon>edit</mat-icon>click here to edit</button> -->
-      <p-card class="p-card-header mt-7" header="My latest Projects" [style]="{ width: '360px',backgroundColor:'var(--surface-900)',border:'1px solid var(--surface-800)'}">
+      <p-card class="p-card-header mt-7 mb-7 lg:mb-0" header="My latest Projects" [style]="{ width: '360px',backgroundColor:'var(--surface-900)',border:'1px solid var(--surface-800)'}">
         <p-card class="contant" contant [style]="{backgroundColor:'var(--surface-800)'}" >
           Here you can add and show some of your projects to attract customers..
           <ng-template pTemplate="footer">
@@ -34,17 +34,13 @@
           </ng-template>
         </p-card>
       </p-card>
-      <div class="card flex justify-content-center">
-    </div>
     </div>
 
-
-    
 
 
     <!-- Want to Become a Seller? -->
-    <div class="flex flex-1 flex-column align-items-center rightBox " [style]="{width:'50%'}" >
-      <p-card class="p-card-header w-9 mb-5" header="Want to Become a Seller?" [style]="{ backgroundColor:'var(--surface-900)',border:'1px solid var(--surface-800)'}">
+    <div class="flex flex-1 flex-column align-items-center " [style]="{width:'50%'}" >
+      <p-card class="p-card-header w-9 mb-5 lg:ml-7" header="Want to Become a Seller?" [style]="{ backgroundColor:'var(--surface-900)',border:'1px solid var(--surface-800)'}">
         <p-card class="contant" contant [style]="{height: '200px',backgroundColor:'var(--surface-800)'}">
           let us see your products
           <ng-template pTemplate="footer">
@@ -57,7 +53,7 @@
         <!-- cards of products: -->
         <!-- <div class="flex  justify-content-evenly flex-row "[style]="{width:'100%'}"> -->
           
-          <p-carousel class="w-10" [value]="productsArray" [numVisible]="3" [numScroll]="1" [circular]="true" [responsiveOptions]="responsiveOptions">
+          <p-carousel class="w-10 lg:ml-7" [value]="productsArray" [numVisible]="3" [numScroll]="1" [circular]="true" [responsiveOptions]="responsiveOptions">
             <ng-template let-product pTemplate="item">
           <mat-card class="product-card m-3">
             
