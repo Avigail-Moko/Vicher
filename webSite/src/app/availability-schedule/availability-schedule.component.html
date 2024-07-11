@@ -1,10 +1,10 @@
 <!-- <h1>Hello {{userProfile.name}} !</h1> -->
-<!-- <div class="p-7"> -->
-<h1  class="mb-4 text-3xl">Availability Schedule</h1>
+<h1 class="mb-4 text-3xl">Availability Schedule</h1>
 
-<h3 class="mb-2 text-lg text-300" >
-  Please set your weekly availability schedule by indicating the time slots you are free for lesson bookings.
-  This will help students know when they can schedule their lessons with you.
+<h3 class="mb-2 text-lg text-300">
+  Please set your weekly availability schedule by indicating the time slots you
+  are free for lesson bookings. This will help students know when they can
+  schedule their lessons with you.
 </h3>
 <h3 class="mb-2 text-lg text-300">
   To delete a time slot, simply click on it.
@@ -13,50 +13,72 @@
   Don’t forget to click 'Save' to confirm your schedule.
 </h3>
 <h3 class="mb-4 text-lg text-300">
-  For any exceptional events and specific dates when you are unavailable, please see the "Exceptional Events" section below the availability schedule.
+  For any exceptional events and specific dates when you are unavailable, please
+  see the "Exceptional Events" section below the availability schedule.
 </h3>
 
-<full-calendar  [options]='calendarOptions' > </full-calendar>  
+<full-calendar [options]="calendarOptions"> </full-calendar>
 
 <h1 class="mb-4 mt-6 text-3xl">Exceptional Events</h1>
 
 <h3 class="mb-4 text-lg text-300">
-  If you have any one-time important events that will prevent you from holding lessons on specific days, please add them here.
-  This will ensure that no lessons are scheduled during those times. Remember to specify the exact date and time of these events to avoid any conflicts in your schedule.
+  If you have any one-time important events that will prevent you from holding
+  lessons on specific days, please add them here. This will ensure that no
+  lessons are scheduled during those times. Remember to specify the exact date
+  and time of these events to avoid any conflicts in your schedule.
 </h3>
 <form [formGroup]="myForm" (ngSubmit)="createBusyEvent()">
-  <fieldset class=" border-500 border-round-md inline p-4  ">
-    <legend class=" text-xl">Create busy event</legend>
+  <fieldset class="border-500 border-round-md inline p-4 mb-6">
+    <legend class="text-xl">Create busy event</legend>
     <div class="flex flex-column md:flex-row md:align-items-end">
-    <div class="inline-block">
-  <label for="startDate" class="font-bold block mb-1"> When your event starts? </label>
-  <!-- [touchUI]="true" -->
-  <p-calendar
-  inputId="startDate"
-   formControlName="startDate"
-   [minDate]="today" 
-   [maxDate]="lastDayOf3Month" 
-   [showIcon]="true"
-   [showTime]="true" 
-   />
-</div>
-<div class="inline-block md:mr-6 md:ml-4 mt-4 mb-5 md:my-0 md:mb-0">
-   <label for="endDate" class="font-bold block mb-1"> When your event ends? </label>
-   <p-calendar
-   inputId="endDate" 
-   formControlName="endDate"
-   [minDate]="today" 
-   [maxDate]="lastDayOf3Month" 
-   [showIcon]="true"
-   [showTime]="true" 
-   />
-  </div>
-  <p-button label="Create busy event" [loading]="loading" (onClick)="load()"></p-button>
-  <!-- <div class="error-message">{{ errorMessage }}</div> -->
-</div>
-</fieldset>
+      <div class="inline-block">
+        <label for="startDate" class="font-bold block mb-1">
+          When your event starts?
+        </label>
+        <!-- [touchUI]="true" -->
+        <p-calendar
+          inputId="startDate"
+          formControlName="startDate"
+          [minDate]="today"
+          [maxDate]="lastDayOf3Month"
+          [showIcon]="true"
+          [showTime]="true"
+        />
+      </div>
+      <div class="inline-block md:mr-6 md:ml-4 mt-4 mb-5 md:my-0 md:mb-0">
+        <label for="endDate" class="font-bold block mb-1">
+          When your event ends?
+        </label>
+        <p-calendar
+          inputId="endDate"
+          formControlName="endDate"
+          [minDate]="today"
+          [maxDate]="lastDayOf3Month"
+          [showIcon]="true"
+          [showTime]="true"
+        />
+      </div>
+      <p-button
+        type="submit"
+        label="Create busy event"
+        [loading]="loading"
+      ></p-button>
+      <!-- <div class="error-message">{{ errorMessage }}</div> -->
+    </div>
+  </fieldset>
 </form>
-<!-- </div> -->
+<p-dataView #dv [value]="busyEvents">
+  <ng-template let-busyEvent pTemplate="listItem">
+    <div class="col-12">
+      <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
+        <div class=" font-bold">
+          {{ busyEvent.startDate | date : "MMM d, y, h:mm a" }} -            
+          {{ busyEvent.endDate | date : "MMM d, y, h:mm a" }}
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-dataView>
 <div class="card">
   <p-toast></p-toast>
 </div>

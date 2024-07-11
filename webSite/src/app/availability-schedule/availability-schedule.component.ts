@@ -42,6 +42,7 @@ export class AvailabilityScheduleComponent {
   today: Date;
   lastDayOf3Month: Date;
   loading: boolean = false;
+  busyEvents: any[];
 
   constructor(
     public newService: NewService,
@@ -148,6 +149,18 @@ export class AvailabilityScheduleComponent {
         console.error('Error:', error.error.message);
       }
     );
+    this.newService.getAllTeacherBusyEvents(this.teacher_id).subscribe(
+      (data) => {
+        console.log('Response:', data);
+        this.busyEvents=data.busyEvent
+        console.log('this.busyEvent',this.busyEvents )
+        console.log('data',data )
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+      }
+    );
+
   }
   onSave() {
     this.newService
@@ -190,9 +203,11 @@ export class AvailabilityScheduleComponent {
   }
 
   createBusyEvent() {
+    this.load()
     const teacher_id = this.userId;
-    const body = this.myForm.value;
-    this.newService.createBusyEvent({ teacher_id, body }).subscribe(
+    const startDate = this.myForm.value.startDate;
+    const endDate = this.myForm.value.endDate;
+    this.newService.createBusyEvent({ teacher_id, startDate,endDate }).subscribe(
       (data) => {
         console.log('Response:', data);
       },
