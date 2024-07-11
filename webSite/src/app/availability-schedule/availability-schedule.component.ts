@@ -19,7 +19,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup ,Validators } from '@angular/forms';
 
 // import { Dropdown, DropdownItem } from 'primeng/dropdown';
 // import { DatePipe } from '@angular/common';
@@ -43,6 +43,8 @@ export class AvailabilityScheduleComponent {
   lastDayOf3Month: Date;
   loading: boolean = false;
   busyEvents: any[];
+  startDate: Date[] | undefined;
+  endDate: Date[] | undefined;
 
   constructor(
     public newService: NewService,
@@ -51,17 +53,11 @@ export class AvailabilityScheduleComponent {
     private fb: FormBuilder
   ) {
     this.myForm = this.fb.group({
-      endDate: Date,
-      startDate: Date,
+      startDate: ['', Validators.required],
+      endDate: ['', Validators.required],
     });
   }
-  load() {
-    this.loading = true;
 
-    setTimeout(() => {
-        this.loading = false
-    }, 2000);
-}
   calendarOptions: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
     headerToolbar: {
@@ -149,17 +145,8 @@ export class AvailabilityScheduleComponent {
         console.error('Error:', error.error.message);
       }
     );
-    this.newService.getAllTeacherBusyEvents(this.teacher_id).subscribe(
-      (data) => {
-        console.log('Response:', data);
-        this.busyEvents=data.busyEvent
-        console.log('this.busyEvent',this.busyEvents )
-        console.log('data',data )
-      },
-      (error) => {
-        console.error('Error:', error.error.message);
-      }
-    );
+    this.getAllTeacherBusyEvents()
+ 
 
   }
   onSave() {
@@ -201,15 +188,46 @@ export class AvailabilityScheduleComponent {
       this._snackBar.dismiss(); // תקרא לפונקציה dismiss כאן
     }
   }
+  getAllTeacherBusyEvents(){
+    this.newService.getAllTeacherBusyEvents(this.teacher_id).subscribe(
+      (data) => {
+        console.log('Response:', data);
+        this.busyEvents=data.busyEvent
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+      }
+    );
+  }
 
   createBusyEvent() {
-    this.load()
+    if (this.myForm.invalid) {
+      this.errorMessage = 'Please fill in all required fields';
+      return;
+    }
+    this.loading = true;
+
     const teacher_id = this.userId;
     const startDate = this.myForm.value.startDate;
     const endDate = this.myForm.value.endDate;
     this.newService.createBusyEvent({ teacher_id, startDate,endDate }).subscribe(
       (data) => {
+        this.loading = false;
         console.log('Response:', data);
+        this.getAllTeacherBusyEvents()
+      },
+      (error) => {
+        this.loading = false;
+        console.error('Error:', error.error.message);
+        this.errorMessage = error.error.message;
+      }
+    );
+  }
+  deleteBusyEvent(_id){
+    this.newService.deleteBusyEvent(_id).subscribe(
+      (data) => {
+        console.log('Response:', data);
+        this.getAllTeacherBusyEvents()
       },
       (error) => {
         console.error('Error:', error.error.message);

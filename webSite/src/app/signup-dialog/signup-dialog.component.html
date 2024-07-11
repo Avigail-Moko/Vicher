@@ -6,16 +6,6 @@
       <mat-error *ngIf="myForm.get('name').hasError('minlength')">{{ validationMessages.name[1].message }}</mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Subject</mat-label>
-      <input matInput name="subject" formControlName="subject" required>
-      <mat-error *ngIf="myForm.get('subject').hasError('required')">{{ validationMessages.subject[0].message }}</mat-error>
-    </mat-form-field>
-    <!-- <mat-form-field appearance="outline">
-      <mat-label>Seniority</mat-label>
-      <input matInput name="seniority" formControlName="seniority" required>
-      <mat-error *ngIf="myForm.get('seniority').hasError('required')">{{ validationMessages.seniority[0].message }}</mat-error>
-    </mat-form-field> -->
-    <mat-form-field appearance="outline">
       <mat-label>Email-Address</mat-label>
       <input matInput name="email" formControlName="email" required email>
       <mat-error *ngIf="myForm.get('email').hasError('required')">{{ validationMessages.email[0].message }}</mat-error>
@@ -30,10 +20,13 @@
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
     </mat-form-field>
-    <button mat-flat-button class="btn mt-2" type="submit" color="primary">Sign Up</button>
+    <p-button
+    type="submit"
+    label="Sign Up"
+    [loading]="loading"
+  ></p-button>
     <div class="error-message">{{ errorMessage }}</div>
     
   </form>
-  
 
 

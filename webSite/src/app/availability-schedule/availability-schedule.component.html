@@ -31,12 +31,13 @@
   <fieldset class="border-500 border-round-md inline p-4 mb-6">
     <legend class="text-xl">Create busy event</legend>
     <div class="flex flex-column md:flex-row md:align-items-end">
-      <div class="inline-block">
+      <div class="flex flex-column inline-block">
         <label for="startDate" class="font-bold block mb-1">
           When your event starts?
         </label>
         <!-- [touchUI]="true" -->
         <p-calendar
+          [(ngModel)]="startDate"
           inputId="startDate"
           formControlName="startDate"
           [minDate]="today"
@@ -44,12 +45,23 @@
           [showIcon]="true"
           [showTime]="true"
         />
+        <div class="error-container">
+          <mat-error
+            *ngIf="
+              myForm.get('startDate').hasError('required') &&
+              myForm.get('startDate').touched
+            "
+          >
+            Start date is required
+          </mat-error>
+        </div>
       </div>
-      <div class="inline-block md:mr-6 md:ml-4 mt-4 mb-5 md:my-0 md:mb-0">
+      <div class="flex flex-column md:mr-6 md:ml-4 mt-4 mb-5 md:my-0 md:mb-0">
         <label for="endDate" class="font-bold block mb-1">
           When your event ends?
         </label>
         <p-calendar
+          [(ngModel)]="endDate"
           inputId="endDate"
           formControlName="endDate"
           [minDate]="today"
@@ -57,28 +69,56 @@
           [showIcon]="true"
           [showTime]="true"
         />
+        <div class="error-container">
+          <mat-error
+            *ngIf="
+              myForm.get('endDate').hasError('required') &&
+              myForm.get('endDate').touched
+            "
+          >
+            End date is required
+          </mat-error>
+        </div>
       </div>
-      <p-button
-        type="submit"
-        label="Create busy event"
-        [loading]="loading"
-      ></p-button>
-      <!-- <div class="error-message">{{ errorMessage }}</div> -->
+      <div class="flex flex-column">
+        <p-button
+          type="submit"
+          label="Create busy event"
+          [loading]="loading"
+        ></p-button>
+        <div class="error-container">
+          <mat-error *ngIf="this.myForm.invalid"  class="error-message">{{ errorMessage }} </mat-error>
+        </div>
+      </div>
     </div>
   </fieldset>
 </form>
+
 <p-dataView #dv [value]="busyEvents">
   <ng-template let-busyEvent pTemplate="listItem">
     <div class="col-12">
-      <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-        <div class=" font-bold">
-          {{ busyEvent.startDate | date : "MMM d, y, h:mm a" }} -            
-          {{ busyEvent.endDate | date : "MMM d, y, h:mm a" }}
+      <div class="flex flex-column xl:flex-row xl:align-items-start p-4">
+        <div
+          class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4"
+        >
+          <div class="font-bold">
+            {{ busyEvent.startDate | date : "MMM d, y, h:mm a" }} -
+            {{ busyEvent.endDate | date : "MMM d, y, h:mm a" }}
+          </div>
+          <div class="align-items-center">
+            <button
+              pButton
+              icon="pi pi-trash"
+              (click)="deleteBusyEvent(busyEvent._id)"
+              matTooltip="Delete Item"
+            ></button>
+          </div>
         </div>
       </div>
     </div>
   </ng-template>
 </p-dataView>
+
 <div class="card">
   <p-toast></p-toast>
 </div>

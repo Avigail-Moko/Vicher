@@ -65,7 +65,7 @@ function createBlueProfileImage(name) {
 
 module.exports = {
     signup: (req, res) => {
-        const { name, subject, email, password } = req.body;
+        const { name, email, password } = req.body;
 
         User.find({ email }).then((users) => {
             if (users.length >= 1) {
@@ -89,7 +89,6 @@ module.exports = {
                     email,
                     password: hash,
                     name,
-                    subject,
                     profileImage
                 });
                 user.save().then((result) => {
@@ -143,7 +142,6 @@ module.exports = {
                         user: {
                             name: user.name,
                             email: user.email,
-                            subject: user.subject,
                             profileImage: user.profileImage,
                             description:user.description
                         }
@@ -160,7 +158,7 @@ module.exports = {
         const userId = req.userData.id; // Use the data from the middleware
 
         User.findById(userId)
-            .select('name email subject profileImage description _id') // Select the fields you want to retrieve
+            .select('name email profileImage description _id') // Select the fields you want to retrieve
             .exec()
             .then(user => {
                 if (!user) {
@@ -174,7 +172,7 @@ module.exports = {
     },
     getAllUsers: (req, res) => {
         User.find()
-            .select('_id email profileImage name subject description') // בחר את השדות שתרצה להחזיר
+            .select('_id email profileImage name description') // בחר את השדות שתרצה להחזיר
             .exec()
             .then(users => {
                 if (!users || users.length === 0) {
@@ -185,7 +183,6 @@ module.exports = {
                     email: user.email,
                     profileImage: user.profileImage,
                     name:user.name,
-                    subject:user.subject,
                     _id:user._id,
                     description:user.description
                 }));

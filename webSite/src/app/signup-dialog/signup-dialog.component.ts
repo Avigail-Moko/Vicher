@@ -18,6 +18,7 @@ myForm: FormGroup;
 errorMessage='';
 apiService: any;
 message='';
+loading: boolean = false;
 
 //take care of the user details:
 constructor(private http: HttpClient,
@@ -36,6 +37,11 @@ constructor(private http: HttpClient,
 });}
 
 onSignup() {
+  if (this.myForm.invalid) {
+    return;
+  }
+  this.loading = true;
+
   const formValues = this.myForm.value; 
   const loginValues={
     email: formValues.email,
@@ -48,6 +54,7 @@ onSignup() {
 
       this.newService.Login(loginValues).subscribe(
         (data) => {
+          this.loading = false;
           console.log('Response:', data);
           localStorage.setItem('token', data.token);
           localStorage.setItem('userId', data.userId);
@@ -61,6 +68,7 @@ onSignup() {
             // this.loggedIn.next(true);
         },
         (error) => {
+          this.loading = false;
           console.error('Error:', error.error.message);
           this.errorMessage = error.error.message;
         }
@@ -68,6 +76,7 @@ onSignup() {
 
     },
     (error) => {
+      this.loading = false;
       console.error('Error:', error.error.message);
       this.errorMessage = error.error.message;
     }

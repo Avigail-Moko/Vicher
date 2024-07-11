@@ -1,8 +1,12 @@
+
 form{
-    padding :10%
+    padding :30px
 }
 ::ng-deep{
     mat-form-field{
         max-width: 100%;
     }
+}
+mat-form-field{
+    margin-bottom: 12px;
 }

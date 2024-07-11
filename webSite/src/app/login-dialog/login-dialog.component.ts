@@ -15,6 +15,7 @@ export class LoginDialogComponent {
 
 myLoginForm:FormGroup;
 errorMessage='';
+loading: boolean = false;
 
 private usersSubject = new Subject<any[]>();
   users$ = this.usersSubject.asObservable();
@@ -30,18 +31,25 @@ constructor(private http: HttpClient,
 });}
  
   onLogin() {
+    if (this.myLoginForm.invalid) {
+      return;
+    }
+    this.loading = true;
+
     //במידה ומעוניינים לשלוף פריט אחד מתוך הטופס ניתן להשתמש ב .get 
   //   const email = this.myLoginForm.get('email').value;
     const body = this.myLoginForm.value;
     this.newService.Login(body).subscribe(
       (data) => {
         console.log('Response:', data);
+        this.loading = false;
         this.dialog.closeAll();
         // this.router.navigate(['/user-profile']);
       },
       (error) => {
         console.error('Error:', error.error.message);
         this.errorMessage = error.error.message;
+        this.loading = false;
       }
     );
   }
