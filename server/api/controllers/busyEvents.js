@@ -3,10 +3,11 @@ const BusyEvent = require("../models/busyEvents");
 
 module.exports = {
   createBusyEvent: (req, res) => {
-    const { teacher_id, startDate, endDate } = req.body;
+    const { teacher_id,nameEvent, startDate, endDate } = req.body;
 
     const busyEvent = new BusyEvent({
       _id: new mongoose.Types.ObjectId(),
+      nameEvent,
       startDate,
       endDate,
       teacher_id,

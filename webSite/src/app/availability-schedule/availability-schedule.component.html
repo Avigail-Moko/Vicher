@@ -31,6 +31,26 @@
   <fieldset class="border-500 border-round-md inline p-4 mb-6">
     <legend class="text-xl">Create busy event</legend>
     <div class="flex flex-column md:flex-row md:align-items-end">
+
+
+      <div class="flex flex-column inline-block md:mr-4 md:mb-0 mb-4">
+        <label for="nameEvent" class="font-bold block mb-1">
+          How do you call your event?
+        </label>
+        <input type="text" pInputText maxlength="15" formControlName="nameEvent"/>
+        <div class="error-container">
+          <mat-error
+            *ngIf="
+              myForm.get('nameEvent').hasError('required') &&
+              myForm.get('nameEvent').touched
+            "
+          >
+          Name event is required
+          </mat-error>
+        </div>
+      </div>
+
+
       <div class="flex flex-column inline-block">
         <label for="startDate" class="font-bold block mb-1">
           When your event starts?
@@ -41,7 +61,7 @@
           inputId="startDate"
           formControlName="startDate"
           [minDate]="today"
-          [maxDate]="lastDayOf3Month"
+          [maxDate]="endDate||lastDayOf3Month"
           [showIcon]="true"
           [showTime]="true"
         />
@@ -64,7 +84,7 @@
           [(ngModel)]="endDate"
           inputId="endDate"
           formControlName="endDate"
-          [minDate]="today"
+          [minDate]="startDate||today"
           [maxDate]="lastDayOf3Month"
           [showIcon]="true"
           [showTime]="true"
@@ -101,10 +121,12 @@
         <div
           class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4"
         >
-          <div class="font-bold">
-            {{ busyEvent.startDate | date : "MMM d, y, h:mm a" }} -
-            {{ busyEvent.endDate | date : "MMM d, y, h:mm a" }}
-          </div>
+<div class="flex flex-column font-bold sm:flex-row align-items-center ">
+            <span class="mr-4 text-xl sm:mb-auto mb-4">{{ busyEvent.nameEvent }}</span>
+            <span>{{ busyEvent.startDate | date : "MMM d, y, h:mm a" }}</span>
+            <span class="m-2 sm:my-0">-</span> 
+            <span>{{ busyEvent.endDate | date : "MMM d, y, h:mm a" }}</span>
+</div>
           <div class="align-items-center">
             <button
               pButton

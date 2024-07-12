@@ -19,7 +19,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { FormBuilder, FormGroup ,Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // import { Dropdown, DropdownItem } from 'primeng/dropdown';
 // import { DatePipe } from '@angular/common';
@@ -43,8 +43,8 @@ export class AvailabilityScheduleComponent {
   lastDayOf3Month: Date;
   loading: boolean = false;
   busyEvents: any[];
-  startDate: Date[] | undefined;
-  endDate: Date[] | undefined;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
 
   constructor(
     public newService: NewService,
@@ -53,6 +53,7 @@ export class AvailabilityScheduleComponent {
     private fb: FormBuilder
   ) {
     this.myForm = this.fb.group({
+      nameEvent: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
     });
@@ -127,6 +128,36 @@ export class AvailabilityScheduleComponent {
     }
   }
   ngOnInit() {
+    this.myForm.get('endDate').valueChanges.subscribe((value) => {
+      if (this.myForm.get('startDate').value) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // איפוס השעה, הדקות, השניות והאלפיות שנייה
+
+        const endDate = new Date(value);
+        endDate.setHours(0, 0, 0, 0); // איפוס השעה, הדקות, השניות והאלפיות שנייה
+
+        if (endDate.getTime() === today.getTime()) {
+          const endDateOriginal = new Date(value);
+          const hours = endDateOriginal.getHours();
+          const minutes = endDateOriginal.getMinutes();
+          const startDate = new Date(this.myForm.get('startDate').value);
+          startDate.setHours(hours, minutes, 0, 0);
+
+          this.myForm.get('endDate').setValue(startDate);
+
+          if (
+            this.myForm.get('endDate').value <=
+            this.myForm.get('startDate').value
+          ) {
+            this.myForm
+              .get('endDate')
+              .setValue(this.myForm.get('startDate').value);
+          }
+        }
+      }
+    });
+
+
     this.today = new Date();
     this.lastDayOf3Month = new Date(
       new Date().getFullYear(),
@@ -145,9 +176,7 @@ export class AvailabilityScheduleComponent {
         console.error('Error:', error.error.message);
       }
     );
-    this.getAllTeacherBusyEvents()
- 
-
+    this.getAllTeacherBusyEvents();
   }
   onSave() {
     this.newService
@@ -188,11 +217,11 @@ export class AvailabilityScheduleComponent {
       this._snackBar.dismiss(); // תקרא לפונקציה dismiss כאן
     }
   }
-  getAllTeacherBusyEvents(){
+  getAllTeacherBusyEvents() {
     this.newService.getAllTeacherBusyEvents(this.teacher_id).subscribe(
       (data) => {
         console.log('Response:', data);
-        this.busyEvents=data.busyEvent
+        this.busyEvents = data.busyEvent;
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -208,26 +237,31 @@ export class AvailabilityScheduleComponent {
     this.loading = true;
 
     const teacher_id = this.userId;
+    const nameEvent = this.myForm.value.nameEvent;
     const startDate = this.myForm.value.startDate;
     const endDate = this.myForm.value.endDate;
-    this.newService.createBusyEvent({ teacher_id, startDate,endDate }).subscribe(
-      (data) => {
-        this.loading = false;
-        console.log('Response:', data);
-        this.getAllTeacherBusyEvents()
-      },
-      (error) => {
-        this.loading = false;
-        console.error('Error:', error.error.message);
-        this.errorMessage = error.error.message;
-      }
-    );
+    this.newService
+      .createBusyEvent({ teacher_id, startDate, endDate, nameEvent })
+      .subscribe(
+        (data) => {
+          console.log('Response:', data);
+          this.getAllTeacherBusyEvents();
+          this.myForm.reset();
+          this.errorMessage = '';
+          this.loading = false;
+        },
+        (error) => {
+          console.error('Error:', error.error.message);
+          this.errorMessage = error.error.message;
+          this.loading = false;
+        }
+      );
   }
-  deleteBusyEvent(_id){
+  deleteBusyEvent(_id) {
     this.newService.deleteBusyEvent(_id).subscribe(
       (data) => {
         console.log('Response:', data);
-        this.getAllTeacherBusyEvents()
+        this.getAllTeacherBusyEvents();
       },
       (error) => {
         console.error('Error:', error.error.message);

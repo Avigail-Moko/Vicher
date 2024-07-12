@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const busyEventSchema= mongoose.Schema({
     _id:mongoose.Types.ObjectId,
+    nameEvent:String,
     startDate:Date,
     endDate:Date,
     teacher_id:String, 
