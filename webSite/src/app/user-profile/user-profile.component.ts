@@ -19,6 +19,7 @@ export class UserProfileComponent {
   inputValue: string = '';
   message = '';
   isButtonsVisible: boolean = false;
+  editUserProfile: boolean = false;
   responsiveOptions: any[] | undefined;
 
   constructor(
@@ -67,7 +68,8 @@ export class UserProfileComponent {
     ];
 
     this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
-    // כאן חסר שינוי בזמן אמת על מנת ש description יתעדכן
+    this.inputValue = this.userProfile.description;
+
 
     const userId = localStorage.getItem('userId');
     this.newService.getProduct(userId).subscribe(
@@ -135,9 +137,15 @@ export class UserProfileComponent {
     const userId = localStorage.getItem('userId');
     this.newService.updateDescription(userId, data).subscribe(
       (response) => {
+
+        this.userProfile.description = this.inputValue;
+        localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
+        
+        this.editUserProfile=false
         console.log('Data updated', response);
       },
       (error) => {
+        this.editUserProfile=false
         console.error('Error updating data', error);
       }
     );

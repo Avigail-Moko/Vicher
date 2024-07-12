@@ -127,36 +127,40 @@ export class AvailabilityScheduleComponent {
       this.openSnackBar();
     }
   }
-  ngOnInit() {
+  calendarChronologicalOrder() {
     this.myForm.get('endDate').valueChanges.subscribe((value) => {
-      if (this.myForm.get('startDate').value) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // איפוס השעה, הדקות, השניות והאלפיות שנייה
 
-        const endDate = new Date(value);
-        endDate.setHours(0, 0, 0, 0); // איפוס השעה, הדקות, השניות והאלפיות שנייה
+      const startDate = new Date(this.myForm.get('startDate').value);
+      const endDate = new Date(this.myForm.get('endDate').value);
+      const today = new Date();
 
-        if (endDate.getTime() === today.getTime()) {
-          const endDateOriginal = new Date(value);
-          const hours = endDateOriginal.getHours();
-          const minutes = endDateOriginal.getMinutes();
-          const startDate = new Date(this.myForm.get('startDate').value);
-          startDate.setHours(hours, minutes, 0, 0);
+      if (endDate <= today) {
+        this.myForm.get('endDate').setValue(today);
+      }
+      if (endDate <= startDate) {
+        startDate.setMinutes(startDate.getMinutes() + 1); // להוסיף דקה אחת
 
-          this.myForm.get('endDate').setValue(startDate);
-
-          if (
-            this.myForm.get('endDate').value <=
-            this.myForm.get('startDate').value
-          ) {
-            this.myForm
-              .get('endDate')
-              .setValue(this.myForm.get('startDate').value);
-          }
-        }
+        this.myForm.get('endDate').setValue(startDate);
       }
     });
+    this.myForm.get('startDate').valueChanges.subscribe((value) => {
 
+      const startDate = new Date(this.myForm.get('startDate').value);
+      const endDate = new Date(this.myForm.get('endDate').value);
+      const today = new Date();
+
+      if (startDate < today) {
+        this.myForm.get('startDate').setValue(today);
+      }
+      if (endDate <= startDate) {
+        startDate.setMinutes(startDate.getMinutes() + 1); // להוסיף דקה אחת
+
+        this.myForm.get('endDate').setValue(startDate);
+      }
+    });
+  }
+  ngOnInit() {
+    this.calendarChronologicalOrder();
 
     this.today = new Date();
     this.lastDayOf3Month = new Date(

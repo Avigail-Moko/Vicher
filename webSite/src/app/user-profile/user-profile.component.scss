@@ -39,3 +39,6 @@ width: 32px;
 .rightBox >*{
   margin-left: 100px;
 }
+::ng-deep .p-card-footer {
+  padding:  0 !important;
+}
