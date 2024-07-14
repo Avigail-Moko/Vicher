@@ -1,69 +1,112 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NewService } from '../new.service';
 declare var JitsiMeetExternalAPI: any;
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-video-chat',
   templateUrl: './video-chat.component.html',
   styleUrls: ['./video-chat.component.scss']
 })
-export class VideoChatComponent implements OnInit, AfterViewInit {
+export class VideoChatComponent implements OnInit {
 
   domain: string = "meet.jit.si"; // For self hosted use your domain
   room: any;
   options: any;
   api: any;
   user: any;
-
+  allowedUsers:any[]=[];
+  _id: string;
+  userId = localStorage.getItem('userId');
+  userProfile=JSON.parse(localStorage.getItem('userProfile')); 
 
   // For Custom Controls
   isAudioMuted = false;
   isVideoMuted = false;
 
   constructor(
-      private router: Router
+      private router: Router,
+      private newService:NewService,
+      private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-      this.room = 'my room'; // Set your room name
-      this.user = {
-          name: 'Avigail Moko' // Set your username
+    this.route.queryParams.subscribe(params => {
+      this._id = params['_id'];
+    });
+  
+    console.log('_id:', this._id);
+    console.log('user id:', this.userId);
+  
+    this.newService.getLessonById(this._id).subscribe((data) => {
+      const startDate= new Date(data.lesson[0].myDate);
+      startDate.setMinutes(startDate.getMinutes() - 15);
+      const today=new Date();
+
+      this.allowedUsers.push(data.lesson[0].teacher_id);
+      this.allowedUsers.push(data.lesson[0].student_id);
+
+      if (this.allowedUsers.includes(this.userId)&&today>startDate) {
+        this.room = this._id;
+        this.user = {
+          // id: this.userId,
+          name: this.userProfile.name
+        };
+        this.initializeJitsiMeet();
+      } else if(!this.allowedUsers.includes(this.userId)) {
+        alert('you are not allowed to enter this room');
+        this.router.navigate(['/']);
+        
+      }else if(this.allowedUsers.includes(this.userId)&&today<startDate) {
+        const formattedStartDate = startDate.toLocaleString('en', {
+          year: 'numeric',
+          month: 'long', 
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        alert('lesson has not started yet. try again after '+formattedStartDate);
+        this.router.navigate(['/']);
+        
+      }
+    });
+  }
+  
+  initializeJitsiMeet(): void {
+    this.options = {
+      roomName: this.room,
+      width: 900,
+      height: 500,
+      configOverwrite: { 
+        prejoinPageEnabled: true,
+        // disableInviteFunctions: true // Disable invite functions
+    },
+      interfaceConfigOverwrite: {
+          // overwrite interface properties
+      },
+      parentNode: document.querySelector('#jitsi-iframe'),
+      userInfo: {
+          displayName: this.userProfile.name
       }
   }
 
-  ngAfterViewInit(): void {
-      this.options = {
-          roomName: this.room,
-          width: 900,
-          height: 500,
-          configOverwrite: { 
-            prejoinPageEnabled: true,
-            // disableInviteFunctions: true // Disable invite functions
-        },
-          interfaceConfigOverwrite: {
-              // overwrite interface properties
-          },
-          parentNode: document.querySelector('#jitsi-iframe'),
-          userInfo: {
-              displayName: this.user.name
-          }
-      }
+  this.api = new JitsiMeetExternalAPI(this.domain, this.options);
+  
 
-      this.api = new JitsiMeetExternalAPI(this.domain, this.options);
-      
+   // Event handlers
+  this.api.addEventListeners({
+      readyToClose: this.handleClose,
+      participantLeft: this.handleParticipantLeft,
+      participantJoined: this.handleParticipantJoined,
+      videoConferenceJoined: this.handleVideoConferenceJoined,
+      videoConferenceLeft: this.handleVideoConferenceLeft,
+      audioMuteStatusChanged: this.handleMuteStatus,
+      videoMuteStatusChanged: this.handleVideoStatus
+  });
+ };
 
-       // Event handlers
-      this.api.addEventListeners({
-          readyToClose: this.handleClose,
-          participantLeft: this.handleParticipantLeft,
-          participantJoined: this.handleParticipantJoined,
-          videoConferenceJoined: this.handleVideoConferenceJoined,
-          videoConferenceLeft: this.handleVideoConferenceLeft,
-          audioMuteStatusChanged: this.handleMuteStatus,
-          videoMuteStatusChanged: this.handleVideoStatus
-      });
-      
-}
 handleClose = () => {
   console.log("handleClose");
 }

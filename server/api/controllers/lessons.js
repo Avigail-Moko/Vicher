@@ -67,17 +67,17 @@ module.exports = {
 
   getLesson: (req, res) => {
     const teacher_id = req.query.teacher_id;
-    const product_id = req.query.product_id;
+    const _id = req.query._id;
 
     let query = {};
 
     if (teacher_id) {
       query.teacher_id = teacher_id;
-    } else if (product_id) {
-      query.product_id = product_id;
+    } else if (_id) {
+      query._id = _id;
     } else {
       return res.status(400).json({
-        message: "Either teacherId or productId must be provided",
+        message: "Either teacherId or id must be provided",
       });
     }
 
