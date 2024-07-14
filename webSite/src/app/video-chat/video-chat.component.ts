@@ -37,10 +37,8 @@ export class VideoChatComponent implements OnInit {
       this._id = params['_id'];
     });
   
-    console.log('_id:', this._id);
-    console.log('user id:', this.userId);
-  
     this.newService.getLessonById(this._id).subscribe((data) => {
+
       const startDate= new Date(data.lesson[0].myDate);
       startDate.setMinutes(startDate.getMinutes() - 15);
       const today=new Date();
@@ -56,11 +54,11 @@ export class VideoChatComponent implements OnInit {
         };
         this.initializeJitsiMeet();
       } else if(!this.allowedUsers.includes(this.userId)) {
-        alert('you are not allowed to enter this room');
+        // alert('you are not allowed to enter this room');
         this.router.navigate(['/']);
         
       }else if(this.allowedUsers.includes(this.userId)&&today<startDate) {
-        const formattedStartDate = startDate.toLocaleString('en', {
+        const formattedStartDate = startDate.toLocaleString('en-GB', {
           year: 'numeric',
           month: 'long', 
           day: '2-digit',
@@ -71,6 +69,9 @@ export class VideoChatComponent implements OnInit {
         this.router.navigate(['/']);
         
       }
+    },
+    () => {
+      this.router.navigate(['/']);
     });
   }
   

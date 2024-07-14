@@ -81,7 +81,10 @@ export class UserViewComponent {
           console.log('Response:', data);
   
           this.productsArray=data.product
-          });
+        },
+        (error) => {
+          console.error('Error:', error.error.message);
+        });
   }
 
   openDailyPlanner(product: any) {
