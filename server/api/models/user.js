@@ -11,13 +11,8 @@ const userSchema = mongoose.Schema({
     password: {type: String, require: true},
     name:{type:String, require: true},
     description: { type: String },
-    ratings: [
-        {
-            rating: { type: Number, required: true },
-            user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
-        }
-    ],
-    averageRating: { type: Number, default: 0 }
+    raterCounter:Number,
+    totalRating:Number
 
 })
 

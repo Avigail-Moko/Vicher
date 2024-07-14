@@ -17,7 +17,7 @@ import { Message } from 'primeng/api';
 export class UserViewComponent {
  //האם ניתן למחוק משתנה זה?
   // date: Date | undefined;
-  value!: number;
+  rating!: number;
   lesson_title: string | undefined;
   category: string | undefined;
   description: string | undefined;
@@ -53,6 +53,9 @@ export class UserViewComponent {
 
  
   ngOnInit() {
+
+    this.rating = Math.round(this.userProfile.totalRating/this.userProfile.raterCounter);
+
     //responsive page
     this.responsiveOptions = [
       {

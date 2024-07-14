@@ -1,7 +1,7 @@
 <div class="flex flex-wrap ">
   <div class="flex flex-1 flex-column align-items-center  lg:flex-none " >
     <p-card class="p-card-header" header="{{userProfile.name}}" subheader="{{ userProfile.email }}" [style]="{ width: '360px',backgroundColor:'var(--surface-900)',border:'1px solid var(--surface-800)'}">
-      <p-rating  class="p-rating mb-3" [(ngModel)]="value" [cancel]="false"></p-rating>
+      <p-rating  class="p-rating mb-3" [(ngModel)]="rating" [disabled]="true" [cancel]="false"></p-rating>
       <ng-template  pTemplate="header">
         <img class="profileImage mt-5" [src]="userProfile.profileImage" alt="User Profile">
       </ng-template> 

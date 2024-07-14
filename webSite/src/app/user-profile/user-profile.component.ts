@@ -13,7 +13,7 @@ import { DeleteItemComponent } from '../delete-item/delete-item.component';
   providers: [MessageService],
 })
 export class UserProfileComponent {
-  value!: number;
+  rating!: number;
   productsArray: any;
   userProfile: any;
   inputValue: string = '';
@@ -48,7 +48,8 @@ export class UserProfileComponent {
     });
   }
 
-  ngOnInit() {
+  ngOnInit() { 
+
     this.responsiveOptions = [
       {
         breakpoint: '1199px',
@@ -69,6 +70,7 @@ export class UserProfileComponent {
 
     this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
     this.inputValue = this.userProfile.description;
+    this.rating = Math.round(this.userProfile.totalRating/this.userProfile.raterCounter);
 
 
     const userId = localStorage.getItem('userId');

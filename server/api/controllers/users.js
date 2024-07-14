@@ -89,7 +89,8 @@ module.exports = {
                     email,
                     password: hash,
                     name,
-                    profileImage
+                    profileImage,
+
                 });
                 user.save().then((result) => {
                     console.log(result);
@@ -143,7 +144,9 @@ module.exports = {
                             name: user.name,
                             email: user.email,
                             profileImage: user.profileImage,
-                            description:user.description
+                            description:user.description,
+                            totalRating:user.totalRating,
+                            raterCounter:user.raterCounter,
                         }
                     })
                 }
@@ -154,25 +157,25 @@ module.exports = {
             })}
         )
     },
-    getProfile: (req, res) => {
-        const userId = req.userData.id; // Use the data from the middleware
+    // getProfile: (req, res) => {
+    //     const userId = req.userData.id; // Use the data from the middleware
 
-        User.findById(userId)
-            .select('name email profileImage description _id') // Select the fields you want to retrieve
-            .exec()
-            .then(user => {
-                if (!user) {
-                    return res.status(404).json({ message: 'User not found' });
-                }
-                res.status(200).json({ message: 'User retrieved successfully', user:user });
-            })
-            .catch(err => {
-                res.status(500).json({ error: 'Server error' });
-            });
-    },
+    //     User.findById(userId)
+    //         .select('name email profileImage description _id') // Select the fields you want to retrieve
+    //         .exec()
+    //         .then(user => {
+    //             if (!user) {
+    //                 return res.status(404).json({ message: 'User not found' });
+    //             }
+    //             res.status(200).json({ message: 'User retrieved successfully', user:user });
+    //         })
+    //         .catch(err => {
+    //             res.status(500).json({ error: 'Server error' });
+    //         });
+    // },
     getAllUsers: (req, res) => {
         User.find()
-            .select('_id email profileImage name description') // בחר את השדות שתרצה להחזיר
+            .select('_id email profileImage name description totalRating raterCounter') // בחר את השדות שתרצה להחזיר
             .exec()
             .then(users => {
                 if (!users || users.length === 0) {
@@ -184,7 +187,9 @@ module.exports = {
                     profileImage: user.profileImage,
                     name:user.name,
                     _id:user._id,
-                    description:user.description
+                    description:user.description,
+                    totalRating:user.totalRating,
+                    raterCounter:user.raterCounter
                 }));
 
                 res.status(200).json({ message: 'Users retrieved successfully', users: formattedUsers });
@@ -211,38 +216,58 @@ module.exports = {
                 res.status(500).json({ error: 'Server error' });
             });
     },
-    rateUser: (req, res) => {
-        const { userId, rating } = req.body;
-        const raterId = req.userData.id;
+    rating: (req, res) => {
+        const { rating } = req.body;
+        const userId = req.query.teacher_id;
+        const ratingNumber = Number(rating);
 
-        if (rating < 1 || rating > 5) {
-            return res.status(400).json({ message: 'Rating should be between 1 and 5' });
-        }
-
-        User.findById(userId).then(user => {
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-
-            const existingRatingIndex = user.ratings.findIndex(r => r.user.toString() === raterId);
-
-            if (existingRatingIndex >= 0) {
-                user.ratings[existingRatingIndex].rating = rating;
-            } else {
-                user.ratings.push({ rating, user: raterId });
-            }
-
-            const totalRating = user.ratings.reduce((acc, r) => acc + r.rating, 0);
-            user.averageRating = totalRating / user.ratings.length;
-
-            user.save().then(updatedUser => {
-                res.status(200).json({ message: 'User rated successfully', averageRating: updatedUser.averageRating });
-            }).catch(err => {
+        User.findById(userId)
+            .then(user => {
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+                
+                // Initialize raterCounter and totalRating if they don't exist
+                if (user.raterCounter === undefined ) {
+                    user.raterCounter = 0;
+                }
+                if (user.totalRating === undefined ) {
+                    user.totalRating = 0;
+                }
+    
+                user.raterCounter += 1;
+                user.totalRating += ratingNumber;
+    
+                user.save()
+                    .then(() => {
+                        res.status(200).json({ message: 'User rated successfully' });
+                    })
+                    .catch(err => {
+                        res.status(500).json({ error: 'Server error' });
+                    });
+            })
+            .catch(err => {
                 res.status(500).json({ error: 'Server error' });
             });
-        }).catch(err => {
-            res.status(500).json({ error: 'Server error' });
-        });
-    }
+    },
+    // getRating: (req, res) => {
+    //     const userId = req.query.userId;
+    
+    //     User.findById(userId)
+    //         .then(user => {
+    //             if (!user) {
+    //                 return res.status(404).json({ message: 'User not found' });
+    //             }
+
+    //             const avgRating = (user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0;
+    
+    //             res.status(200).json({ avgRating: avgRating });
+    //         })
+    //         .catch(err => {
+    //             res.status(500).json({ error: 'Server error' });
+    //         });
+    // }
+    
+    
 }
 
