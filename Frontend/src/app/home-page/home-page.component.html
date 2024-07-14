@@ -37,6 +37,10 @@
       </button>
       <!-- <mat-select multiple > -->
       <p-overlayPanel #op [style]="{ width: '450px' }">
+        <div *ngIf="alerts.length === 0">
+          No notifications available at this time.
+        </div>
+        
         <div *ngFor="let alert of alerts">
           <!-- reminder: -->
           <button
