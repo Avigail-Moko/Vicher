@@ -45,8 +45,10 @@ export class VideoChatComponent implements OnInit {
 
       this.allowedUsers.push(data.lesson[0].teacher_id);
       this.allowedUsers.push(data.lesson[0].student_id);
-
+      
       if (this.allowedUsers.includes(this.userId)&&today>startDate) {
+        
+
         this.room = this._id;
         this.user = {
           // id: this.userId,
@@ -127,9 +129,13 @@ handleVideoConferenceJoined = async (participant) => {
   const data = await this.getParticipants();
 }
 
+// handleVideoConferenceLeft = () => {
+//   console.log("handleVideoConferenceLeft");
+//   this.router.navigate(['/thank-you']);
+// }
 handleVideoConferenceLeft = () => {
-  console.log("handleVideoConferenceLeft");
-  this.router.navigate(['/thank-you']);
+  console.log("handle Video ConferenceLeft is working");
+  this.router.navigate(['/end-and-rate']);
 }
 
 handleMuteStatus = (audio) => {

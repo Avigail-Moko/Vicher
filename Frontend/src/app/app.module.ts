@@ -55,6 +55,7 @@ import { BadgeModule } from 'primeng/badge';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TagModule } from 'primeng/tag';
 import { VideoChatComponent } from './video-chat/video-chat.component';
+import { RatingPageComponent } from './rating-page/rating-page.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { VideoChatComponent } from './video-chat/video-chat.component';
     AvailabilityScheduleComponent,
     UserViewComponent,
     VideoChatComponent,
+    RatingPageComponent,
     
     
   ],

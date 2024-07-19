@@ -9,6 +9,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { AvailabilityScheduleComponent } from './availability-schedule/availability-schedule.component';
 import { UserViewComponent } from './user-view/user-view.component';
 import { VideoChatComponent } from './video-chat/video-chat.component';
+import { RatingPageComponent } from './rating-page/rating-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'wellcome', pathMatch: 'full' }, // נתיב ריק מוביל לדף הבית
@@ -32,6 +33,7 @@ const routes: Routes = [
     component: VideoChatComponent,
     canActivate: [AuthGuard],
   },
+  {path:'end-and-rate', component:RatingPageComponent,canActivate: [AuthGuard]}
   
 ];
 

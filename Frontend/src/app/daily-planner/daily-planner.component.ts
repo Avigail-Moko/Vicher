@@ -443,6 +443,7 @@ areThereLessonsInTimeRange(timeRange: string): boolean {
         product_id: this.product._id,
         teacher_id: this.product.userId,
         length: this.product.length,
+        // myDate: '2024-07-19T11:15:00Z',
         myDate: this.myDate,
       })
       .subscribe(

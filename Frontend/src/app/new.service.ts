@@ -128,7 +128,7 @@ export class NewService {
   }
   
   getLessonById(_id: any): Observable<any> {
-    const url = `http://localhost:3000/lessons/getLesson?_id=${_id}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
+    const url = `http://localhost:3000/lessons/getLesson?_id=${_id}`;
     return this.http.get(url);
   }
   createSchedule(objectsArray: any, teacher_id: any) {
