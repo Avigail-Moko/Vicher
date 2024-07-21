@@ -188,8 +188,9 @@ module.exports = {
                     name:user.name,
                     _id:user._id,
                     description:user.description,
-                    totalRating:user.totalRating,
-                    raterCounter:user.raterCounter
+                    // totalRating:user.totalRating,
+                    // raterCounter:user.raterCounter,
+                    avgRating:(user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0
                 }));
 
                 res.status(200).json({ message: 'Users retrieved successfully', users: formattedUsers });
@@ -250,23 +251,23 @@ module.exports = {
                 res.status(500).json({ error: 'Server error' });
             });
     },
-    // getRating: (req, res) => {
-    //     const userId = req.query.userId;
+    getRating: (req, res) => {
+        const userId = req.query.userId;
     
-    //     User.findById(userId)
-    //         .then(user => {
-    //             if (!user) {
-    //                 return res.status(404).json({ message: 'User not found' });
-    //             }
+        User.findById(userId)
+            .then(user => {
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
 
-    //             const avgRating = (user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0;
+                const avgRating = (user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0;
     
-    //             res.status(200).json({ avgRating: avgRating });
-    //         })
-    //         .catch(err => {
-    //             res.status(500).json({ error: 'Server error' });
-    //         });
-    // }
+                res.status(200).json({ avgRating: avgRating });
+            })
+            .catch(err => {
+                res.status(500).json({ error: 'Server error' });
+            });
+    }
     
     
 }

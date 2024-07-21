@@ -15,6 +15,6 @@ router.patch('/updateDescription',updateDescription);
 
 router.post('/rating', rating);
 
-// router.get('/getRating', getRating)
+router.get('/getRating', getRating)
 
 module.exports= router;

@@ -1,5 +1,5 @@
 import {  Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { NewService } from '../new.service';
 declare var JitsiMeetExternalAPI: any;
 import { ActivatedRoute } from '@angular/router';
@@ -21,6 +21,7 @@ export class VideoChatComponent implements OnInit {
   _id: string;
   userId = localStorage.getItem('userId');
   userProfile=JSON.parse(localStorage.getItem('userProfile')); 
+  teacher_id:any;
 
   // For Custom Controls
   isAudioMuted = false;
@@ -33,19 +34,39 @@ export class VideoChatComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    setTimeout(() => {
+      this.selectModerator();
+    }, 8000);
+
+
     this.route.queryParams.subscribe(params => {
       this._id = params['_id'];
     });
+
+    if (!this._id) {
+      this.router.navigate(['/']);
+      return;
+    }
+    if (!this.userProfile) {
+      this.router.navigate(['/']);
+      return;
+    }
   
     this.newService.getLessonById(this._id).subscribe((data) => {
 
+      if (!data.lesson[0]) {
+        this.router.navigate(['/']);
+        return;
+      }
       const startDate= new Date(data.lesson[0].myDate);
       startDate.setMinutes(startDate.getMinutes() - 15);
       const today=new Date();
 
       this.allowedUsers.push(data.lesson[0].teacher_id);
       this.allowedUsers.push(data.lesson[0].student_id);
-      
+      this.teacher_id=data.lesson[0].teacher_id
+
       if (this.allowedUsers.includes(this.userId)&&today>startDate) {
         
 
@@ -135,7 +156,8 @@ handleVideoConferenceJoined = async (participant) => {
 // }
 handleVideoConferenceLeft = () => {
   console.log("handle Video ConferenceLeft is working");
-  this.router.navigate(['/end-and-rate']);
+console.log(this.teacher_id)
+this.router.navigate(['/end-and-rate'], { state: { teacher_id: this.teacher_id } });
 }
 
 handleMuteStatus = (audio) => {
@@ -168,4 +190,20 @@ executeCommand(command: string) {
       this.isVideoMuted = !this.isVideoMuted;
   }
 }
+
+
+selectModerator(): void {
+  const modal = document.querySelector('div[aria-label="Waiting for a moderator..."]') as HTMLElement;
+  if (modal) {
+    const moderatorButton = modal.querySelector('button[aria-label="אני המארח"]') as HTMLButtonElement;
+    if (moderatorButton) {
+      moderatorButton.click();
+    } else {
+      console.warn('Moderator button not found.');
+    }
+  } else {
+    console.warn('Moderator waiting modal not found.');
+  }
+}
+
 }

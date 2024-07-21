@@ -156,10 +156,7 @@ export class NewService {
     const url = `http://localhost:3000/notification/markNotificationsAsRead?_id=${_id}`;
     return this.http.patch(url, { userId });
   }
-  rateUser(values: any):Observable<any>{
-    const url=`http://localhost:3000/users/rateUser`;
-    return this.http.post(url, values)
-  }
+
   createBusyEvent(values: any) {
     const url = `http://localhost:3000/busyEvents/createBusyEvent`;
     return this.http.post(url, values );
@@ -175,5 +172,9 @@ export class NewService {
   getRating(userId: any):Observable<any>{
     const url = `http://localhost:3000/users/getRating?userId=${userId}`;
     return this.http.get(url);
+  }
+  rating(teacher_id: any,rating:any):Observable<any>{
+    const url = `http://localhost:3000/users/rating?teacher_id=${teacher_id}`;
+    return this.http.post(url,{rating});
   }
 }

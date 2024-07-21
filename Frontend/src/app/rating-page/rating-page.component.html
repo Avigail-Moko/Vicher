@@ -1,1 +1,8 @@
-<p>rating-page works!</p>
+
+
+<p-card class="div">
+  <h1>Thank you for joining the lesson!</h1>
+  <h2>Please rate your experience by selecting the number of stars below.</h2>
+  <h3>Your feedback is valuable to us!</h3>
+  <p-rating [(ngModel)]="value" [cancel]="false" (onRate)="onRate($event)" [readonly]="isReadonly"  />
+</p-card>

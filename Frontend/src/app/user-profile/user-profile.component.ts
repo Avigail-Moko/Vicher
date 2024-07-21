@@ -48,8 +48,7 @@ export class UserProfileComponent {
     });
   }
 
-  ngOnInit() { 
-
+  ngOnInit() {
     this.responsiveOptions = [
       {
         breakpoint: '1199px',
@@ -68,12 +67,15 @@ export class UserProfileComponent {
       },
     ];
 
+    const userId = localStorage.getItem('userId');
     this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
     this.inputValue = this.userProfile.description;
-    this.rating = Math.round(this.userProfile.totalRating/this.userProfile.raterCounter);
+    // this.rating = Math.round(this.userProfile.totalRating/this.userProfile.raterCounter);
+    this.newService.getRating(userId).subscribe((data) => {
+      this.rating=data.avgRating
+      console.log('Response:', this.rating);
+    });
 
-
-    const userId = localStorage.getItem('userId');
     this.newService.getProduct(userId).subscribe(
       (data) => {
         console.log('Response:', data);
@@ -139,15 +141,14 @@ export class UserProfileComponent {
     const userId = localStorage.getItem('userId');
     this.newService.updateDescription(userId, data).subscribe(
       (response) => {
-
         this.userProfile.description = this.inputValue;
         localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
-        
-        this.editUserProfile=false
+
+        this.editUserProfile = false;
         console.log('Data updated', response);
       },
       (error) => {
-        this.editUserProfile=false
+        this.editUserProfile = false;
         console.error('Error updating data', error);
       }
     );
