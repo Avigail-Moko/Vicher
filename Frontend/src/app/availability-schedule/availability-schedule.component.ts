@@ -258,6 +258,8 @@ export class AvailabilityScheduleComponent {
           console.log('Response:', data);
           this.getAllTeacherBusyEvents();
           this.myForm.reset();
+          this.endDate=undefined
+          this.startDate=undefined
           this.errorMessage = '';
           this.loading = false;
         },
