@@ -35,6 +35,8 @@ export class DailyPlannerComponent {
   flag: boolean = false;
   newObjArray: any[] = [];
   availableDays: Set<number> = new Set();
+  busyEventArray: any[] = [];
+
   takenLessonArray: any[] = [];
   dailyTakenArray: any[] = [];
   isTaken: boolean;
@@ -44,7 +46,6 @@ export class DailyPlannerComponent {
   timeRanges: string[] = ['morning', 'noon', 'afternoon', 'evening'];
   appointmentGuid: number = 1;
   userProfile = JSON.parse(localStorage.getItem('userProfile'));
-
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -157,7 +158,6 @@ export class DailyPlannerComponent {
   }
 
   ngOnInit() {
-
     this.newService.getSchedule(this.product.userId).subscribe(
       (data) => {
         for (
@@ -189,7 +189,6 @@ export class DailyPlannerComponent {
     this.newService.getLessonByTeacher(this.product.userId).subscribe(
       (data) => {
         for (let index = 0; index < data.lesson.length; index++) {
-
           const newDate = {
             start: new Date(data.lesson[index].myDate),
             end: new Date(data.lesson[index].endDate),
@@ -206,27 +205,72 @@ export class DailyPlannerComponent {
     this.newService.getAllTeacherBusyEvents(this.product.userId).subscribe(
       (data) => {
         for (let index = 0; index < data.busyEvent.length; index++) {
-
-          const newDate = {
-            start: new Date(data.busyEvent[index].startDate),
-            end: new Date(data.busyEvent[index].endDate),
-          };
-
-          this.takenLessonArray.push(newDate);
+          this.busyEventArray.push(data.busyEvent[index]);
         }
-        console.log(data)
-
+        this.busyEventsToTaken();
       },
       (error) => {
         console.error('Error:', error.error.message);
         this.errorMessage = error.error.message;
       }
     );
+  }
+  
+  busyEventsToTaken() {
+    if (this.busyEventArray.length === 0) {
+      return console.log('dont have any busy event', this.busyEventArray);
+    }
+    for (let index = 0; index < this.busyEventArray.length; index++) {
+      const startOnlyDateString = this.datePipe.transform(
+        this.busyEventArray[index].startDate,
+        'yyyy-MM-dd'
+      );
+      const endOnlyDateString = this.datePipe.transform(
+        this.busyEventArray[index].endDate,
+        'yyyy-MM-dd'
+      );
+      const startOnlyDate = new Date(startOnlyDateString);
+      const endOnlyDate = new Date(endOnlyDateString);
+      const timeDifference = endOnlyDate.getTime() - startOnlyDate.getTime();
+      const dayDifference = timeDifference / (1000 * 3600 * 24);
 
+      if (dayDifference === 0) {
+        const newDate = {
+          start: new Date(this.busyEventArray[index].startDate),
+          end: new Date(this.busyEventArray[index].endDate),
+        };
+        this.takenLessonArray.push(newDate);
+      } else {
+        const startnewDate = {
+          start: new Date(this.busyEventArray[index].startDate),
+          end: new Date(startOnlyDate.setHours(23, 59)),
+        };
+        this.takenLessonArray.push(startnewDate);
+        const endnewDate = {
+          start: new Date(endOnlyDate.setHours(0, 0)),
+          end: new Date(this.busyEventArray[index].endDate),
+        };
+        this.takenLessonArray.push(endnewDate);
+      }
+
+      if (dayDifference > 1) {
+        for (let day = 1; day < dayDifference; day++) {
+          const newOnlyDate = new Date(startOnlyDate);
+          newOnlyDate.setDate(newOnlyDate.getDate() + day);
+
+          const newDate = {
+            start: new Date(newOnlyDate.setHours(0, 0)),
+            end: new Date(newOnlyDate.setHours(23, 59)),
+          };
+
+          this.takenLessonArray.push(newDate);
+        }
+      }
+    }
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    this.appointmentGuid=2
+    this.appointmentGuid = 2;
     this.dailyTakenArray = [];
     this.selectedLesson = null;
     this.newObjArray = [];
@@ -389,18 +433,20 @@ export class DailyPlannerComponent {
   getTimeOfDay(lesson: string): string {
     const hour = +lesson.split(':')[0];
     if (hour >= 0 && hour < 6) {
-        return 'morning';
+      return 'morning';
     } else if (hour >= 6 && hour < 12) {
-        return 'noon';
+      return 'noon';
     } else if (hour >= 12 && hour < 18) {
-        return 'afternoon';
+      return 'afternoon';
     } else {
-        return 'evening';
+      return 'evening';
     }
-}
-areThereLessonsInTimeRange(timeRange: string): boolean {
-  return this.lessonsArray.some(lesson => this.getTimeOfDay(lesson) === timeRange);
-}
+  }
+  areThereLessonsInTimeRange(timeRange: string): boolean {
+    return this.lessonsArray.some(
+      (lesson) => this.getTimeOfDay(lesson) === timeRange
+    );
+  }
 
   isSelected(lesson: string): boolean {
     return this.selectedLesson === lesson;
@@ -434,16 +480,14 @@ areThereLessonsInTimeRange(timeRange: string): boolean {
   }
 
   createLesson() {
-
     this.newService
       .createLesson({
         student_id: this.userId,
-        teacher_name:this.product.userProfileName,
-        student_name:this.userProfile.name,
+        teacher_name: this.product.userProfileName,
+        student_name: this.userProfile.name,
         product_id: this.product._id,
         teacher_id: this.product.userId,
         length: this.product.length,
-        // myDate: '2024-07-19T12:15:00Z',
         myDate: this.myDate,
       })
       .subscribe(
