@@ -215,10 +215,10 @@ export class DailyPlannerComponent {
       }
     );
   }
-  
+
   busyEventsToTaken() {
     if (this.busyEventArray.length === 0) {
-      return console.log('dont have any busy event', this.busyEventArray);
+      return console.log('dont have any busy event');
     }
     for (let index = 0; index < this.busyEventArray.length; index++) {
       const startOnlyDateString = this.datePipe.transform(
