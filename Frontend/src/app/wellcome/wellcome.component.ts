@@ -15,9 +15,10 @@ export class WellcomeComponent {
   AllproductsArray: any;
   AllusersArray: any;
   responsiveOptions: any[] | undefined;
+  responsiveOptions2: any[] | undefined;
   messages: Message[] | undefined;
   userId = localStorage.getItem('userId');
-
+  
   constructor(
     private newService: NewService,
     private http: HttpClient,
@@ -36,24 +37,6 @@ export class WellcomeComponent {
         this.userId = null;
       }
     });
-
-    this.responsiveOptions = [
-      {
-        breakpoint: '1199px',
-        numVisible: 1,
-        numScroll: 1,
-      },
-      {
-        breakpoint: '991px',
-        numVisible: 2,
-        numScroll: 1,
-      },
-      {
-        breakpoint: '767px',
-        numVisible: 1,
-        numScroll: 1,
-      },
-    ];
 
     this.newService.getAllProduct().subscribe(
       (data) => {
@@ -74,6 +57,32 @@ export class WellcomeComponent {
         console.error('Error:', error.error.message);
       }
     );
+
+    this.responsiveOptions = [
+      {
+          breakpoint: '1260px',
+          numVisible: 3,
+          numScroll: 2
+      },
+            {
+          breakpoint: '1000px',
+          numVisible: 2,
+          numScroll: 1
+      },
+      {
+          breakpoint: '750px',
+          numVisible: 1,
+          numScroll: 1
+      }
+  ];
+  this.responsiveOptions2 = [
+    {
+        breakpoint: '750px',
+        numVisible: 1,
+        numScroll: 1
+    }
+];
+
   }
 
   openDailyPlanner(product: any) {

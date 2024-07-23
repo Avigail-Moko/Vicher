@@ -14,7 +14,7 @@ import { DeleteItemComponent } from '../delete-item/delete-item.component';
 })
 export class UserProfileComponent {
   rating!: number;
-  productsArray: any;
+  productsArray: any[] = [];
   userProfile: any;
   inputValue: string = '';
   message = '';
@@ -51,21 +51,16 @@ export class UserProfileComponent {
   ngOnInit() {
     this.responsiveOptions = [
       {
-        breakpoint: '1199px',
-        numVisible: 1,
-        numScroll: 1,
+          breakpoint: '1430px',
+          numVisible: 2,
+          numScroll: 2
       },
       {
-        breakpoint: '991px',
-        numVisible: 2,
-        numScroll: 1,
-      },
-      {
-        breakpoint: '767px',
-        numVisible: 1,
-        numScroll: 1,
-      },
-    ];
+          breakpoint: '1170px',
+          numVisible: 1,
+          numScroll: 1
+      }
+  ];
 
     const userId = localStorage.getItem('userId');
     this.userProfile = JSON.parse(localStorage.getItem('userProfile'));

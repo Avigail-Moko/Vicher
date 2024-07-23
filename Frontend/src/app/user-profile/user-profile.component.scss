@@ -1,44 +1,72 @@
-::ng-deep .p-card-header {
+.p-card-header {
   text-align: center;
 }
 
-.profileImage{
+.profileImage {
   border-radius: 50%;
   width: 50%;
 }
 
-.product-card{
-background-color:var(--surface-900);
-border:1px solid var(--surface-800);
-border-radius:20px;
-width: 220px;
-height: 480px;
+.product-card {
+  background-color: var(--surface-900);
+  border: 1px solid var(--surface-800);
+  border-radius: 20px;
+  // width: 220px;
+  // height: 480px;
+  width: 240px;
+  height: 520px;
 }
 
-.header-image{
-width: 100%;
-height: 200px;
-border-radius: 20px;
-padding: 10px ;
+.header-image {
+  width: 100%;
+  height: 200px;
+  border-radius: 20px;
+  padding: 10px;
 }
 
 .content-image {
-background-size: cover;
-margin: 0;
-height: 32px;
-width: 32px;
+  background-size: cover;
+  margin: 0;
+  height: 32px;
+  width: 32px;
 }
 
-// ::ng-deep
-.no-border{
-  border: none;
+p-carousel {
+  width: 100%;
 }
 
-
-
-.rightBox >*{
-  margin-left: 100px;
+::ng-deep #p-carousel-center > * > * > * > * > * > * {
+  display: flex;
+  justify-content: center;
 }
+
 ::ng-deep .p-card-footer {
-  padding:  0 !important;
+  padding: 0 !important;
+}
+.product-footer {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.product-description {
+  display: -webkit-box; /* Uses the WebKit box model for layout */
+  -webkit-box-orient: vertical; /* Arranges child elements in a vertical direction */  
+  -webkit-line-clamp: 6; /* Limits the paragraph to 6 lines */
+  line-clamp: 6; /* Limits the paragraph to 6 lines */
+  overflow: hidden; /* Hides content that exceeds the line limit */
+  text-overflow: ellipsis; /* Adds ellipsis at the end */
+  // word-wrap: break-word; /* Breaks long words */
+  // hyphens: auto; /* Adds hyphenation to broken words */
+}
+
+.user-description {
+  display: -webkit-box; /* Uses the WebKit box model for layout */
+  -webkit-box-orient: vertical; /* Arranges child elements in a vertical direction */  
+  -webkit-line-clamp: 9; /* Limits the paragraph to 6 lines */
+  line-clamp: 9; /* Limits the paragraph to 6 lines */
+  overflow: hidden; /* Hides content that exceeds the line limit */
+  text-overflow: ellipsis; /* Adds ellipsis at the end */
+  // word-wrap: break-word; /* Breaks long words */
+  // hyphens: auto; /* Adds hyphenation to broken words */
 }

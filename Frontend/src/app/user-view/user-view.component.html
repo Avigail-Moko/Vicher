@@ -36,7 +36,7 @@
             how old are you? Where do you live, how many years did you study?
             Any detail that will attract potential customers to contact you!
           </p>
-          <p>{{ userProfile.description }}</p>
+          <p class="user-description">{{ userProfile.description }}</p>
         </div>
       </p-card>
     </p-card>
@@ -62,17 +62,18 @@
 
   <!-- right box -->
   <div
-    class="flex flex-1 flex-column align-items-center"
+    class="flex flex-1 flex-column align-items-center lg:ml-7"
     [style]="{ width: '50%' }"
   >
     <!-- cards of products: -->
     <p-carousel
-      class="w-10 lg:ml-7"
+    id="p-carousel-center"
+      class=" lg:mx-7"
       [value]="productsArray"
-      [numVisible]="3"
+      [numVisible]="productsArray.length < 3 ? productsArray.length : 3"
       [numScroll]="1"
       [circular]="true"
-      [responsiveOptions]="responsiveOptions"
+      [responsiveOptions]="productsArray.length > 1 ?responsiveOptions : null"
     >
       <ng-template let-product pTemplate="item">
         <mat-card class="product-card m-3" (click)="openDailyPlanner(product)">
@@ -112,10 +113,11 @@
               >lesson length: {{ product.length }} min.</mat-card-subtitle
             >
           </mat-card-content>
-          <mat-card-footer class="px-3">
-            <p class="overflow-hidden text-overflow-ellipsis">
+          <mat-card-footer class="px-3 product-footer">
+            <p class="product-description">
               {{ product.description }}
             </p>
+
           </mat-card-footer>
         </mat-card>
       </ng-template>

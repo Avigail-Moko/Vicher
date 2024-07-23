@@ -56,6 +56,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TagModule } from 'primeng/tag';
 import { VideoChatComponent } from './video-chat/video-chat.component';
 import { RatingPageComponent } from './rating-page/rating-page.component';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -142,7 +143,7 @@ import { RatingPageComponent } from './rating-page/rating-page.component';
     BadgeModule,
     OverlayPanelModule,
     TagModule,
-  
+    InputNumberModule
   ],
 })
 export class AppModule {}

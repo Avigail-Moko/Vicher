@@ -22,7 +22,7 @@ export class UserViewComponent {
   category: string | undefined;
   description: string | undefined;
   price: string | undefined;
-  productsArray: any;
+  productsArray: any[] = []; // Make sure to initialize as an empty array
   // inputValue: string = '';
 
   // isContentEditable = false;
@@ -59,21 +59,16 @@ export class UserViewComponent {
     //responsive page
     this.responsiveOptions = [
       {
-        breakpoint: '1199px',
-        numVisible: 1,
-        numScroll: 1,
+          breakpoint: '1430px',
+          numVisible: 2,
+          numScroll: 1
       },
       {
-        breakpoint: '991px',
-        numVisible: 2,
-        numScroll: 1,
-      },
-      {
-        breakpoint: '767px',
-        numVisible: 1,
-        numScroll: 1,
-      },
-    ];
+          breakpoint: '1170px',
+          numVisible: 1,
+          numScroll: 1
+      }
+  ];
 
    
       this.newService.getProduct(this.userProfile._id).subscribe(

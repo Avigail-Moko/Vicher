@@ -37,12 +37,13 @@
   <!-- <p-fieldset  legend="Header"> -->
 
   <p-carousel
+  id="p-carousel-center"
     [value]="AllproductsArray"
-    [numVisible]="4"
-    [numScroll]="3"
-    [circular]="true"
-    [responsiveOptions]="responsiveOptions"
-    [autoplayInterval]="6000"
+    [numVisible]=" AllproductsArray.length < 4 ? AllproductsArray.length : 4"
+    [numScroll]="AllproductsArray.length === 1 ? 1 : (AllproductsArray.length < 4 ? AllproductsArray.length - 1 : 3)"
+     [circular]="true"
+     [responsiveOptions]="AllproductsArray.length <= 2 ? responsiveOptions2 : responsiveOptions"
+     [autoplayInterval]="6000"
   >
     >
     <ng-template let-product pTemplate="item">
@@ -81,10 +82,11 @@
             >lesson length: {{ product.length }} min.</mat-card-subtitle
           >
         </mat-card-content>
-        <mat-card-footer class="px-3">
-          <p class="overflow-hidden text-overflow-ellipsis">
+        <mat-card-footer class="px-3 product-footer">
+          <p class="product-description">
             {{ product.description }}
           </p>
+
           <!-- <p-button  icon="pi pi-trash" class="m-2" *ngIf="isButtonsVisible" (click)="deleteProduct(product._id)" mat-raised-button matTooltip="Delete Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button>
               <p-button  icon="pi pi-user-edit" class="m-2" *ngIf="isButtonsVisible" (click)="openProductsEditDialog(product,userProfile)"  mat-raised-button matTooltip="Edit Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button> -->
         </mat-card-footer>
@@ -97,11 +99,12 @@
   <!-- <p-fieldset  legend="Header"> -->
 
   <p-carousel
+  id="p-carousel-center"
     [value]="AllusersArray"
-    [numVisible]="4"
-    [numScroll]="3"
+    [numVisible]=" AllusersArray.length < 4 ? AllusersArray.length : 4"
+    [numScroll]="AllusersArray.length === 1 ? 1 : (AllusersArray.length < 4 ? AllusersArray.length - 1 : 3)"
     [circular]="true"
-    [responsiveOptions]="responsiveOptions"
+    [responsiveOptions]="AllusersArray.length <= 2 ? responsiveOptions2 : responsiveOptions"
     [autoplayInterval]="6000"
   >
     >

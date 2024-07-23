@@ -17,11 +17,15 @@
       <div class="flex flex-row justify-content-between">
         <mat-card-subtitle>
           <i class="pi pi-tag text-sm mr-2"></i>
-          <input pInputText id="category" formControlName="category" [value]="product.category" matTooltip="category" [(ngModel)]="product.category" class="p-inputtext-sm w-7 surface-900 mb-4" />
+          <input pInputText id="category" formControlName="category" [value]="product.category" matTooltip="category" [(ngModel)]="product.category" class="p-inputtext-sm w-9 surface-900 mb-4" />
           </mat-card-subtitle>
-        <mat-card-subtitle class="w-4">
-          <span class="font-bold text-100 mr-2">₪</span>
-          <input pInputText id="price" formControlName="price" [value]="product.price" matTooltip="price" [(ngModel)]="product.price" class="p-inputtext-sm w-7 surface-900 "  />
+        <mat-card-subtitle >
+          <!-- <span class="font-bold text-100 mr-2">₪</span>
+          <input pInputText id="price" formControlName="price" [value]="product.price" matTooltip="price" [(ngModel)]="product.price" class="p-inputtext-sm w-7 surface-900 "  /> -->
+          <p-inputNumber id="price" formControlName="price" matTooltip="price" class="p-inputtext-sm  surface-900 " [(ngModel)]="product.price"  mode="currency" currency="USD" locale="en-US" > </p-inputNumber>
+
+
+
         </mat-card-subtitle>
       </div>
       <mat-card-subtitle>
@@ -33,7 +37,7 @@
             </div>
         </mat-card-subtitle>
     </mat-card-content>
-<textarea  pInputTextarea id="description" matTooltip="description" [autoResize]="true" formControlName="description" #description [value]="product.description" [(ngModel)]="product.description" class=" surface-900  w-full h-6" maxlength="150" ></textarea>
+<textarea  pInputTextarea id="description" matTooltip="description"  formControlName="description" #description [value]="product.description" [(ngModel)]="product.description" class=" surface-900 product-description " rows="6" maxlength="150" ></textarea>
     <div class="flex justify-content-end mr-2">
         <mat-hint  [style]="{ color:'var(--surface-400)'}">{{ description.value.length }}<span [style]="{ color:'var(--surface-200)'}">/150</span></mat-hint>
       </div>

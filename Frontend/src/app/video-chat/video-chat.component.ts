@@ -1,4 +1,4 @@
-import {  Component, OnInit } from '@angular/core';
+import {  AfterViewInit, Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { NewService } from '../new.service';
 declare var JitsiMeetExternalAPI: any;
@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './video-chat.component.html',
   styleUrls: ['./video-chat.component.scss']
 })
-export class VideoChatComponent implements OnInit {
+export class VideoChatComponent implements OnInit  {
 
   domain: string = "meet.jit.si"; // For self hosted use your domain
   room: any;
@@ -30,15 +30,12 @@ export class VideoChatComponent implements OnInit {
   constructor(
       private router: Router,
       private newService:NewService,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+      private renderer: Renderer2
+
   ) { }
 
   ngOnInit(): void {
-
-    setTimeout(() => {
-      this.selectModerator();
-    }, 8000);
-
 
     this.route.queryParams.subscribe(params => {
       this._id = params['_id'];
@@ -133,6 +130,8 @@ export class VideoChatComponent implements OnInit {
 
 handleClose = () => {
   console.log("handleClose");
+  this.router.navigate(['/end-and-rate']);
+
 }
 
 handleParticipantLeft = async (participant) => {
@@ -150,14 +149,13 @@ handleVideoConferenceJoined = async (participant) => {
   const data = await this.getParticipants();
 }
 
-// handleVideoConferenceLeft = () => {
-//   console.log("handleVideoConferenceLeft");
-//   this.router.navigate(['/thank-you']);
-// }
+
 handleVideoConferenceLeft = () => {
-  console.log("handle Video ConferenceLeft is working");
+  // this.router.navigate(['/end-and-rate']);
+
+console.log("handle Video ConferenceLeft is working");
 console.log(this.teacher_id)
-this.router.navigate(['/end-and-rate'], { state: { teacher_id: this.teacher_id } });
+// this.router.navigate(['/end-and-rate'], { state: { teacher_id: this.teacher_id } });
 }
 
 handleMuteStatus = (audio) => {
@@ -175,35 +173,39 @@ getParticipants() {
       }, 500)
   });
 }
-executeCommand(command: string) {
-  this.api.executeCommand(command);;
-  if(command == 'hangup') {
-      this.router.navigate(['/thank-you']);
-      return;
-  }
 
-  if(command == 'toggleAudio') {
-      this.isAudioMuted = !this.isAudioMuted;
-  }
+// executeCommand(command: string) {
+//   this.api.executeCommand(command);;
+//   if(command == 'hangup') {
+//     console.log('Hang up')
+//       this.router.navigate(['/end-and-rate']);
+//       return;
+//   }
 
-  if(command == 'toggleVideo') {
-      this.isVideoMuted = !this.isVideoMuted;
-  }
+//   if(command == 'toggleAudio') {
+//       this.isAudioMuted = !this.isAudioMuted;
+//   }
+
+//   if(command == 'toggleVideo') {
+//       this.isVideoMuted = !this.isVideoMuted;
+//   }
+// }
+
+
+ngAfterViewInit(): void {
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList') {
+        const hostButton = document.getElementsByClassName('css-oxuikt-button-primary-medium');
+        if (hostButton) {
+          this.renderer.setStyle(hostButton, 'background-color', '#FF5733');
+          this.renderer.setStyle(hostButton, 'color', '#FFFFFF');
+          this.renderer.setStyle(hostButton, 'border', 'none');
+        }
+      }
+    });
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
 }
-
-
-selectModerator(): void {
-  const modal = document.querySelector('div[aria-label="Waiting for a moderator..."]') as HTMLElement;
-  if (modal) {
-    const moderatorButton = modal.querySelector('button[aria-label="אני המארח"]') as HTMLButtonElement;
-    if (moderatorButton) {
-      moderatorButton.click();
-    } else {
-      console.warn('Moderator button not found.');
-    }
-  } else {
-    console.warn('Moderator waiting modal not found.');
-  }
-}
-
 }

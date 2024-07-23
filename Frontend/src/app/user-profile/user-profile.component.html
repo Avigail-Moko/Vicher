@@ -38,14 +38,15 @@
             #description
             [value]="userProfile.description"
             [(ngModel)]="inputValue"
-            class="surface-900 w-full h-6"
-            maxlength="200"
+            rows="8"
+            class="surface-900 w-full "
+            maxlength="300"
           ></textarea>
           <div class="flex justify-content-end mr-2">
             <mat-hint [style]="{ color: 'var(--surface-400)' }"
               >{{ description.value.length
               }}<span [style]="{ color: 'var(--surface-200)' }"
-                >/200</span
+                >/300</span
               ></mat-hint
             >
           </div>
@@ -56,7 +57,7 @@
             how old are you? Where do you live, how many years did you study?
             Any detail that will attract potential customers to contact you!
           </p>
-          <p>{{ userProfile.description }}</p>
+          <p class="user-description">{{ userProfile.description }}</p>
         </div>
         <ng-template pTemplate="footer">
           <p-button
@@ -102,11 +103,11 @@
 
   <!-- Want to Become a Seller? -->
   <div
-    class="flex flex-1 flex-column align-items-center"
+    class="flex flex-1 flex-column align-items-center lg:ml-7 "
     [style]="{ width: '50%' }"
   >
     <p-card
-      class="p-card-header w-9 mb-5 lg:ml-7"
+      class="p-card-header w-9 mb-5 "
       header="Want to Become a Seller?"
       [style]="{
         backgroundColor: 'var(--surface-900)',
@@ -134,15 +135,15 @@
         </ng-template>
       </p-card>
     </p-card>
-
     <!-- cards of products: -->
     <p-carousel
-      class="w-10 lg:ml-7"
+    id="p-carousel-center"
+      class=" lg:mx-7 "
       [value]="productsArray"
-      [numVisible]="3"
+      [numVisible]="productsArray.length < 3 ? productsArray.length : 3"
       [numScroll]="1"
       [circular]="true"
-      [responsiveOptions]="responsiveOptions"
+      [responsiveOptions]="productsArray.length > 1 ?responsiveOptions : null"
     >
       <ng-template let-product pTemplate="item">
         <mat-card class="product-card m-3">
@@ -182,8 +183,8 @@
               >lesson length: {{ product.length }} min.</mat-card-subtitle
             >
           </mat-card-content>
-          <mat-card-footer class="px-3">
-            <p class="overflow-hidden text-overflow-ellipsis">
+          <mat-card-footer class="px-3 product-footer">
+            <p class="product-description">
               {{ product.description }}
             </p>
 
