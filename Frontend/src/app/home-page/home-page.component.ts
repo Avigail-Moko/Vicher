@@ -48,6 +48,7 @@ export class HomePageComponent  {
     }
 
     ngOnInit() {
+      
 this.getNotifications()
       this.newService.getAuthStatusListener().subscribe(isAuthenticated => {
         if (isAuthenticated) {
@@ -130,7 +131,7 @@ this.getNotifications()
     @ViewChild('drawer') drawer: MatDrawer;
     
     navigateToUserProfile() {
-      this.router.navigate(['/user-profile']); // הנתיב שבו נמצאת קומפוננטת "user profile"
+      this.router.navigate(['/user-profile']); 
     }  
     navigateToWellcomePage(){
       this.router.navigate(['/wellcome'])
@@ -147,7 +148,7 @@ this.getNotifications()
       this.newService.getNote(this.userId).subscribe(
         (data)=>{
         for (let index = 0; index < data.notification.length; index++) {
-          this.alerts.unshift(data.notification[index]); // הוספת התראה חדשה בראש המערך
+          this.alerts.unshift(data.notification[index]);
         }
       },
       (error) => {
@@ -173,4 +174,6 @@ this.getNotifications()
       })
 
     }
+   
+    
 }

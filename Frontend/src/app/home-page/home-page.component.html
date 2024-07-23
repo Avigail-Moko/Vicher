@@ -45,17 +45,24 @@
           <!-- reminder: -->
           <button
             *ngIf="alert.startLesson"
-            [matTooltip]="'Click to move to the lesson'"
             mat-button
-            class="btn-note text-yellow-200"
+            class="btn-note text-yellow-200 h-7rem"
           >
             <span *ngIf="userId == alert.teacher_id"
-              >Hello Teacher, just a reminder that your class will begin in 15
-              minutes. Please prepare accordingly</span
+              >Hello Teacher, just a reminder that your class is scheduled to start at {{ alert.myDate |date:'HH:mm' }}.    
+              Click below to start the lesson and connect with your student:
+              <br>
+              <a class="joinLesson" [href]="'/video-chat?_id=' + alert.lesson_id">
+                Join the Lesson
+              </a></span
             >
             <span *ngIf="userId == alert.student_id"
-              >Hello Student, this is a reminder that your class will start in
-              15 minutes. Please be ready to join the session.</span
+              >Hello Student, this is a reminder that your class is scheduled to start at {{ alert.myDate |date:'HH:mm' }}.
+              Click below to join your lesson and get ready:
+              <br>
+              <a class="joinLesson" [href]="'/video-chat?_id=' + alert.lesson_id" >
+                Join the Lesson
+              </a></span
             >
           </button>
           <!-- notifications:-->
@@ -64,7 +71,7 @@
             (click)="alert.studentStatus === 'unread' ? readNote(alert._id) : (alert.studentStatus === 'read' ? deleteNote(alert._id) : deleteNote(alert._id))"
             [color]="alert.studentStatus === 'read' ? 'primary' : (alert.studentStatus === 'unread' ? 'inherit' : 'inherit')"
             [ngStyle]="{ color: alert.studentStatus === 'read' ? 'grey' : (alert.studentStatus === 'unread' ? 'white' : 'white')}"
-            [matTooltip]="alert.studentStatus === 'read' ? 'Click to delete' : (alert.studentStatus === 'unread' ? '' : '')"
+            [matTooltip]="alert.studentStatus === 'read' ? 'Tap to delete' : (alert.studentStatus === 'unread' ? 'Tap to mark as read' : '')"
             mat-button
             class="btn-note"
           >

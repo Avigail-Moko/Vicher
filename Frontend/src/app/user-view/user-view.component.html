@@ -67,6 +67,7 @@
   >
     <!-- cards of products: -->
     <p-carousel
+    *ngIf="productsArray.length >0"
     id="p-carousel-center"
       class=" lg:mx-7"
       [value]="productsArray"

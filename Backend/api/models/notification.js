@@ -7,7 +7,7 @@ const notificationSchema = new mongoose.Schema({
     endDate:{ type:Date, require: true},
     teacher_id:{ type:String, require: true}, 
     student_id:{ type:String, require: true},
-    product_id:{ type:String, require: true}, 
+    lesson_id:{ type:String, require: true}, 
     teacher_name:{ type:String, require: true},
     student_name:{ type:String, require: true},
     studentStatus: { type: String, require:true },

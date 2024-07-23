@@ -49,7 +49,7 @@ module.exports = {
     endDate,
     teacher_id,
     student_id,
-    product_id,
+    lesson_id,
     teacher_name,
     student_name,
     session
@@ -60,7 +60,7 @@ module.exports = {
       endDate,
       teacher_id,
       student_id,
-      product_id,
+      lesson_id,
       teacher_name,
       student_name,
       studentStatus: "unread",

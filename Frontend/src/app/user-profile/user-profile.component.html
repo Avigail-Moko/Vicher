@@ -129,7 +129,9 @@
           ></p-button>
           <p-button
             matTooltip="Edit Products"
-            (click)="toggleButtonsVisibility()"
+            (onClick)="this.isButtonsVisible=true"
+            (onBlur)="this.isButtonsVisible=false"
+
             icon="pi pi-user-edit"
           ></p-button>
         </ng-template>
@@ -137,7 +139,9 @@
     </p-card>
     <!-- cards of products: -->
     <p-carousel
+    *ngIf="productsArray.length >0"
     id="p-carousel-center"
+    (mousedown)="onDivMouseDown($event)"
       class=" lg:mx-7 "
       [value]="productsArray"
       [numVisible]="productsArray.length < 3 ? productsArray.length : 3"
@@ -145,10 +149,12 @@
       [circular]="true"
       [responsiveOptions]="productsArray.length > 1 ?responsiveOptions : null"
     >
-      <ng-template let-product pTemplate="item">
-        <mat-card class="product-card m-3">
+            <!-- [ngStyle]="{'border':'1px solid #d0d0d0' ,'opacity':'0.5 '}" -->
+      <ng-template let-product pTemplate="item" >
+        <mat-card class="product-card m-3"  [ngClass]="{'disabled-card': isButtonsVisible}" >
           <mat-card-header class="flex flex-column p-0">
             <img
+            
               class="header-image"
               [src]="product.image.src"
               width="250px"
@@ -190,7 +196,7 @@
 
             <p-button
               icon="pi pi-trash"
-              class="m-2"
+              class="m-2 delete-floating-button"
               *ngIf="isButtonsVisible"
               (click)="confirm(product)"
               mat-raised-button
@@ -199,7 +205,7 @@
             ></p-button>
             <p-button
               icon="pi pi-user-edit"
-              class="m-2"
+              class="m-2 edit-floating-button"
               *ngIf="isButtonsVisible"
               (click)="openProductsEditDialog(product, userProfile)"
               mat-raised-button

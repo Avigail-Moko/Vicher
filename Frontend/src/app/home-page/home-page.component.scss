@@ -1,3 +1,5 @@
+@import '../../styles.scss'; // נניח שהקובץ נמצא בתיקיית src
+
 .example-spacer {
   flex: 1 1 auto;
 }
@@ -97,3 +99,30 @@ text-align: left;
 ::ng-deep .p-overlaypanel {
   z-index: 999 !important;
 }
+
+.joinLesson {
+  display: inline-block;
+  padding: 5px 10px;
+  margin-top: 5px;
+  background-color: $primary; /* כחול בהיר */
+  color: white;
+  border-radius: 25px; /* עיגול קל בפינות */
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.joinLesson:hover {
+  background-color: $dark-primary; /* כחול כהה יותר להצללה */
+  transform: scale(1.05); /* הגדלה קלה בזמן ריחוף */
+}
+
+.joinLesson:focus {
+  outline: none; /* הסרת הקו המוקף בזמן הפוקוס */
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* קו אור סביב בזמן פוקוס */
+}
+// .lessonStart{
+// height: 800px;
+// }

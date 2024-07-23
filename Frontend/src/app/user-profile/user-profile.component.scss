@@ -1,3 +1,4 @@
+
 .p-card-header {
   text-align: center;
 }
@@ -8,6 +9,8 @@
 }
 
 .product-card {
+  position: relative; /* Ensure that the absolute positioning of the button is relative to this card */
+
   background-color: var(--surface-900);
   border: 1px solid var(--surface-800);
   border-radius: 20px;
@@ -69,4 +72,37 @@ p-carousel {
   text-overflow: ellipsis; /* Adds ellipsis at the end */
   // word-wrap: break-word; /* Breaks long words */
   // hyphens: auto; /* Adds hyphenation to broken words */
+}
+
+.delete-floating-button {
+  position: absolute;
+  bottom: 410px; /* Adjust the distance from the bottom */
+  left: -30px; /* Adjust the distance from the right */
+  z-index: 10; /* Ensure it is above the content */
+  // opacity: 1 !important; /* ביטול השפעת השקיפות */
+  
+}
+.edit-floating-button {
+  position: absolute;
+  bottom: 330px; /* Adjust the distance from the bottom */
+  left: -30px; /* Adjust the distance from the right */
+  z-index: 10; /* Ensure it is above the content */
+  // opacity: 1 !important; /* ביטול השפעת השקיפות */
+
+}
+.disabled-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(101, 97, 97, 0.504);
+  opacity: 0.4;
+  z-index: 1;
+  border: 1px solid #d0d0d0;
+}
+
+.disabled-card img {
+  opacity: 0.6;
 }

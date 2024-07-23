@@ -88,10 +88,12 @@ export class UserProfileComponent {
     ],
   };
 
-  toggleButtonsVisibility() {
-    this.isButtonsVisible = !this.isButtonsVisible;
-  }
 
+  onDivMouseDown(event: MouseEvent): void {
+    if (this.isButtonsVisible) {
+      event.preventDefault();
+    }
+  }
   openProductsEditDialog(product: any, userProfile: any): void {
     const dialogRef = this.dialog.open(ProductsEditDialogComponent, {
       width: '300px',
@@ -119,16 +121,25 @@ export class UserProfileComponent {
       },
     });
 
+  
+
     dialogRef.afterClosed().subscribe((result) => {
       dialogRef2.close();
+      this.isButtonsVisible=true
       console.log('The dialog was closed');
     });
   }
   // אישור מחיקה
   confirm(product: any) {
-    this.dialog.open(DeleteItemComponent, {
+    const dialog = this.dialog.open(DeleteItemComponent, {
       data: { product: product },
       panelClass: 'delete-item-dialog',
+
+    });
+    dialog.afterClosed().subscribe((result) => {
+      dialog.close();
+      this.isButtonsVisible=true
+      console.log('The dialog was closed');
     });
   }
   save() {

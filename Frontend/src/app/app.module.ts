@@ -57,6 +57,7 @@ import { TagModule } from 'primeng/tag';
 import { VideoChatComponent } from './video-chat/video-chat.component';
 import { RatingPageComponent } from './rating-page/rating-page.component';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @NgModule({
   declarations: [
@@ -143,7 +144,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     BadgeModule,
     OverlayPanelModule,
     TagModule,
-    InputNumberModule
+    InputNumberModule,
+    ToggleButtonModule,
   ],
 })
 export class AppModule {}

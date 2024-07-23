@@ -95,14 +95,19 @@ export class AvailabilityScheduleComponent {
 
   handleDateSelect(selectInfo: DateSelectArg) {
     const calendarApi = selectInfo.view.calendar;
+    let endDate = new Date(selectInfo.endStr);
+    if (endDate.getHours() === 0 && endDate.getMinutes() === 0) {
+      endDate.setMinutes(endDate.getMinutes() - 1);
+    }
+    
     calendarApi.addEvent({
       start: selectInfo.startStr,
-      end: selectInfo.endStr,
+      end: endDate.toISOString(),
     });
 
     this.newObj = {
       start: selectInfo.startStr,
-      end: selectInfo.endStr,
+      end: endDate.toISOString(),
     };
 
     this.objectsArray.push(this.newObj);
@@ -111,6 +116,7 @@ export class AvailabilityScheduleComponent {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
+    
     if (confirm(`Are you sure you want to delete`)) {
       //מציאת מיקום האירוע במערך האירועים שב objectsArray ומחיקתו
       for (let item = 0; item < this.objectsArray.length; item++) {
@@ -124,8 +130,9 @@ export class AvailabilityScheduleComponent {
       this.objectsArray.splice(this.indexOfEvent, 1);
       //מחיקת האירוע מהקלנדר
       clickInfo.event.remove();
-      this.openSnackBar();
     }
+    this.openSnackBar();
+
   }
   calendarChronologicalOrder() {
     this.myForm.get('endDate').valueChanges.subscribe((value) => {

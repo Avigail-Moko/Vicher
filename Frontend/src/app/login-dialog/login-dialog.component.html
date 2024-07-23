@@ -2,12 +2,13 @@
       <mat-form-field appearance="outline">
         <mat-label>Email-Address</mat-label>
         <input matInput name="email" formControlName="email" required>
-        <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
-      </mat-form-field>
+        <mat-error *ngIf="myLoginForm.get('email').hasError('required')">{{ validationMessages.email[0].message }}</mat-error>
+        <mat-error *ngIf="myLoginForm.get('email').hasError('email')">{{ validationMessages.email[1].message }}</mat-error>
+        </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>password</mat-label>
         <input matInput [type]="hide ? 'password' : 'text'" name="password" formControlName="password" required>
-        <mat-error *ngIf="password.invalid">{{getErrorMessage()}}</mat-error>
+        <mat-error *ngIf="myLoginForm.get('password').hasError('required')">{{ validationMessages.password[0].message }}</mat-error>
         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
@@ -21,3 +22,5 @@
       
     </form>
   
+
+    

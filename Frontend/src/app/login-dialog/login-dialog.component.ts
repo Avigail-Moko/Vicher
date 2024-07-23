@@ -1,43 +1,41 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
-
 @Component({
   selector: 'app-login-dialog',
   templateUrl: './login-dialog.component.html',
-  styleUrls: ['./login-dialog.component.scss']
+  styleUrls: ['./login-dialog.component.scss'],
 })
 export class LoginDialogComponent {
+  myLoginForm: FormGroup;
+  errorMessage = '';
+  loading: boolean = false;
 
-myLoginForm:FormGroup;
-errorMessage='';
-loading: boolean = false;
-
-private usersSubject = new Subject<any[]>();
+  private usersSubject = new Subject<any[]>();
   users$ = this.usersSubject.asObservable();
-  
-constructor(private http: HttpClient,
-  private newService: NewService,
-  public dialog: MatDialog,
-  private fb: FormBuilder,
-) { 
-  this.myLoginForm = this.fb.group({
-  email: [''],
-  password: [''],
-});}
- 
+
+  constructor(
+    private http: HttpClient,
+    private newService: NewService,
+    public dialog: MatDialog,
+    private fb: FormBuilder
+  ) {
+    this.myLoginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+    });
+  }
+
   onLogin() {
     if (this.myLoginForm.invalid) {
       return;
     }
     this.loading = true;
 
-    //במידה ומעוניינים לשלוף פריט אחד מתוך הטופס ניתן להשתמש ב .get 
-  //   const email = this.myLoginForm.get('email').value;
     const body = this.myLoginForm.value;
     this.newService.Login(body).subscribe(
       (data) => {
@@ -54,15 +52,13 @@ constructor(private http: HttpClient,
     );
   }
 
-email = new FormControl('',[Validators.required]);
-password = new FormControl('',[Validators.required]);
-apiService: any;
+  validationMessages = {
+    email: [
+      { type: 'required', message: 'Email is required' },
+      { type: 'email', message: 'Invalid email address' },
+    ],
+    password: [{ type: 'required', message: 'Password is required' }],
+  };
 
-getErrorMessage() {
-  if ((this.email.hasError('required')) || (this.password.hasError('required'))) {
-    return 'You must enter a value';
-  }
-return this.email.hasError('email') ? 'Not a valid email' : '';
-}
-hide = true;
+  hide = true;
 }

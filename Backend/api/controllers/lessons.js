@@ -29,13 +29,13 @@ module.exports = {
     session.startTransaction();
     try {
       await lesson.save({ session });
-
+const lesson_id= lesson._id
       await createNote(
         myDate,
         endDate,
         teacher_id,
         student_id,
-        product_id,
+        lesson_id,
         teacher_name,
         student_name,
         session
