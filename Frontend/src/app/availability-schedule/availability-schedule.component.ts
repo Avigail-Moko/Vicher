@@ -2,22 +2,16 @@ import { Component } from '@angular/core';
 import {
   CalendarOptions,
   DateSelectArg,
-  DatesSetArg,
   EventClickArg,
-  EventDropArg,
-  EventSourceInput,
 } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {
-  EventResizeStartArg,
 } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { NewService } from '../new.service';
 import { Message, MessageService } from 'primeng/api';
 import {
   MatSnackBar,
-  MatSnackBarHorizontalPosition,
-  MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -84,7 +78,7 @@ export class AvailabilityScheduleComponent {
     },
     allDaySlot: false,
     selectOverlap: false,
-    // editable: true, //אחראי על הוזזת אירועים
+    // editable: true, 
     selectable: true,
     droppable: true,
     selectMirror: true,
@@ -118,7 +112,7 @@ export class AvailabilityScheduleComponent {
   handleEventClick(clickInfo: EventClickArg) {
     
     if (confirm(`Are you sure you want to delete`)) {
-      //מציאת מיקום האירוע במערך האירועים שב objectsArray ומחיקתו
+
       for (let item = 0; item < this.objectsArray.length; item++) {
         if (
           this.objectsArray[item].start === clickInfo.event.startStr &&
@@ -128,7 +122,7 @@ export class AvailabilityScheduleComponent {
         }
       }
       this.objectsArray.splice(this.indexOfEvent, 1);
-      //מחיקת האירוע מהקלנדר
+
       clickInfo.event.remove();
     }
     this.openSnackBar();
@@ -145,7 +139,7 @@ export class AvailabilityScheduleComponent {
         this.myForm.get('endDate').setValue(today);
       }
       if (endDate <= startDate) {
-        startDate.setMinutes(startDate.getMinutes() + 1); // להוסיף דקה אחת
+        startDate.setMinutes(startDate.getMinutes() + 1); 
 
         this.myForm.get('endDate').setValue(startDate);
       }
@@ -160,7 +154,7 @@ export class AvailabilityScheduleComponent {
         this.myForm.get('startDate').setValue(today);
       }
       if (endDate <= startDate) {
-        startDate.setMinutes(startDate.getMinutes() + 1); // להוסיף דקה אחת
+        startDate.setMinutes(startDate.getMinutes() + 1); 
 
         this.myForm.get('endDate').setValue(startDate);
       }
@@ -225,7 +219,7 @@ export class AvailabilityScheduleComponent {
           this.onSave();
         });
     } else {
-      this._snackBar.dismiss(); // תקרא לפונקציה dismiss כאן
+      this._snackBar.dismiss(); 
     }
   }
   getAllTeacherBusyEvents() {

@@ -51,7 +51,9 @@ export class WellcomeComponent {
     this.newService.getAllUsers().subscribe(
       (data) => {
         console.log('Response:', data);
+        
         this.AllusersArray = data.users;
+
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -88,8 +90,8 @@ export class WellcomeComponent {
   openDailyPlanner(product: any) {
     if (this.userId && this.userId != product.userId) {
       const dialogRef = this.dialog.open(DailyPlannerComponent, {
-        // width: '95%',
-        // height: '650px',
+        width: '100vw',
+        height: '95%',
         data: {
           product: product
         },

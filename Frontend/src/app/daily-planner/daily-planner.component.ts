@@ -13,6 +13,12 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { DatePipe } from '@angular/common';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { StepperOrientation } from '@angular/material/stepper';
+import { Observable } from 'rxjs';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {map} from 'rxjs/operators';
+
+
 
 @Component({
   selector: 'app-daily-planner',
@@ -22,6 +28,7 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 export class DailyPlannerComponent {
   @Output() dialogClosed: EventEmitter<any> = new EventEmitter();
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
+  stepperOrientation: Observable<StepperOrientation>;
 
   selectedLesson: string | null = null;
   hasSelectedLessons: boolean = false;
@@ -36,7 +43,7 @@ export class DailyPlannerComponent {
   newObjArray: any[] = [];
   availableDays: Set<number> = new Set();
   busyEventArray: any[] = [];
-
+  isStepCompleted: boolean = false;
   takenLessonArray: any[] = [];
   dailyTakenArray: any[] = [];
   isTaken: boolean;
@@ -51,9 +58,13 @@ export class DailyPlannerComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialog: MatDialog,
     private newService: NewService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe, breakpointObserver: BreakpointObserver
   ) {
     this.product = data.product;
+    //stepper:
+    this.stepperOrientation = breakpointObserver
+    .observe('(min-width: 800px)')
+    .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
   }
 
   calendarOptions: CalendarOptions = {
@@ -274,7 +285,7 @@ export class DailyPlannerComponent {
     this.dailyTakenArray = [];
     this.selectedLesson = null;
     this.newObjArray = [];
-    const title = 'my lesson';
+    const title = '';
     const calendarApi = selectInfo.view.calendar;
 
     calendarApi.removeAllEvents();

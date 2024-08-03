@@ -1,13 +1,9 @@
 import { Component } from '@angular/core';
 import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ProductStepperComponent } from '../product-stepper/product-stepper.component';
-import { ProductsEditDialogComponent } from '../products-edit-dialog/products-edit-dialog.component';
 import { MessageService } from 'primeng/api';
-import { DeleteItemComponent } from '../delete-item/delete-item.component';
 import { Router } from '@angular/router';
 import { DailyPlannerComponent } from '../daily-planner/daily-planner.component';
-import { Message } from 'primeng/api';
 
 @Component({
   selector: 'app-user-view',
@@ -15,23 +11,18 @@ import { Message } from 'primeng/api';
   styleUrls: ['./user-view.component.scss']
 })
 export class UserViewComponent {
- //האם ניתן למחוק משתנה זה?
-  // date: Date | undefined;
   rating!: number;
   lesson_title: string | undefined;
   category: string | undefined;
   description: string | undefined;
   price: string | undefined;
-  productsArray: any[] = []; // Make sure to initialize as an empty array
-  // inputValue: string = '';
+  productsArray: any[] = []; 
 
-  // isContentEditable = false;
-  // errorMessage = '';
   message = '';
   responsiveOptions: any[] | undefined;
   userProfile:any
   userId = localStorage.getItem('userId');
-
+  raterCounter:any;
 
 
   constructor(
@@ -54,9 +45,13 @@ export class UserViewComponent {
  
   ngOnInit() {
 
-    this.rating = Math.round(this.userProfile.totalRating/this.userProfile.raterCounter);
+    // this.rating = Math.round(this.userProfile.totalRating/this.userProfile.raterCounter);
+    this.newService.getRating(this.userId).subscribe((data) => {
+      this.rating=data.avgRating
+      this.raterCounter=data.raterCounter
+      console.log('Response:', this.rating);
+    });
 
-    //responsive page
     this.responsiveOptions = [
       {
           breakpoint: '1430px',
@@ -85,8 +80,7 @@ export class UserViewComponent {
   openDailyPlanner(product: any) {
     if (this.userId && this.userId != product.userId) {
       const dialogRef = this.dialog.open(DailyPlannerComponent, {
-        // width: '95%',
-        // height: '650px',
+
         data: {
           product: product
         },

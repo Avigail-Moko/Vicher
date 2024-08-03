@@ -4,5 +4,12 @@
   <h1>Thank you for joining the lesson!</h1>
   <h2>Please rate your experience by selecting the number of stars below.</h2>
   <h3>Your feedback is valuable to us!</h3>
-  <p-rating [(ngModel)]="value" [cancel]="false" (onRate)="onRate($event)" [readonly]="isReadonly"  />
+  <p-rating [(ngModel)]="value" [cancel]="false"/>
+  <div class="card flex justify-content-center ">
+  <button mat-raised-button color="primary" class="mr-5 mt-4" (click)="onRate()">Submit</button>
+  </div>
+  <div class="card flex justify-content-end">
+  <button mat-button color="accent" class="mt-4" [routerLink]="['/wellcome']"> <span class="button-content">Skip<mat-icon>navigate_next</mat-icon></span></button>
+  </div>
 </p-card>
+

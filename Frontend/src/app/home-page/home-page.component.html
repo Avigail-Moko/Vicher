@@ -68,7 +68,8 @@
           <!-- notifications:-->
           <button
             *ngIf="!alert.startLesson && userId===alert.student_id &&alert.studentStatus!='delete'"
-            (click)="alert.studentStatus === 'unread' ? readNote(alert._id) : (alert.studentStatus === 'read' ? deleteNote(alert._id) : deleteNote(alert._id))"
+            (click)="alert.studentStatus === 'unread' ? readNote(alert._id) : (alert.studentStatus === 'read' ?
+             deleteNote(alert._id) : deleteNote(alert._id))"
             [color]="alert.studentStatus === 'read' ? 'primary' : (alert.studentStatus === 'unread' ? 'inherit' : 'inherit')"
             [ngStyle]="{ color: alert.studentStatus === 'read' ? 'grey' : (alert.studentStatus === 'unread' ? 'white' : 'white')}"
             [matTooltip]="alert.studentStatus === 'read' ? 'Tap to delete' : (alert.studentStatus === 'unread' ? 'Tap to mark as read' : '')"

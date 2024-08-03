@@ -14,6 +14,7 @@ import { DeleteItemComponent } from '../delete-item/delete-item.component';
 })
 export class UserProfileComponent {
   rating!: number;
+  raterCounter:any;
   productsArray: any[] = [];
   userProfile: any;
   inputValue: string = '';
@@ -21,7 +22,7 @@ export class UserProfileComponent {
   isButtonsVisible: boolean = false;
   editUserProfile: boolean = false;
   responsiveOptions: any[] | undefined;
-
+  
   constructor(
     private newService: NewService,
     public dialog: MatDialog,
@@ -65,9 +66,10 @@ export class UserProfileComponent {
     const userId = localStorage.getItem('userId');
     this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
     this.inputValue = this.userProfile.description;
-    // this.rating = Math.round(this.userProfile.totalRating/this.userProfile.raterCounter);
+
     this.newService.getRating(userId).subscribe((data) => {
       this.rating=data.avgRating
+      this.raterCounter=data.raterCounter
       console.log('Response:', this.rating);
     });
 
@@ -98,7 +100,7 @@ export class UserProfileComponent {
     const dialogRef = this.dialog.open(ProductsEditDialogComponent, {
       width: '300px',
       height: '640px',
-      panelClass: 'custom-container', // הוספת קלאס לתיבת הדיאלוג
+      panelClass: 'custom-container', 
       data: {
         product: product,
         userProfile: userProfile,
@@ -109,7 +111,6 @@ export class UserProfileComponent {
     const dialogRef2 = this.dialog.open(ProductsEditDialogComponent, {
       autoFocus: false,
       hasBackdrop: false,
-      // panelClass: 'custom-container', // הוספת קלאס לתיבת הדיאלוג
       position: {
         bottom: '25px',
         right: `calc(50% - 250px)`,

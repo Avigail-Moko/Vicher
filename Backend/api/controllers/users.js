@@ -189,7 +189,7 @@ module.exports = {
                     _id:user._id,
                     description:user.description,
                     // totalRating:user.totalRating,
-                    // raterCounter:user.raterCounter,
+                    raterCounter:user.raterCounter,
                     avgRating:(user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0
                 }));
 
@@ -262,7 +262,7 @@ module.exports = {
 
                 const avgRating = (user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0;
     
-                res.status(200).json({ avgRating: avgRating });
+                res.status(200).json({ avgRating: avgRating,raterCounter:user.raterCounter });
             })
             .catch(err => {
                 res.status(500).json({ error: 'Server error' });

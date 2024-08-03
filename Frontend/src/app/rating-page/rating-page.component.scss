@@ -1,9 +1,13 @@
 ::ng-deep .div .p-rating .p-rating-icon  {
-  width: 100px !important;
-  height: 100px !important;
+  width: 50px !important;
+  height: 50px !important;
 }
 .div{
     text-align: center;
+}
+.button-content {
+  display: flex;
+  align-items: center;
 }
 
 

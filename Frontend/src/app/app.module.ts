@@ -146,6 +146,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     TagModule,
     InputNumberModule,
     ToggleButtonModule,
+    
   ],
 })
 export class AppModule {}

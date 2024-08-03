@@ -15,7 +15,7 @@
         class="p-rating mb-3"
         [(ngModel)]="rating"
         [disabled]="true"
-        [cancel]="false"
+        [cancel]="false" [attr.data-rater-counter]="raterCounter"
       ></p-rating>
       <ng-template pTemplate="header">
         <img

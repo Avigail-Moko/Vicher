@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NewService } from '../new.service';
@@ -19,7 +18,6 @@ export class LoginDialogComponent {
   users$ = this.usersSubject.asObservable();
 
   constructor(
-    private http: HttpClient,
     private newService: NewService,
     public dialog: MatDialog,
     private fb: FormBuilder

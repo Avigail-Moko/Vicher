@@ -106,3 +106,7 @@ p-carousel {
 .disabled-card img {
   opacity: 0.6;
 }
+.p-rating::after {
+  content: '('attr(data-rater-counter)')';
+  color: rgb(163, 171, 168);
+}

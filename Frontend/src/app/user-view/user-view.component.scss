@@ -68,3 +68,7 @@ height: 520px;
     // word-wrap: break-word; /* Breaks long words */
     // hyphens: auto; /* Adds hyphenation to broken words */
   }
+  .p-rating::after {
+    content: '('attr(data-rater-counter)')';
+    color: rgb(163, 171, 168);
+  }

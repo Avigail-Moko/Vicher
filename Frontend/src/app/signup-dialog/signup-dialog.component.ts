@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -10,14 +9,11 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./signup-dialog.component.scss'],
 })
 export class SignupDialogComponent {
-  //  @ViewChild("DialogComponent")
   mySingupForm: FormGroup;
   errorMessage = '';
   loading: boolean = false;
 
-  //take care of the user details:
   constructor(
-    private http: HttpClient,
     private newService: NewService,
     public dialog: MatDialog,
     private fb: FormBuilder
@@ -51,14 +47,9 @@ export class SignupDialogComponent {
             console.log('Response:', data);
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
-            //המרה למחרוזת ושמירת פרטי המשתמש למשתנה לוקלי
             localStorage.setItem('userProfile', JSON.stringify(data.user));
             window.dispatchEvent(new Event('userProfileUpdated'));
-            // this.newService.isAuthenticatedSubject.next(false);
             this.dialog.closeAll();
-            // if (response.success) {
-            // התחברות מוצלחת, סמן שהמשתמש התחבר
-            // this.loggedIn.next(true);
           },
           (error) => {
             this.loading = false;
@@ -75,7 +66,6 @@ export class SignupDialogComponent {
     );
   }
 
-  //form values validation part:
   validationMessages = {
     name: [
       { type: 'required', message: 'Name is required' },

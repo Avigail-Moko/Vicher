@@ -151,11 +151,15 @@ handleVideoConferenceJoined = async (participant) => {
 
 
 handleVideoConferenceLeft = () => {
-  // this.router.navigate(['/end-and-rate']);
+  if (this.userId!=this.teacher_id) {
+    console.log('user id:',this.userId,'teacher id:',this.teacher_id)
+    // this.router.navigate(['/end-and-rate']);
+    this.router.navigate(['/end-and-rate'], { state: { teacher_id: this.teacher_id } });
 
-console.log("handle Video ConferenceLeft is working");
-console.log(this.teacher_id)
-// this.router.navigate(['/end-and-rate'], { state: { teacher_id: this.teacher_id } });
+  }
+  else this.router.navigate(['/wellcome']);
+  console.log('user id:',this.userId,'teacher id:',this.teacher_id)
+
 }
 
 handleMuteStatus = (audio) => {
