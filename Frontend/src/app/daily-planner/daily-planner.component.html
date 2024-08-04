@@ -1,62 +1,102 @@
-
 <!-- stepper -->
-<mat-stepper linear
-  class="example-stepper" 
-  >
-  <mat-step  [completed]="appointmentGuid==2" label="Choose a date">
-    <div class="px-2">
-    <p class="text-100">First, please select a preferred available date on the calendar</p>
+<mat-stepper linear class="example-stepper">
 
-    <full-calendar #calendar [options]="calendarOptions" class=" lg:mx-8 md:mx-5 mx-0">
+  <mat-step [completed]="appointmentGuid == 2">
+    <ng-template matStepLabel><i class="pi pi-calendar"></i></ng-template>
+    <p class="text-100 text-2xl line-height-1 mt-2 mb-4 lg:mx-8 md:mx-5 mx-3">
+      First, please select a preferred available date on the calendar
+    </p>
+    <full-calendar
+      #calendar
+      [options]="calendarOptions"
+      class="lg:mx-8 md:mx-5 mx-3"
+    >
     </full-calendar>
     <div class="flex justify-content-end">
-      <button [disabled]="appointmentGuid!=2"  mat-raised-button color="primary" matStepperNext>Next</button>
+      <button
+        [disabled]="appointmentGuid != 2"
+        mat-raised-button
+        color="primary"
+        class="md:m-2 m-1"
+        matStepperNext
+      >
+        Next
+      </button>
     </div>
-  </div>
   </mat-step>
-  <mat-step  [completed]="selectedLesson" label="Choose a time">
-    <div class="px-2">
-    <p class="text-100">Now, choose a desired time from the available time slots</p>
 
-      <h1 *ngIf="isTaken" class="text-base text-white">
-        there is no open lessons for this date.
-      </h1>
-      <ng-container *ngFor="let timeRange of timeRanges">
-        <ng-container *ngIf="areThereLessonsInTimeRange(timeRange)">
-          <p class="text-100">{{ timeRange }}</p>
-          <mat-chip-listbox>
-            <ng-container *ngFor="let lesson of lessonsArray">
-              <ng-container *ngIf="getTimeOfDay(lesson) === timeRange">
-                <mat-chip-option
-                  (click)="choosingTime(lesson)"
-                  [selected]="isSelected(lesson)"
-                >
-                  {{ lesson }}
-                </mat-chip-option>
-              </ng-container>
+  <mat-step [completed]="selectedLesson">
+    <ng-template matStepLabel><i class="pi pi-clock"></i></ng-template>
+    <div class="flex justify-content-center">
+      <div class="max-w-30rem mx-3">
+    <p class="text-100 mt-2 mb-4  text-2xl line-height-1">
+      Now, choose a desired time from the available time slots
+    </p>
+    <h1 *ngIf="isTaken" class="font-bold text-primary text-4xl line-height-1">
+      there is no open lessons for this date.
+    </h1>
+    <ng-container *ngFor="let timeRange of timeRanges">
+      <ng-container *ngIf="areThereLessonsInTimeRange(timeRange)">
+        <p class="text-100 text-xl">{{ timeRange }}</p>
+        <mat-chip-listbox>
+          <ng-container *ngFor="let lesson of lessonsArray">
+            <ng-container *ngIf="getTimeOfDay(lesson) === timeRange">
+              <mat-chip-option
+                (click)="choosingTime(lesson)"
+                [selected]="isSelected(lesson)"
+              >
+                {{ lesson }}
+              </mat-chip-option>
             </ng-container>
-          </mat-chip-listbox>
-          <br />
-        </ng-container>
+          </ng-container>
+        </mat-chip-listbox>
+        <br />
       </ng-container>
-      <div class="flex justify-content-end">
-        <button mat-button  matStepperPrevious>Back</button>
-        <button [disabled]="!selectedLesson" mat-raised-button color="primary" matStepperNext>Next</button>
-      </div>
+    </ng-container>
+    </div>    </div>
+    <div class="flex justify-content-end">
+      <button mat-button matStepperPrevious class="md:m-2 m-1">Back</button>
+      <button
+        [disabled]="!selectedLesson"
+        mat-raised-button
+        color="primary"
+        class="md:m-2 m-1"
+        matStepperNext
+      >
+        Next
+      </button>
     </div>
   </mat-step>
-  <mat-step   label="Save date">
-    <div class="px-2">
-    <!-- <ng-template matStepLabel>Save date</ng-template> -->
 
-    <p class="text-100">Finally, click on 'Save Date' to confirm the appointment.</p>
+  <mat-step>
+    <ng-template matStepLabel><i class="pi pi-check-circle"></i></ng-template>
+    <div class="flex justify-content-center">
+      <div class="max-w-30rem mx-3">
+    <p class="line-height-1 text-2xl text-white mt-2">Your Lesson is Almost Booked!</p>
+    <p class="text-2xl pl-4 mt-4 font-bold text-primary" >🎓 Teacher: </p>
+    <p class="text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{product.userProfileName}}</p>
+    <p class="text-2xl pl-4 mt-4 font-bold text-primary">🔍 Lesson: </p>
+    <p class="line-height-1 text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{ product.lesson_title }}</p>
+    <p class="text-2xl pl-4 mt-4 font-bold text-primary">⏳ Duration:</p>
+    <p class="text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{product.length}} min</p>
+    <p class="text-2xl pl-4 mt-4 font-bold text-primary">💲 Cost:</p>
+    <p class="text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{product.price}}$</p>
+    <p class="text-2xl pl-4 mt-4 font-bold text-primary">📆 Date and Time:</p>
+    <p class="text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{ this.myDate | date: 'dd MMM yyyy, HH:mm' }}</p>
+    <p class="text-2xl text-white mt-4 ">Ready to Dive In?</p>
+<p class="line-height-1 text-2xl text-white my-3">
+Hit "Save Date" to confirm your spot and start your adventure in {{product.category}}!</p>
+
     <p-button
-    (click)="createLesson()"
-    *ngIf="!(this.lessonsArray.length == this.comparisonArray.length)"
-    >Save Date</p-button
-  >    <div class="flex justify-content-end">
-      <button mat-button matStepperPrevious>Back</button>
-    </div>
-  </div>
+      (click)="createLesson()"
+      *ngIf="!(this.lessonsArray.length == this.comparisonArray.length)"
+      >Save Date</p-button
+    >
+</div>
+</div>
+<div class="flex justify-content-end">
+  <button mat-button matStepperPrevious class="md:mx-2 mx-1">Back</button>
+</div>
   </mat-step>
+
 </mat-stepper>

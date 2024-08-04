@@ -478,7 +478,7 @@ export class DailyPlannerComponent {
 
     let myFlag: boolean = false;
     const [hours, minutes] = lesson.split(':').map(Number);
-    this.myDate.setHours(hours, minutes);
+    this.myDate = new Date(this.myDate.setHours(hours, minutes));
     for (let i = this.comparisonArray.length - 1; i >= 0; i--) {
       if (this.comparisonArray[i] === lesson) {
         this.comparisonArray.splice(i, 1);
