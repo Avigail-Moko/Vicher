@@ -16,6 +16,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent {
+  objectsArray: { start: any; end: any; title:any;  }[] = [];
   myDate:any;
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
@@ -40,6 +41,8 @@ export class CalendarComponent {
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
+    eventMouseEnter: this.handleEventMouseEnter.bind(this),
+    eventMouseLeave: this.handleEventMouseLeave.bind(this),
   views: {
     timeGrid: {
       eventLimit: 1 // adjust to 6 only for timeGridWeek/timeGridDay
@@ -56,14 +59,34 @@ export class CalendarComponent {
     */
   };
   currentEvents: EventApi[] = [];
+  tooltipContent: string;
   // workDays: number[] = [];
   // workHours: string[] = [];
   constructor(private changeDetector: ChangeDetectorRef,private newService:NewService) {
   }
 
-  // ngOnInit(): void {
+  ngOnInit(): void {
+    const student_id=localStorage.getItem('userId');
+    const teacher_id=localStorage.getItem('userId');
+    this.newService.getLessonByTeacherAndStudentId(student_id,teacher_id).subscribe((data)=>{
+      
+        console.log('Response:', data);
+        data.lessons.forEach((object) => {
+          const start=object.myDate;
+          const end=object.endDate;
+          const title=object.lesson_title;
+          const newObj={start,end,title}
+          this.objectsArray.push(newObj);
+        });
+        console.log('objects Array:',this.objectsArray)
+        this.calendarOptions.events = this.objectsArray;
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+      }
+    );
     
-  // }
+  }
 
   // getLessonsForUser(userId: string) {
   //   this.newService.createLessons(userId).subscribe(lessons => {
@@ -151,4 +174,28 @@ export class CalendarComponent {
 //     endTime: workHours[workHours.length - 1] // השעה האחרונה בטווח השעות הנבחר
 //   };
 // }
+
+// tooltip:
+
+handleEventMouseEnter(mouseEnterInfo: any) {
+  // const event = mouseEnterInfo.event;
+  // this.tooltipContent = `${event.title}\n${event.start.toISOString()} - ${event.end ? event.end.toISOString() : 'hhhhhhh'}`;
+  // const tooltipElement = document.createElement('div');
+  // tooltipElement.className = 'tooltip';
+  // tooltipElement.textContent = this.tooltipContent;
+  // document.body.appendChild(tooltipElement);
+
+  // const mouseEnterEvent = mouseEnterInfo.jsEvent;
+  // tooltipElement.style.position = 'absolute';
+  // tooltipElement.style.left = `${mouseEnterEvent.pageX + 10}px`;
+  // tooltipElement.style.top = `${mouseEnterEvent.pageY + 10}px`;
+  alert('is working')
+}
+
+handleEventMouseLeave() {
+  // const tooltipElement = document.querySelector('.tooltip');
+  // if (tooltipElement) {
+  //   tooltipElement.remove();
+  // }
+}
 }

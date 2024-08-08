@@ -500,6 +500,7 @@ export class DailyPlannerComponent {
         teacher_id: this.product.userId,
         length: this.product.length,
         myDate: this.myDate,
+        lesson_title: this.product.lesson_title
       })
       .subscribe(
         (data) => {

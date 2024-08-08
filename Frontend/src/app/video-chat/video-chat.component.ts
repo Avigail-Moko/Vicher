@@ -51,18 +51,18 @@ export class VideoChatComponent implements OnInit  {
     }
   
     this.newService.getLessonById(this._id).subscribe((data) => {
-
-      if (!data.lesson[0]) {
+      console.log('dataaaaA:',data)
+      if (!data.lessons[0]) {
         this.router.navigate(['/']);
         return;
       }
-      const startDate= new Date(data.lesson[0].myDate);
+      const startDate= new Date(data.lessons[0].myDate);
       startDate.setMinutes(startDate.getMinutes() - 15);
       const today=new Date();
 
-      this.allowedUsers.push(data.lesson[0].teacher_id);
-      this.allowedUsers.push(data.lesson[0].student_id);
-      this.teacher_id=data.lesson[0].teacher_id
+      this.allowedUsers.push(data.lessons[0].teacher_id);
+      this.allowedUsers.push(data.lessons[0].student_id);
+      this.teacher_id=data.lessons[0].teacher_id
 
       if (this.allowedUsers.includes(this.userId)&&today>startDate) {
         

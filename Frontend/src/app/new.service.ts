@@ -131,6 +131,11 @@ export class NewService {
     const url = `http://localhost:3000/lessons/getLesson?_id=${_id}`;
     return this.http.get(url);
   }
+  getLessonByTeacherAndStudentId(teacher_id: any, student_id: any): Observable<any> {
+    const url = `http://localhost:3000/lessons/getLesson?teacher_id=${teacher_id}&student_id=${student_id}`;
+    return this.http.get(url);
+}
+
   createSchedule(objectsArray: any, teacher_id: any) {
     const url = `http://localhost:3000/schedule/createSchedule?teacher_id=${teacher_id}`;
     return this.http.post(url, { objectsArray });

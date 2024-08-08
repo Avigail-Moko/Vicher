@@ -9,7 +9,8 @@ const lessonSchema= mongoose.Schema({
     endDate:Date,
     teacher_id:String, 
     student_id:String,
-    product_id:String
+    product_id:String,
+    lesson_title:String
 })
 
 lessonSchema.index({ endDate: 1 }, { expireAfterSeconds: 0 });

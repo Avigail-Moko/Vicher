@@ -12,6 +12,7 @@ module.exports = {
       length,
       teacher_name,
       student_name,
+      lesson_title
     } = req.body;
     const startDate = new Date(myDate);
     const endDate = new Date(startDate.getTime() + length * 60000);
@@ -24,6 +25,7 @@ module.exports = {
       teacher_id,
       student_id,
       product_id,
+      lesson_title
     });
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -65,34 +67,48 @@ const lesson_id= lesson._id
     }
   },
 
-  getLesson: (req, res) => {
+  getLesson: async (req, res) => {
     const teacher_id = req.query.teacher_id;
     const _id = req.query._id;
+    const student_id = req.query.student_id;
 
-    let query = {};
-
-    if (teacher_id) {
-      query.teacher_id = teacher_id;
-    } else if (_id) {
-      query._id = _id;
-    } else {
-      return res.status(400).json({
-        message: "Either teacherId or id must be provided",
-      });
+    if (!teacher_id && !student_id && !_id) {
+        return res.status(400).json({
+            message: "Either teacherId, studentId, or id must be provided",
+        });
     }
 
-    Lesson.find(query)
-      .exec()
-      .then((lesson) => {
-        return res.status(200).json({ lesson });
-      })
-      .catch((error) => {
+    let lessons = [];
+
+    try {
+        if (teacher_id) {
+            const teacherLessons = await Lesson.find({ teacher_id }).exec();
+            lessons = lessons.concat(teacherLessons);
+        }
+
+        if (student_id) {
+            const studentLessons = await Lesson.find({ student_id }).exec();
+            lessons = lessons.concat(studentLessons);
+        }
+
+        if (_id) {
+            const idLessons = await Lesson.find({ _id }).exec();
+            lessons = lessons.concat(idLessons);
+        }
+
+        // מסננים כפילויות לפי _id
+        const uniqueLessons = Array.from(new Set(lessons.map(item => item._id)))
+                                   .map(id => lessons.find(item => item._id === id));
+
+        return res.status(200).json({ lessons: uniqueLessons });
+    } catch (error) {
         console.error("Error:", error);
-        res.status(500).json({
-          message: "Error retrieving lessons",
+        return res.status(500).json({
+            message: "Error retrieving lessons",
         });
-      });
-  },
+    }
+}
+,
 //   deleteLesson: (req, res) => {
 //     const _id = req.query._id;
 
