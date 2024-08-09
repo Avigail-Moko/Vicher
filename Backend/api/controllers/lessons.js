@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Lesson = require("../models/lessons");
+const Notification = require("../models/notification");
 const { createNote } = require("./notification");
 
 module.exports = {
@@ -109,21 +110,47 @@ const lesson_id= lesson._id
     }
 }
 ,
-//   deleteLesson: (req, res) => {
-//     const _id = req.query._id;
+  deleteLesson: (req, res) => {
+    const _id = req.query._id;
 
-//     Lesson.deleteOne({ _id: _id })
-//       .then(() => {
-//         res.status(200).json({
-//           message: "lesson deleted",
-//         });
-//       })
-//       .catch((error) => {
-//         res.status(500).json({
-//           error,
-//         });
-//       });
-//   },
+    Lesson.deleteOne({ _id: _id })
+      .then(() => {
+        res.status(200).json({
+          message: "lesson deleted",
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({
+          error,
+        });
+      });
+
+      Notification.findOneAndUpdate(
+        { lesson_id: _id }, 
+        { $set: { deleteLesson: "true" } },
+        { new: true } 
+      ).exec()
+        .then((result) => {
+          io.emit("notification", {
+            type: "deleteLesson",
+            _id,
+            deleteLesson: "true",
+            note: result,
+          });
+          agenda.cancel({ 'data.notificationId': result._id }, (err, numRemoved) => {
+            if (err) {
+              console.error("Failed to delete job:", err);
+            } else {
+              console.log(`${numRemoved} job(s) canceled.`);
+            }
+          });
+        })
+        .catch((error) => {
+          console.error(error); 
+        });
+
+  },
+
 //   updateLesson: (req, res) => {
 //     const _id = req.query._id;
 //     const updateFields = req.body; // אובייקט שיכיל את כל השדות שברצונך לעדכן

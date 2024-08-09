@@ -182,4 +182,8 @@ export class NewService {
     const url = `http://localhost:3000/users/rating?teacher_id=${teacher_id}`;
     return this.http.post(url,{rating});
   }
+  deleteLesson(_id: any): Observable<any> {
+    const url = `http://localhost:3000/lessons/deleteLesson?_id=${_id}`;
+    return this.http.delete(url);
+  }
 }

@@ -12,7 +12,8 @@ const notificationSchema = new mongoose.Schema({
     student_name:{ type:String, require: true},
     studentStatus: { type: String, require:true },
     teacherStatus: { type: String, require:true },
-    startLesson: { type: Boolean, default: false }
+    startLesson: { type: Boolean, default: false },
+    deleteLesson: { type: Boolean, default: false }
 });
 
 notificationSchema.index({ endDate: 1 }, { expireAfterSeconds: 0 });

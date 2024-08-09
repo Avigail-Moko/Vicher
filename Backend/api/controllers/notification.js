@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Notification = require("../models/notification");
 const Agenda = require("agenda");
+
 // socket
 let io;
 
@@ -26,16 +27,15 @@ agenda.define("update startLesson", async (job) => {
     type: "startLesson",
     _id: notificationId,
     startLesson: true,
-    note: updatedNotification
-
+    note: updatedNotification,
   });
 });
-agenda.on('complete', async (job) => {
+agenda.on("complete", async (job) => {
   await job.remove();
   console.log(`Job ${job.attrs.name} completed and removed`);
 });
 
-agenda.on('fail', async (err, job) => {
+agenda.on("fail", async (err, job) => {
   await job.remove();
   console.log(`Job ${job.attrs.name} failed and removed`);
 });
@@ -66,6 +66,7 @@ module.exports = {
       studentStatus: "unread",
       teacherStatus: "unread",
       startLesson: false,
+      deleteLesson: false,
     });
 
     await note.save({ session });
@@ -79,14 +80,13 @@ module.exports = {
   getNote: (req, res) => {
     const userId = req.query.userId;
 
-    Notification.find
-    ({
+    Notification.find({
       $or: [
-        { student_id: userId, studentStatus: { $ne: 'delete' } },
-        { teacher_id: userId, teacherStatus: { $ne: 'delete' } },
+        { student_id: userId, studentStatus: { $ne: "delete" } },
+        { teacher_id: userId, teacherStatus: { $ne: "delete" } },
         { student_id: userId, startLesson: true },
-        { teacher_id: userId, startLesson: true }
-      ]
+        { teacher_id: userId, startLesson: true },
+      ],
     })
       .exec()
       .then((notification) => {
@@ -118,20 +118,32 @@ module.exports = {
           // Update student status to true
           return Notification.updateOne(
             { _id: _id },
-            { $set: {  studentStatus: 'read' } }
-          ).exec().then(result => {
-            io.emit("notification", { type: "studentReadStatus", _id, studentStatus: 'read' });
-            return result;
-          });
+            { $set: { studentStatus: "read" } }
+          )
+            .exec()
+            .then((result) => {
+              io.emit("notification", {
+                type: "studentReadStatus",
+                _id,
+                studentStatus: "read",
+              });
+              return result;
+            });
         } else if (userId === teacherId) {
           // Update only the notification status
           return Notification.updateOne(
             { _id: _id },
-            { $set: { teacherStatus: 'read' } }
-          ).exec().then(result => {
-            io.emit("notification", { type: "teacherReadStatus", _id, teacherStatus: 'read' });
-            return result;
-          });
+            { $set: { teacherStatus: "read" } }
+          )
+            .exec()
+            .then((result) => {
+              io.emit("notification", {
+                type: "teacherReadStatus",
+                _id,
+                teacherStatus: "read",
+              });
+              return result;
+            });
         }
       })
       .then((result) => {
@@ -162,23 +174,47 @@ module.exports = {
         const teacherId = notification.teacher_id;
 
         if (userId === studentId) {
-          // Update student status to true
-          return Notification.updateOne(
-            { _id: _id },
-            { $set: {  studentStatus: 'delete' } }
-          ).exec().then(result => {
-            io.emit("notification", { type: "studentDeleteStatus", _id, studentId  });
-            return result;
-          });
+          if (
+            notification.deleteLesson === "true" &&
+            notification.teacherStatus === "delete"
+          ) {
+            return this.deleteNotification(_id);
+          } else {
+            return Notification.updateOne(
+              { _id: _id },
+              { $set: { studentStatus: "delete" } }
+            )
+              .exec()
+              .then((result) => {
+                io.emit("notification", {
+                  type: "studentDeleteStatus",
+                  _id,
+                  studentId,
+                });
+                return result;
+              });
+          }
         } else if (userId === teacherId) {
-          // Update only the notification status
-          return Notification.updateOne(
-            { _id: _id },
-            { $set: { teacherStatus: 'delete' } }
-          ).exec().then(result => {
-            io.emit("notification", { type: "teacherDeleteStatus", _id, teacherId });
-            return result;
-          });
+          if (
+            notification.deleteLesson === "true" &&
+            notification.studentStatus === "delete"
+          ) {
+            return this.deleteNotification(_id);
+          } else {
+            return Notification.updateOne(
+              { _id: _id },
+              { $set: { teacherStatus: "delete" } }
+            )
+              .exec()
+              .then((result) => {
+                io.emit("notification", {
+                  type: "teacherDeleteStatus",
+                  _id,
+                  teacherId,
+                });
+                return result;
+              });
+          }
         }
       })
       .then((result) => {
@@ -195,4 +231,17 @@ module.exports = {
       });
   },
 
+  deleteNotification(_id) {
+    Notification.deleteOne({ _id: _id })
+      .then(() => {
+        res.status(200).json({
+          message: "notification deleted",
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({
+          error,
+        });
+      });
+  },
 };

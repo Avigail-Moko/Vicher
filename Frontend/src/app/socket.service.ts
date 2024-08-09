@@ -24,7 +24,7 @@ export class SocketService {
     if (this.socket) {
       this.socket.disconnect();
     }
-    console.log('disconnect socket');
+    console.log('disconnect socket'); 
   }
 
   private handleNotification(notification: any): void {
@@ -72,6 +72,16 @@ export class SocketService {
           alerts.unshift(notification.note);
         }
         break;
+        case 'deleteLesson':
+          const deleteLessonAlert = alerts.find(
+            (alert) => alert._id === notification._id
+          );
+          if (deleteLessonAlert) {
+            deleteLessonAlert.deleteLesson = notification.deleteLesson;
+          }else if (notification.note.student_id === userId || notification.note.teacher_id === userId) {
+            alerts.unshift(notification.note);
+          }
+          break;
       
     }
     this.alertsSubject.next(alerts);
