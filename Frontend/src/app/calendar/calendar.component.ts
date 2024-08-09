@@ -16,7 +16,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent {
-  objectsArray: { start: any; end: any; title:any;  }[] = [];
+  objectsArray: { start: any; end: any; title:any; id:any }[] = [];
   myDate:any;
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
@@ -38,7 +38,7 @@ export class CalendarComponent {
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
-    select: this.handleDateSelect.bind(this),
+    // select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
     eventMouseEnter: this.handleEventMouseEnter.bind(this),
@@ -75,7 +75,8 @@ export class CalendarComponent {
           const start=object.myDate;
           const end=object.endDate;
           const title=object.lesson_title;
-          const newObj={start,end,title}
+          const id=object._id;
+          const newObj={start,end,title,id}
           this.objectsArray.push(newObj);
         });
         console.log('objects Array:',this.objectsArray)
@@ -104,38 +105,41 @@ export class CalendarComponent {
     calendarOptions.weekends = !calendarOptions.weekends;
   }
 
-  //קביעת אירוע
-  handleDateSelect(selectInfo: DateSelectArg) {
-    const title = prompt('Please enter a new title for your event');
-    const calendarApi = selectInfo.view.calendar;
+  // //קביעת אירוע
+  // handleDateSelect(selectInfo: DateSelectArg) {
+  //   const title = prompt('Please enter a new title for your event');
+  //   const calendarApi = selectInfo.view.calendar;
 
-    calendarApi.unselect(); // clear date selection
+  //   calendarApi.unselect(); // clear date selection
 
-    if (title) {
-      // calendarApi.getEvents().forEach(event => {
-      //   event.remove();
-      // });
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      });
+  //   if (title) {
+   
+  //     calendarApi.addEvent({
+  //       id: createEventId(),
+  //       title,
+  //       start: selectInfo.startStr,
+  //       end: selectInfo.endStr,
+  //       allDay: selectInfo.allDay
+  //     });
       
-       this.myDate = selectInfo.start; // שמירת התאריך שנבחר למשתנה 
+  //      this.myDate = selectInfo.start; // שמירת התאריך שנבחר למשתנה 
 
 
-      //  this.selectedDateEmitter.emit(selectInfo.start); // שליחת התאריך שנבחר לקומפוננטה האב
 
-      // localStorage.setItem('myDate', JSON.stringify(myDate));
-
-    }
-  }
+  //   }
+  // }
 //מחיקת אירוע
   handleEventClick(clickInfo: EventClickArg) {
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
+      this.newService.deleteLesson(clickInfo.event.id).subscribe((data)=>{
+        console.log('Response:', data);
+        clickInfo.event.remove();
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+      }
+    );
+
     }
   }
 
@@ -189,7 +193,7 @@ handleEventMouseEnter(mouseEnterInfo: any) {
   // tooltipElement.style.position = 'absolute';
   // tooltipElement.style.left = `${mouseEnterEvent.pageX + 10}px`;
   // tooltipElement.style.top = `${mouseEnterEvent.pageY + 10}px`;
-  alert('is working')
+  // alert('is working')
 }
 
 handleEventMouseLeave() {
