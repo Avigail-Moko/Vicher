@@ -8,6 +8,8 @@ import { NewService } from '../new.service';
 import { MatSelectChange } from '@angular/material/select';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { DeleteLessonDialogComponent } from '../delete-lesson-dialog/delete-lesson-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -23,7 +25,7 @@ export class CalendarComponent {
   objectsArray: {}[] = [];
   // myDate:any;
 
-  constructor(private newService:NewService) {
+  constructor(private newService:NewService,public dialog: MatDialog,) {
   }
 
   calendarOptions: CalendarOptions = {
@@ -256,19 +258,30 @@ export class CalendarComponent {
   //   }
   // }
 //מחיקת אירוע
-  handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      this.newService.deleteLesson(clickInfo.event.id).subscribe((data)=>{
-        console.log('Response:', data);
-        clickInfo.event.remove();
-      },
-      (error) => {
-        console.error('Error:', error.error.message);
-      }
-    );
+ // קומפוננטה שפותחת את הדיאלוג
+handleEventClick(clickInfo: EventClickArg) {
+  const dialog = this.dialog.open(DeleteLessonDialogComponent, {
+    // data: { email: clickInfo.event. }
+  });
 
+  dialog.afterClosed().subscribe((result) => {
+    if (result === true) {
+      this.newService.deleteLesson(clickInfo.event.id).subscribe(
+        (data) => {
+          console.log('Response:', data);
+          clickInfo.event.remove();  // מסיר את האירוע מהיומן
+        },
+        (error) => {
+          console.error('Error:', error.error.message);
+        }
+      );
     }
-  }
+    console.log('The dialog was closed');
+  });
+}
+
+
+
 
   // handleEvents(events: EventApi[]) {
   //   this.currentEvents = events;
