@@ -1,6 +1,5 @@
-import { Component, signal, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, signal, ChangeDetectorRef, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
-import { INITIAL_EVENTS,createEventId  } from './event-utils';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -8,6 +7,7 @@ import listPlugin from '@fullcalendar/list';
 import { NewService } from '../new.service';
 import { MatSelectChange } from '@angular/material/select';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 
 @Component({
@@ -16,9 +16,16 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent {
-  objectsArray: { start: any; end: any; title:any; id:any }[] = [];
-  myDate:any;
-  calendarVisible = true;
+  @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
+  CalendarCounter: number = 0;
+  nextButton: HTMLButtonElement;
+  prevButton: HTMLButtonElement;
+  objectsArray: {}[] = [];
+  // myDate:any;
+
+  constructor(private newService:NewService) {
+  }
+
   calendarOptions: CalendarOptions = {
     plugins: [
       interactionPlugin,
@@ -31,18 +38,40 @@ export class CalendarComponent {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
     },
+    customButtons: {
+      prev: {
+        text: 'prev',
+        click: this.handlePrevClick.bind(this),
+      },
+      next: {
+        text: 'next',
+        click: this.handleNextClick.bind(this),
+      },
+      today: {
+        text: 'today',
+        click: this.handleTodayClick.bind(this),
+      },
+    },
     initialView: 'dayGridMonth',
-    initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
     weekends: true,
-    editable: true,
-    selectable: true,
-    selectMirror: true,
+    editable: false,
+    selectable: false,
+    selectMirror: false,
     dayMaxEvents: true,
     // select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
-    eventMouseEnter: this.handleEventMouseEnter.bind(this),
-    eventMouseLeave: this.handleEventMouseLeave.bind(this),
+    validRange: {
+      start: new Date().toISOString().split('T')[0]  // התאריך של היום
+    },
+    dayCellDidMount: function(info) {
+      var today = new Date();
+      var yesterday = new Date(today.setDate(today.getDate() - 1)).toISOString().split('T')[0];
+      var cellDate = info.date.toISOString().split('T')[0];
+      info.el.classList.toggle('outside-range', cellDate < yesterday);
+    },
+    // eventsSet: this.handleEvents.bind(this),
+    // eventMouseEnter: this.handleEventMouseEnter.bind(this),
+    // eventMouseLeave: this.handleEventMouseLeave.bind(this),
   views: {
     timeGrid: {
       eventLimit: 1 // adjust to 6 only for timeGridWeek/timeGridDay
@@ -50,19 +79,109 @@ export class CalendarComponent {
     dayGrid: {
       eventLimit: 1 // כאן אתה יכול לקבוע את המגבלה עבור תצוגת DayGrid בלבד
     }
-  }
-  
-    /* you can update a remote database when these fire:
-    eventAdd:
-    eventChange:
-    eventRemove:
-    */
+  },
+  eventTimeFormat: { // like '14:30:00'
+    hour: '2-digit',
+    minute: '2-digit',
+    meridiem: false
+  },
+  displayEventEnd:true,
+
+
+
+    eventDidMount(info: any) {
+      const eventEl = info.el;
+      const extendedProps= info.event.extendedProps
+      console.log(extendedProps)
+      const lesson_title= extendedProps.lesson_title
+      const tooltipContent = `
+      <strong>Lesson title:</strong> ${lesson_title}<br>
+    `;
+      
+    
+      // יצירת אלמנט tooltip
+      const tooltipElement = document.createElement('div');
+      tooltipElement.className = 'custom-tooltip';
+      tooltipElement.innerHTML = tooltipContent;
+    
+      // הוספת הסגנונות ל-tooltip
+      tooltipElement.style.position = 'absolute';
+      tooltipElement.style.zIndex = '9999';
+      tooltipElement.style.background = '#FFC107';
+      tooltipElement.style.color = 'black';
+      tooltipElement.style.width = '150px';
+      tooltipElement.style.borderRadius = '3px';
+      tooltipElement.style.boxShadow = '0 0 2px rgba(0,0,0,0.5)';
+      tooltipElement.style.padding = '10px';
+      tooltipElement.style.textAlign = 'center';
+      tooltipElement.style.display= 'none';
+    
+      // הוספת ה-tooltip לגוף הדף
+      document.body.appendChild(tooltipElement);
+    
+      // מיקום ה-tooltip על פי מיקום העכבר
+      eventEl.addEventListener('mouseenter', (event: MouseEvent) => {
+        tooltipElement.style.display = 'block';
+        const rect = eventEl.getBoundingClientRect();
+        const tooltipWidth = tooltipElement.offsetWidth;    
+        tooltipElement.style.left = `${rect.left + window.scrollX + (rect.width / 2) - (tooltipWidth / 2)}px`;
+        tooltipElement.style.top = `${rect.top + window.scrollY - tooltipElement.offsetHeight - 10}px`; // Update position to follow mouse if needed
+      
+      });
+    
+      // הסרת ה-tooltip כאשר העכבר עוזב את האיוונט
+      eventEl.addEventListener('mouseleave', () => {
+        tooltipElement.style.display= 'none';
+      });
+    }
+    
+    
+    
+    
   };
-  currentEvents: EventApi[] = [];
-  tooltipContent: string;
+
+  // currentEvents: EventApi[] = [];
+  // tooltipContent: string;
   // workDays: number[] = [];
   // workHours: string[] = [];
-  constructor(private changeDetector: ChangeDetectorRef,private newService:NewService) {
+  
+  ngAfterViewInit() {
+    this.nextButton = document.querySelector(
+      '.fc-next-button'
+    ) as HTMLButtonElement;
+    this.prevButton = document.querySelector(
+      '.fc-prev-button'
+    ) as HTMLButtonElement;
+    this.prevButton.disabled = true;
+  }
+  handleTodayClick() {
+    const calendarApi = this.calendarComponent.getApi();
+    calendarApi.today();
+    this.CalendarCounter = 0;
+    this.prevButton.disabled = true;
+    // this.nextButton.disabled = false;
+  }
+  handlePrevClick() {
+    const calendarApi = this.calendarComponent.getApi();
+    if (this.CalendarCounter > 0) {
+      calendarApi.prev();
+      this.CalendarCounter--;
+      // this.nextButton.disabled = false;
+      if (this.CalendarCounter === 0) {
+        this.prevButton.disabled = true;
+      }
+    }
+  }
+  handleNextClick() {
+    const calendarApi = this.calendarComponent.getApi();
+    // if (this.CalendarCounter < 3) {
+      calendarApi.next();
+      this.CalendarCounter++;
+      this.prevButton.disabled = false;
+      // if (this.CalendarCounter === 3) {
+      //   this.nextButton.disabled = true;
+      // }
+    // }
   }
 
   ngOnInit(): void {
@@ -72,11 +191,19 @@ export class CalendarComponent {
       
         console.log('Response:', data);
         data.lessons.forEach((object) => {
+          const id=object._id;
           const start=object.myDate;
           const end=object.endDate;
-          const title=object.lesson_title;
-          const id=object._id;
-          const newObj={start,end,title,id}
+          const backgroundColor=object.teacher_id===localStorage.getItem('userId')?'#D86018':'#3788d8';
+
+          const newObj={
+            id,
+            start,
+            end,
+            backgroundColor,
+            extendedProps: {
+            lesson_title: object.lesson_title,
+          }}
           this.objectsArray.push(newObj);
         });
         console.log('objects Array:',this.objectsArray)
@@ -96,14 +223,14 @@ export class CalendarComponent {
   //   });
   // }
 
-  handleCalendarToggle() {
-    this.calendarVisible = !this.calendarVisible;
-  }
+  // handleCalendarToggle() {
+  //   this.calendarVisible = !this.calendarVisible;
+  // }
 
-  handleWeekendsToggle() {
-    const { calendarOptions } = this;
-    calendarOptions.weekends = !calendarOptions.weekends;
-  }
+  // handleWeekendsToggle() {
+  //   const { calendarOptions } = this;
+  //   calendarOptions.weekends = !calendarOptions.weekends;
+  // }
 
   // //קביעת אירוע
   // handleDateSelect(selectInfo: DateSelectArg) {
@@ -143,10 +270,10 @@ export class CalendarComponent {
     }
   }
 
-  handleEvents(events: EventApi[]) {
-    this.currentEvents = events;
-    this.changeDetector.detectChanges();
-  }
+  // handleEvents(events: EventApi[]) {
+  //   this.currentEvents = events;
+  //   this.changeDetector.detectChanges();
+  // }
 
 
 // toggleWorkDay(event: any, day: string) {
@@ -181,7 +308,8 @@ export class CalendarComponent {
 
 // tooltip:
 
-handleEventMouseEnter(mouseEnterInfo: any) {
+// handleEventMouseEnter(mouseEnterInfo: any) {
+  
   // const event = mouseEnterInfo.event;
   // this.tooltipContent = `${event.title}\n${event.start.toISOString()} - ${event.end ? event.end.toISOString() : 'hhhhhhh'}`;
   // const tooltipElement = document.createElement('div');
@@ -194,12 +322,12 @@ handleEventMouseEnter(mouseEnterInfo: any) {
   // tooltipElement.style.left = `${mouseEnterEvent.pageX + 10}px`;
   // tooltipElement.style.top = `${mouseEnterEvent.pageY + 10}px`;
   // alert('is working')
-}
+// }
 
-handleEventMouseLeave() {
+// handleEventMouseLeave() {
   // const tooltipElement = document.querySelector('.tooltip');
   // if (tooltipElement) {
   //   tooltipElement.remove();
   // }
-}
+// }
 }

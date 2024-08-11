@@ -74,14 +74,24 @@ export class SocketService {
         break;
         case 'deleteLesson':
           const deleteLessonAlert = alerts.find(
-            (alert) => alert._id === notification._id
+            (alert) => alert._id === notification.note._id
           );
           if (deleteLessonAlert) {
             deleteLessonAlert.deleteLesson = notification.deleteLesson;
+            deleteLessonAlert.teacherStatus = notification.note.teacherStatus;
+            deleteLessonAlert.studentStatus = notification.note.studentStatus;
           }else if (notification.note.student_id === userId || notification.note.teacher_id === userId) {
             alerts.unshift(notification.note);
           }
           break;
+          case 'deleteNotification':
+            const deleteNotificationAlert = alerts.find(
+              (alert) => alert._id === notification._id
+            );
+            if (deleteNotificationAlert !== -1) {
+              alerts.splice(deleteNotificationAlert, 1);
+            }
+            break;
       
     }
     this.alertsSubject.next(alerts);

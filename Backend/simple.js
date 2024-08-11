@@ -15,6 +15,8 @@ const io = new Server(server, {
 
 const notificationController = require('./api/controllers/notification');
 notificationController.setIo(io);
+const lessonsController = require('./api/controllers/lessons');
+lessonsController.setIo(io);
 
 io.on('connection', (socket) => {
   console.log('New client connected');

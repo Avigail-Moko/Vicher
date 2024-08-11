@@ -1,57 +1,30 @@
-<h1>My Schedule</h1>
-<div class='demo-app'>
+<h1 class="mb-4 text-3xl">My Calendar</h1>
 
-  <!-- <div class='demo-app-sidebar'>
-    <div class='demo-app-sidebar-section'>
-      <h2>Instructions</h2>
-      <ul>
-        <li>Select dates and you will be prompted to create a new event</li>
-        <li>Drag, drop, and resize events</li>
-        <li>Click an event to delete it</li>
-      </ul>
-    </div>
-    <div class='demo-app-sidebar-section'>
-      <label>
-        <input
-          type='checkbox'
-          [checked]='calendarVisible'
-          (change)='handleCalendarToggle()'
-        />
-        toggle whole calendar
-      </label>
-    </div>
-    <div class='demo-app-sidebar-section'>
-      <label>
-        <input
-          type='checkbox'
-          [checked]='calendarOptions.weekends'
-          (change)='handleWeekendsToggle()'
-        />
-        toggle weekends
-      </label>
-    </div>
-    <div class='demo-app-sidebar-section'>
-      <h2>All Events ({{currentEvents.length}})</h2>
-      <ul>
-        <li *ngFor='let event of currentEvents'>
-          <b>{{event.startStr}}</b>
-          <i>{{event.title}}</i>
-        </li>
-      </ul>
-    </div>
-  </div> -->
+<h3 class="mb-0 text-lg text-300">
+  Here you can view all your scheduled lessons, whether you are a teacher or a student.
+</h3>
+<h3 class="mb-0 text-lg text-300">
+  <span style="color: #E67E22;">Orange </span> indicates lessons where you are the teacher.
+</h3>
+<h3 class="mb-2 text-lg text-300">
+  <span style="color: #3788d8;">Sky blue</span> indicates lessons where you are the student.
+</h3>
+<h3 class="mb-4 text-lg text-300">
+  To cancel a lesson, simply click on it. A notification will be sent to both the teacher and the student to inform them of the cancellation.
+</h3>
+<!-- <div class='demo-app'>
 
-  <div class='demo-app-main'>
-    <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'>
-      <ng-template #eventContent let-arg>
-        <b>{{ arg.timeText }}</b>
-        <i>{{ arg.event.title }}</i>
-      </ng-template>
+  <div class='demo-app-main'> -->
+    <full-calendar  #calendar [options]='calendarOptions'>
+      <!-- <ng-template #eventContent let-arg>
+        <b>{{ arg.event.start |date:' HH:mm' }}-{{ arg.event.end |date:' HH:mm' }}</b> -->
+        <!-- <i>{{ arg.event.title }}</i> -->
+      <!-- </ng-template> -->
     </full-calendar>
-  </div>
+  <!-- </div>
   
-</div>
-<div>
+ </div> -->
+<div> 
   <!-- <input #f/> -->
   <!-- <h2>Select Work Days</h2>
   <mat-checkbox *ngFor="let day of ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']" (change)="toggleWorkDay($event, day)">{{day}}</mat-checkbox>

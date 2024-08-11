@@ -88,6 +88,15 @@ export class DailyPlannerComponent {
         click: this.handleTodayClick.bind(this),
       },
     },
+    validRange: {
+      start: new Date().toISOString().split('T')[0]  // התאריך של היום
+    },
+    dayCellDidMount: function(info) {
+      var today = new Date();
+      var yesterday = new Date(today.setDate(today.getDate() - 1)).toISOString().split('T')[0];
+      var cellDate = info.date.toISOString().split('T')[0];
+      info.el.classList.toggle('outside-range', cellDate < yesterday);
+    },
     initialView: 'dayGridMonth',
     editable: true,
     selectable: true,

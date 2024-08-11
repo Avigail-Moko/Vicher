@@ -72,6 +72,12 @@ full-calendar {
 //   position: relative;
 //   min-height: 400px; /* Adjust as needed */
 // }
-.step-2-div{
-  // min-height: 78vh;
+
+// .step-2-div{
+//   min-height: 78vh;
+// }
+::ng-deep .fc-daygrid-day.outside-range {
+  background-color: hsla(0, 5%, 29%, 0.621) !important; /* צבע רקע לתאריכים מחוץ לטווח */
+  color: hsla(0, 5%, 29%, 0.621) !important; /* צבע טקסט לתאריכים מחוץ לטווח */
+  // pointer-events: none; /* מניעת אינטראקציה עם התאריכים */
 }

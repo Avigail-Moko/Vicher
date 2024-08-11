@@ -2,8 +2,26 @@ const mongoose = require("mongoose");
 const Lesson = require("../models/lessons");
 const Notification = require("../models/notification");
 const { createNote } = require("./notification");
+const Agenda = require("agenda");
+
+// socket
+let io;
+
+const setIo = (socketIo) => {
+  io = socketIo;
+};
+// agenda
+const mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.5rd1vlt.mongodb.net/?retryWrites=true&w=majority`;
+
+const agenda = new Agenda({
+  db: { address: mongoUri, collection: "notificationJobs" },
+});
+agenda.start();
+
 
 module.exports = {
+  setIo,
+
   createLesson: async (req, res) => {
     const {
       myDate,
@@ -127,13 +145,12 @@ const lesson_id= lesson._id
 
       Notification.findOneAndUpdate(
         { lesson_id: _id }, 
-        { $set: { deleteLesson: "true" } },
+        { $set: { deleteLesson: "true",teacherStatus:"unread",studentStatus:"unread" } },
         { new: true } 
       ).exec()
         .then((result) => {
           io.emit("notification", {
             type: "deleteLesson",
-            _id,
             deleteLesson: "true",
             note: result,
           });

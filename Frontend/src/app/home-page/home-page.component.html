@@ -44,7 +44,7 @@
         <div *ngFor="let alert of alerts">
           <!-- reminder: -->
           <button
-            *ngIf="alert.startLesson"
+            *ngIf="alert.startLesson&&!alert.deleteLesson"
             mat-button
             class="btn-note text-yellow-200 h-7rem"
           >
@@ -67,21 +67,21 @@
           </button>
           <!-- notifications:-->
           <button
-            *ngIf="!alert.startLesson && userId===alert.student_id &&alert.studentStatus!='delete'"
+            *ngIf="!alert.startLesson && !alert.deleteLesson && userId===alert.student_id &&alert.studentStatus!='delete'"
             (click)="alert.studentStatus === 'unread' ? readNote(alert._id) : (alert.studentStatus === 'read' ?
              deleteNote(alert._id) : deleteNote(alert._id))"
             [color]="alert.studentStatus === 'read' ? 'primary' : (alert.studentStatus === 'unread' ? 'inherit' : 'inherit')"
             [ngStyle]="{ color: alert.studentStatus === 'read' ? 'grey' : (alert.studentStatus === 'unread' ? 'white' : 'white')}"
             [matTooltip]="alert.studentStatus === 'read' ? 'Tap to delete' : (alert.studentStatus === 'unread' ? 'Tap to mark as read' : '')"
             mat-button
-            class="btn-note"
+            class="btn-note "
           >
               Success! Your lesson has been scheduled. <br />
               We look forward to seeing you soon
             
           </button>
           <button
-          *ngIf="!alert.startLesson && userId===alert.teacher_id&& alert.teacherStatus!='delete'"
+          *ngIf="!alert.startLesson && !alert.deleteLesson && userId===alert.teacher_id&& alert.teacherStatus!='delete'"
           (click)="alert.teacherStatus === 'unread' ? readNote(alert._id) : (alert.teacherStatus === 'read' ? deleteNote(alert._id) : deleteNote(alert._id))"
           [color]="alert.teacherStatus === 'read' ? 'primary' : (alert.teacherStatus === 'unread' ? 'inherit' : 'inherit')"
           [ngStyle]="{ color: alert.teacherStatus === 'read' ? 'grey' : (alert.teacherStatus === 'unread' ? 'white' : 'white')}"
@@ -93,6 +93,36 @@
               Check your calendar for details. Happy teaching!
 
           </button>
+          <!-- attention -->
+          <button
+            *ngIf="alert.deleteLesson && userId===alert.student_id &&alert.studentStatus!='delete'"
+            (click)="alert.studentStatus === 'unread' ? readNote(alert._id) : (alert.studentStatus === 'read' ?
+             deleteNote(alert._id) : deleteNote(alert._id))"
+            [color]="alert.studentStatus === 'read' ? 'primary' : (alert.studentStatus === 'unread' ? 'inherit' : 'inherit')"
+            [ngClass]="{'text-yellow-800': alert.studentStatus === 'read','text-yellow-200': alert.studentStatus !== 'read'}"
+            [matTooltip]="alert.studentStatus === 'read' ? 'Tap to delete' : (alert.studentStatus === 'unread' ? 'Tap to mark as read' : '')"
+            mat-button
+            class="btn-note "
+          >
+          Hello Student, We would like to inform you that the class scheduled for
+          {{ alert.myDate |date:'dd/MM/yy HH:mm' }} at {{alert.lesson_title}} has been canceled. 
+            
+          </button>
+          <button
+          *ngIf="alert.deleteLesson && userId===alert.teacher_id&& alert.teacherStatus!='delete'"
+          (click)="alert.teacherStatus === 'unread' ? readNote(alert._id) : (alert.teacherStatus === 'read' ?
+          deleteNote(alert._id) : deleteNote(alert._id))"
+          [color]="alert.teacherStatus === 'read' ? 'primary' : (alert.teacherStatus === 'unread' ? 'inherit' : 'inherit')"
+        [ngClass]="{'text-yellow-800': alert.teacherStatus === 'read','text-yellow-200': alert.teacherStatus !== 'read'}"
+          [matTooltip]="alert.teacherStatus === 'read' ? 'Click to delete' : (alert.teacherStatus === 'unread' ? '' : '')"
+            mat-button
+            class="btn-note "
+          >
+          Hello Teacher, We would like to inform you that the class scheduled for
+          {{ alert.myDate |date:'dd/MM/yy HH:mm' }} at {{alert.lesson_title}} has been canceled. 
+
+          </button>
+
         </div>
       </p-overlayPanel>
 

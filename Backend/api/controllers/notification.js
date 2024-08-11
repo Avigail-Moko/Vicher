@@ -41,6 +41,16 @@ agenda.on("fail", async (err, job) => {
 });
 
 agenda.start();
+
+const deleteNotification = (_id) =>{
+  Notification.deleteOne({ _id: _id })
+    .then(() => {
+      io.emit("notification", {
+        type: "deleteNotification",
+        _id,
+      });
+    });
+}
 module.exports = {
   setIo,
 
@@ -175,10 +185,11 @@ module.exports = {
 
         if (userId === studentId) {
           if (
-            notification.deleteLesson === "true" &&
+            notification.deleteLesson &&
             notification.teacherStatus === "delete"
           ) {
-            return this.deleteNotification(_id);
+            return deleteNotification(_id);
+            
           } else {
             return Notification.updateOne(
               { _id: _id },
@@ -196,10 +207,10 @@ module.exports = {
           }
         } else if (userId === teacherId) {
           if (
-            notification.deleteLesson === "true" &&
+            notification.deleteLesson  &&
             notification.studentStatus === "delete"
           ) {
-            return this.deleteNotification(_id);
+            return deleteNotification(_id);
           } else {
             return Notification.updateOne(
               { _id: _id },
@@ -231,17 +242,5 @@ module.exports = {
       });
   },
 
-  deleteNotification(_id) {
-    Notification.deleteOne({ _id: _id })
-      .then(() => {
-        res.status(200).json({
-          message: "notification deleted",
-        });
-      })
-      .catch((error) => {
-        res.status(500).json({
-          error,
-        });
-      });
-  },
+
 };
