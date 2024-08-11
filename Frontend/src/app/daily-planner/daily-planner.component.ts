@@ -89,13 +89,14 @@ export class DailyPlannerComponent {
       },
     },
     validRange: {
-      start: new Date().toISOString().split('T')[0]  // התאריך של היום
+      start: new Date(),
+      end: new Date(new Date().getFullYear(), new Date().getMonth() + 4, 1)
     },
     dayCellDidMount: function(info) {
-      var today = new Date();
-      var yesterday = new Date(today.setDate(today.getDate() - 1)).toISOString().split('T')[0];
-      var cellDate = info.date.toISOString().split('T')[0];
-      info.el.classList.toggle('outside-range', cellDate < yesterday);
+      var start = new Date(new Date().setDate(new Date().getDate() - 1));
+      var end =new Date(new Date().getFullYear(), new Date().getMonth() + 4, 0)
+      var cellDate = new Date(info.date);
+      info.el.classList.toggle('outside-range', cellDate < start||cellDate > end );
     },
     initialView: 'dayGridMonth',
     editable: true,
