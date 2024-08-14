@@ -157,22 +157,22 @@ module.exports = {
             })}
         )
     },
-    // getProfile: (req, res) => {
-    //     const userId = req.userData.id; // Use the data from the middleware
+    getProfile: (req, res) => {
+        const userId = req.query.id; // Use the data from the middleware
 
-    //     User.findById(userId)
-    //         .select('name email profileImage description _id') // Select the fields you want to retrieve
-    //         .exec()
-    //         .then(user => {
-    //             if (!user) {
-    //                 return res.status(404).json({ message: 'User not found' });
-    //             }
-    //             res.status(200).json({ message: 'User retrieved successfully', user:user });
-    //         })
-    //         .catch(err => {
-    //             res.status(500).json({ error: 'Server error' });
-    //         });
-    // },
+        User.findById(userId)
+            .select('_id email profileImage name description totalRating raterCounter') // Select the fields you want to retrieve
+            .exec()
+            .then(user => {
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+                res.status(200).json({ message: 'User retrieved successfully', user:user });
+            })
+            .catch(err => {
+                res.status(500).json({ error: 'Server error' });
+            });
+    },
     getAllUsers: (req, res) => {
         User.find()
             .select('_id email profileImage name description totalRating raterCounter') // בחר את השדות שתרצה להחזיר

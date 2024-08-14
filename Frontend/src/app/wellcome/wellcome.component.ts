@@ -121,7 +121,7 @@ export class WellcomeComponent {
   openUserView(userProfile: any[]) {
     const navigationExtras: NavigationExtras = {
       state: {
-        exampleData: userProfile,
+        userProfile: userProfile,
       },
     };
     this.router.navigate(['/user-view'], navigationExtras);

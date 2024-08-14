@@ -43,6 +43,8 @@ module.exports = {
       endDate,
       teacher_id,
       student_id,
+      teacher_name,
+      student_name,
       product_id,
       lesson_title
     });

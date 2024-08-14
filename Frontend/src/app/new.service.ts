@@ -108,6 +108,10 @@ export class NewService {
     const url = 'http://localhost:3000/users/getAllUsers';
     return this.http.get(url);
   }
+  getProfile(partner_id: any): Observable<any> {
+    const url = `http://localhost:3000/users/getProfile?_id=${partner_id}`;
+    return this.http.get(url);
+  }
 
   deleteProduct(_id: any): Observable<any> {
     const url = `http://localhost:3000/products/deleteProduct?_id=${_id}`;
@@ -186,4 +190,5 @@ export class NewService {
     const url = `http://localhost:3000/lessons/deleteLesson?_id=${_id}`;
     return this.http.delete(url);
   }
+
 }

@@ -17,7 +17,7 @@ export class UserViewComponent {
   description: string | undefined;
   price: string | undefined;
   productsArray: any[] = []; 
-
+  partner_id:any;
   message = '';
   responsiveOptions: any[] | undefined;
   userProfile:any
@@ -33,7 +33,8 @@ export class UserViewComponent {
     public router:Router,
   ) {
     const navigation = this.router.getCurrentNavigation();
-    this.userProfile = navigation?.extras.state?.['exampleData'];}
+    this.userProfile = navigation?.extras.state?.['userProfile'];
+    this.partner_id = navigation?.extras.state?.['partner_id'];}
   showSuccess() {
     this.messageService.add({
       severity: 'success',
@@ -44,7 +45,15 @@ export class UserViewComponent {
 
  
   ngOnInit() {
-
+    if (!this.userProfile&&this.partner_id) {
+      this.newService.getProfile(this.partner_id).subscribe((data)=>{
+        console.log('Response:',data);
+        this.userProfile=data;
+      },
+      (error) => {
+          console.error('Error:', error.error.message);
+        })
+    }
     // this.rating = Math.round(this.userProfile.totalRating/this.userProfile.raterCounter);
     this.newService.getRating(this.userId).subscribe((data) => {
       this.rating=data.avgRating

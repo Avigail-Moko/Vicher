@@ -10,6 +10,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { DeleteLessonDialogComponent } from '../delete-lesson-dialog/delete-lesson-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { Renderer2 } from '@angular/core';
 
 
 @Component({
@@ -25,9 +27,13 @@ export class CalendarComponent {
   objectsArray: {}[] = [];
   // myDate:any;
 
-  constructor(private newService:NewService,public dialog: MatDialog,) {
+  constructor(private newService:NewService,public dialog: MatDialog,
+    private router:Router,) {
   }
 
+  navigateToUserView(partner_id: any){
+  this.router.navigate(['/user-view'], { state: { partner_id: partner_id } });
+}
   calendarOptions: CalendarOptions = {
     plugins: [
       interactionPlugin,
@@ -96,10 +102,19 @@ export class CalendarComponent {
       const extendedProps= info.event.extendedProps
       console.log(extendedProps)
       const lesson_title= extendedProps.lesson_title
+      const teacher_name= extendedProps.teacher_name
+      const student_name= extendedProps.student_name
+      const teacher_id=extendedProps.teacher_id;
+      const student_id=extendedProps.student_id;
+      const userProfile=JSON.parse(localStorage.getItem('userProfile'));
+      const partner_id=userProfile._id===teacher_id?student_id:teacher_id;
+      const partner=userProfile.name===teacher_name?student_name:teacher_name;
       const tooltipContent = `
-      <strong>Lesson title:</strong> ${lesson_title}<br>
+      <strong>${lesson_title}</strong> <br>
+      <span>with: <strong  onclick="this.navigateToUserView()" id="navigateToUserView">${partner}</strong></span>
+
+  
     `;
-      
     
       // יצירת אלמנט tooltip
       const tooltipElement = document.createElement('div');
@@ -127,14 +142,24 @@ export class CalendarComponent {
         const rect = eventEl.getBoundingClientRect();
         const tooltipWidth = tooltipElement.offsetWidth;    
         tooltipElement.style.left = `${rect.left + window.scrollX + (rect.width / 2) - (tooltipWidth / 2)}px`;
-        tooltipElement.style.top = `${rect.top + window.scrollY - tooltipElement.offsetHeight - 10}px`; // Update position to follow mouse if needed
+        tooltipElement.style.top = `${rect.top + window.scrollY - tooltipElement.offsetHeight - 0}px`; // Update position to follow mouse if needed
       
       });
     
       // הסרת ה-tooltip כאשר העכבר עוזב את האיוונט
-      eventEl.addEventListener('mouseleave', () => {
-        tooltipElement.style.display= 'none';
+      eventEl.addEventListener('mouseleave',(event: MouseEvent)  => {
+        const relatedTarget = event.relatedTarget as HTMLElement;
+        if (relatedTarget !== tooltipElement && !tooltipElement.contains(relatedTarget)){
+          tooltipElement.style.display= 'none';
+        }
+        
       });
+
+      // tooltipElement.querySelector('#navigateToUserView')?.addEventListener('click', () => {
+      //   console.log(partner_id)
+      //   this.navigateToUserView(partner_id)
+      // });
+      
     }
     
     
@@ -205,6 +230,10 @@ export class CalendarComponent {
             backgroundColor,
             extendedProps: {
             lesson_title: object.lesson_title,
+            teacher_name:object.teacher_name,
+            student_name:object.student_name,
+            teacher_id:object.teacher_id,
+            student_id:object.student_id,
           }}
           this.objectsArray.push(newObj);
         });
@@ -343,4 +372,6 @@ handleEventClick(clickInfo: EventClickArg) {
   //   tooltipElement.remove();
   // }
 // }
+
 }
+

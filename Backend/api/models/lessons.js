@@ -9,6 +9,8 @@ const lessonSchema= mongoose.Schema({
     endDate:Date,
     teacher_id:String, 
     student_id:String,
+    teacher_name:String,
+    student_name:String,
     product_id:String,
     lesson_title:String
 })
