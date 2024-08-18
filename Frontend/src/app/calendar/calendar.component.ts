@@ -31,9 +31,9 @@ export class CalendarComponent {
     private router:Router,) {
   }
 
-  navigateToUserView(partner_id: any){
-  this.router.navigate(['/user-view'], { state: { partner_id: partner_id } });
-}
+//   navigateToUserView(partner_id: any){
+//   this.router.navigate(['/user-view'], { state: { partner_id: partner_id } });
+// }
   calendarOptions: CalendarOptions = {
     plugins: [
       interactionPlugin,
@@ -95,78 +95,68 @@ export class CalendarComponent {
   },
   displayEventEnd:true,
 
+  eventDidMount: this.setupTooltip.bind(this)
 
-
-    eventDidMount(info: any) {
-      const eventEl = info.el;
-      const extendedProps= info.event.extendedProps
-      console.log(extendedProps)
-      const lesson_title= extendedProps.lesson_title
-      const teacher_name= extendedProps.teacher_name
-      const student_name= extendedProps.student_name
-      const teacher_id=extendedProps.teacher_id;
-      const student_id=extendedProps.student_id;
-      const userProfile=JSON.parse(localStorage.getItem('userProfile'));
-      const partner_id=userProfile._id===teacher_id?student_id:teacher_id;
-      const partner=userProfile.name===teacher_name?student_name:teacher_name;
-      const tooltipContent = `
-      <strong>${lesson_title}</strong> <br>
-      <span>with: <strong  onclick="this.navigateToUserView()" id="navigateToUserView">${partner}</strong></span>
-
-  
-    `;
-    
-      // יצירת אלמנט tooltip
-      const tooltipElement = document.createElement('div');
-      tooltipElement.className = 'custom-tooltip';
-      tooltipElement.innerHTML = tooltipContent;
-    
-      // הוספת הסגנונות ל-tooltip
-      tooltipElement.style.position = 'absolute';
-      tooltipElement.style.zIndex = '9999';
-      tooltipElement.style.background = '#FFC107';
-      tooltipElement.style.color = 'black';
-      tooltipElement.style.width = '150px';
-      tooltipElement.style.borderRadius = '3px';
-      tooltipElement.style.boxShadow = '0 0 2px rgba(0,0,0,0.5)';
-      tooltipElement.style.padding = '10px';
-      tooltipElement.style.textAlign = 'center';
-      tooltipElement.style.display= 'none';
-    
-      // הוספת ה-tooltip לגוף הדף
-      document.body.appendChild(tooltipElement);
-    
-      // מיקום ה-tooltip על פי מיקום העכבר
-      eventEl.addEventListener('mouseenter', (event: MouseEvent) => {
-        tooltipElement.style.display = 'block';
-        const rect = eventEl.getBoundingClientRect();
-        const tooltipWidth = tooltipElement.offsetWidth;    
-        tooltipElement.style.left = `${rect.left + window.scrollX + (rect.width / 2) - (tooltipWidth / 2)}px`;
-        tooltipElement.style.top = `${rect.top + window.scrollY - tooltipElement.offsetHeight - 0}px`; // Update position to follow mouse if needed
-      
-      });
-    
-      // הסרת ה-tooltip כאשר העכבר עוזב את האיוונט
-      eventEl.addEventListener('mouseleave',(event: MouseEvent)  => {
-        const relatedTarget = event.relatedTarget as HTMLElement;
-        if (relatedTarget !== tooltipElement && !tooltipElement.contains(relatedTarget)){
-          tooltipElement.style.display= 'none';
-        }
-        
-      });
-
-      // tooltipElement.querySelector('#navigateToUserView')?.addEventListener('click', () => {
-      //   console.log(partner_id)
-      //   this.navigateToUserView(partner_id)
-      // });
-      
-    }
-    
-    
-    
-    
   };
 
+  setupTooltip(info: any) {
+  
+    const eventEl = info.el;
+    const extendedProps= info.event.extendedProps
+    console.log(extendedProps)
+    const lesson_title= extendedProps.lesson_title
+    const teacher_name= extendedProps.teacher_name
+    const student_name= extendedProps.student_name
+    const teacher_id=extendedProps.teacher_id;
+    const student_id=extendedProps.student_id;
+    const userProfile=JSON.parse(localStorage.getItem('userProfile'));
+    const partner_id=userProfile._id===teacher_id?student_id:teacher_id;
+    const partner=userProfile.name===teacher_name?student_name:teacher_name;
+
+    const tooltipContainerElement = document.getElementById('tooltipContainer');
+    if (!tooltipContainerElement) return;
+
+    // Update tooltipContainer content
+    const lessonTitleEl = tooltipContainerElement.querySelector('#lesson_title');
+    const partnerEl = tooltipContainerElement.querySelector('#partner');
+
+
+
+  
+    // מיקום ה-tooltipContainer על פי מיקום העכבר
+    eventEl.addEventListener('mouseenter', (event: MouseEvent) => {
+      if (lessonTitleEl) lessonTitleEl.textContent = lesson_title;
+      if (partnerEl) partnerEl.textContent = partner;
+      tooltipContainerElement.style.display = 'block';
+      const rect = eventEl.getBoundingClientRect();
+      const tooltipContainerWidth = tooltipContainerElement.offsetWidth;    
+      tooltipContainerElement.style.left = `${rect.left + window.scrollX + (rect.width / 2) - (tooltipContainerWidth / 2)}px`;
+      tooltipContainerElement.style.top = `${rect.top + window.scrollY - tooltipContainerElement.offsetHeight }px`;
+    
+    });
+  
+
+    const handleMouseLeave = (event: MouseEvent) => {
+      const relatedTarget = event.relatedTarget as HTMLElement;
+      
+        if (
+          !tooltipContainerElement.contains(relatedTarget) &&
+          relatedTarget !== eventEl
+        ) {
+          tooltipContainerElement.style.display = 'none';
+        };
+    };
+    eventEl.addEventListener('mouseleave', handleMouseLeave);
+    tooltipContainerElement.addEventListener('mouseleave', handleMouseLeave);
+
+    tooltipContainerElement.querySelector('#partner')?.addEventListener('click', () => {
+      this.router.navigate(['/user-view'], { state: { partner_id: partner_id } });
+  });
+ }
+
+  // navigateToUserView(partner_id: any){
+  //     this.router.navigate(['/user-view'], { state: { partner_id: partner_id } });
+  //   }
   // currentEvents: EventApi[] = [];
   // tooltipContent: string;
   // workDays: number[] = [];
@@ -354,15 +344,15 @@ handleEventClick(clickInfo: EventClickArg) {
   
   // const event = mouseEnterInfo.event;
   // this.tooltipContent = `${event.title}\n${event.start.toISOString()} - ${event.end ? event.end.toISOString() : 'hhhhhhh'}`;
-  // const tooltipElement = document.createElement('div');
-  // tooltipElement.className = 'tooltip';
-  // tooltipElement.textContent = this.tooltipContent;
-  // document.body.appendChild(tooltipElement);
+  // const tooltipContainerElement = document.createElement('div');
+  // tooltipContainerElement.className = 'tooltip';
+  // tooltipContainerElement.textContent = this.tooltipContent;
+  // document.body.appendChild(tooltipContainerElement);
 
   // const mouseEnterEvent = mouseEnterInfo.jsEvent;
-  // tooltipElement.style.position = 'absolute';
-  // tooltipElement.style.left = `${mouseEnterEvent.pageX + 10}px`;
-  // tooltipElement.style.top = `${mouseEnterEvent.pageY + 10}px`;
+  // tooltipContainerElement.style.position = 'absolute';
+  // tooltipContainerElement.style.left = `${mouseEnterEvent.pageX + 10}px`;
+  // tooltipContainerElement.style.top = `${mouseEnterEvent.pageY + 10}px`;
   // alert('is working')
 // }
 

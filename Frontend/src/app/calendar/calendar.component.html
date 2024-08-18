@@ -4,10 +4,10 @@
   Here you can view all your scheduled lessons, whether you are a teacher or a student.
 </h3>
 <h3 class="mb-0 text-lg text-300">
-  <span style="color: #E67E22;">Orange </span> indicates lessons where you are the teacher.
+  <span style="color: #E67E22;">Orange </span> indicates lessons where you are the <strong>teacher</strong>.
 </h3>
 <h3 class="mb-2 text-lg text-300">
-  <span style="color: #3788d8;">Sky blue</span> indicates lessons where you are the student.
+  <span style="color: #3788d8;">Sky blue</span> indicates lessons where you are the <strong>student</strong>.
 </h3>
 <h3 class="mb-4 text-lg text-300">
   To cancel a lesson, simply click on it. A notification will be sent to both the teacher and the student to inform them of the cancellation.
@@ -21,6 +21,10 @@
         <!-- <i>{{ arg.event.title }}</i> -->
       <!-- </ng-template> -->
     </full-calendar>
+    <div id="tooltipContainer">
+<div id="tooltip" ><strong id="lesson_title"></strong> <br>
+  <span>with: <strong id="partner"></strong></span></div></div>
+
   <!-- </div>
   
  </div> -->

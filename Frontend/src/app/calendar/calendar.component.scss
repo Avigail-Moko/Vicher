@@ -1,8 +1,5 @@
 
 
-// b { /* used for event dates/times */
-//   margin-right: 3px;
-// }
 
 .fc { /* the calendar root */
   max-width: 1100px;
@@ -14,38 +11,76 @@
   color: #00000000 !important; /* צבע טקסט לתאריכים מחוץ לטווח */
   // pointer-events: none; /* מניעת אינטראקציה עם התאריכים */
 }
+#tooltipContainer{
+position : fixed;
+z-index : 9999;
+display: none;
+padding-bottom: 10px;
+}
+#tooltip{
+background : #FFC107;
+color : black;
+width : 150px;
+border-radius : 3px;
+box-shadow : 0 0 2px rgba(0,0,0,0.5);
+padding : 10px;
+text-align : center;
+font-size: medium;
+}
 
-// .custom-tooltip {
+#tooltip #partner {
+  color: #0c5e81; /* צבע ורוד זוהר */
+  text-decoration: none; /* ללא קו תחתון */
+  cursor: pointer; /* סמן יד כדי לציין שהוא לחיץ */
+  // font-weight: bold; /* משקל גופן עבה */
+  position: relative; /* לצורך אפקטים נוספים */
+}
+
+#tooltip #partner::after {
+  content: ''; /* תוכן ריק לצורך אפקטים */
+  position: absolute;
+  left: 0;
+  bottom: -3px; /* מרחק קטן מתחת לטקסט */
+  width: 100%;
+  height: 2px; /* גובה קו זוהר */
+  background: linear-gradient(90deg, rgba(255,105,180,0) 0%, #0c5e81c1 50%, rgba(255,105,180,0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#tooltip #partner:hover::after {
+  opacity: 1; /* הופעה של קו זוהר במעבר עכבר */
+}
+// // עיצוב אחר
+// #tooltip #partner {
+//   color: #333; /* צבע כהה ואלגנטי לטקסט */
+//   text-decoration: none; /* ללא קו תחתון */
+//   cursor: pointer; /* סמן יד כדי לציין שהוא לחיץ */
+//   font-weight: 600; /* משקל גופן בינוני-עבה */
+//   position: relative; /* לצורך אפקטים נוספים */
+//   font-size: 16px; /* גודל גופן נעים לקריאה */
+//   transition: color 0.3s ease; /* מעבר חלק בצבע */
+// }
+
+// #tooltip #partner::after {
+//   content: ''; /* תוכן ריק לצורך אפקטים */
 //   position: absolute;
-//   z-index: 9999;
-//   background: #FFC107;
-//   color: black;
-//   width: 150px;
-//   border-radius: 3px;
-//   box-shadow: 0 0 2px rgba(0,0,0,0.5);
-//   padding: 10px;
-//   text-align: center;
-//   // display: none; /* Hide by default */
+//   left: 0;
+//   bottom: -3px; /* מרחק קטן מתחת לטקסט */
+//   width: 100%;
+//   height: 2px; /* גובה קו זוהר */
+//   background: #333; /* קו תחתון בצבע כהה */
+//   opacity: 0;
+//   transition: opacity 0.3s ease, transform 0.3s ease; /* מעבר חלק באופסיטי ובמיקום */
 // }
 
-
-// .demo-app {
-//   display: flex;
-//   min-height: 100%;
-//   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-//   font-size: 14px;
+// #tooltip #partner:hover {
+//   color: #007bff; /* צבע כחול מקצועי במעבר עכבר */
 // }
 
-// .demo-app-main {
-//   flex-grow: 1;
-//   padding: 3em;
+// #tooltip #partner:hover::after {
+//   opacity: 1; /* הופעה של קו זוהר במעבר עכבר */
+//   transform: scaleX(1.2); /* התפשטות קו תחתון במעבר עכבר */
 // }
 
-// .tooltip {
-//   background-color: #000;
-//   color: #fff;
-//   padding: 5px;
-//   border-radius: 5px;
-//   z-index: 1000;
-// }
 
