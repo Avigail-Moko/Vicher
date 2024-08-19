@@ -22,7 +22,6 @@ export class UserViewComponent {
   responsiveOptions: any[] | undefined;
   userProfile:any
   userId = localStorage.getItem('userId');
-  raterCounter:any;
 
 
   constructor(
@@ -45,20 +44,41 @@ export class UserViewComponent {
 
  
   ngOnInit() {
-    if (!this.userProfile&&this.partner_id) {
-      this.newService.getProfile(this.partner_id).subscribe((data)=>{
-        console.log('Response:',data);
-        this.userProfile=data;
-      },
-      (error) => {
-          console.error('Error:', error.error.message);
-        })
-    }
-    // this.rating = Math.round(this.userProfile.totalRating/this.userProfile.raterCounter);
-    this.newService.getRating(this.userId).subscribe((data) => {
-      this.rating=data.avgRating
-      this.raterCounter=data.raterCounter
-      console.log('Response:', this.rating);
+
+    const profilePromise = new Promise<void>((resolve, reject) => {
+      if (!this.userProfile && this.partner_id) {
+        this.newService.getProfile(this.partner_id).subscribe(
+          (data) => {
+            this.userProfile = data.user;
+            this.rating = this.userProfile.avgRating;
+            resolve();
+          },
+          (error) => {
+            console.error('Error:', error.error.message);
+            reject(error);
+          }
+        );
+      } else {
+        resolve(); 
+      }
+    });
+  
+    profilePromise.then(() => {
+      if (this.userProfile) {
+        this.rating = this.userProfile.avgRating;
+        this.newService.getProduct(this.userProfile._id).subscribe(
+          (data) => {
+            this.productsArray = data.product;
+          },
+          (error) => {
+            console.error('Error:', error.error.message);
+          }
+        );
+      } else {
+        console.error('UserProfile is not available');
+      }
+    }).catch((error) => {
+      console.error('Profile fetch failed:', error);
     });
 
     this.responsiveOptions = [
@@ -74,16 +94,6 @@ export class UserViewComponent {
       }
   ];
 
-   
-      this.newService.getProduct(this.userProfile._id).subscribe(
-        (data) => {
-          console.log('Response:', data);
-  
-          this.productsArray=data.product
-        },
-        (error) => {
-          console.error('Error:', error.error.message);
-        });
   }
 
   openDailyPlanner(product: any) {

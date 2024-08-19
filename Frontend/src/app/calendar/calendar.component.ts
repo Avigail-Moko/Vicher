@@ -25,15 +25,13 @@ export class CalendarComponent {
   nextButton: HTMLButtonElement;
   prevButton: HTMLButtonElement;
   objectsArray: {}[] = [];
-  // myDate:any;
+  partner_id: any
+
 
   constructor(private newService:NewService,public dialog: MatDialog,
     private router:Router,) {
   }
 
-//   navigateToUserView(partner_id: any){
-//   this.router.navigate(['/user-view'], { state: { partner_id: partner_id } });
-// }
   calendarOptions: CalendarOptions = {
     plugins: [
       interactionPlugin,
@@ -66,7 +64,6 @@ export class CalendarComponent {
     selectable: false,
     selectMirror: false,
     dayMaxEvents: true,
-    // select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     validRange: {
       start: new Date().toISOString().split('T')[0]  // התאריך של היום
@@ -77,17 +74,15 @@ export class CalendarComponent {
       var cellDate = info.date.toISOString().split('T')[0];
       info.el.classList.toggle('outside-range', cellDate < yesterday);
     },
-    // eventsSet: this.handleEvents.bind(this),
-    // eventMouseEnter: this.handleEventMouseEnter.bind(this),
-    // eventMouseLeave: this.handleEventMouseLeave.bind(this),
-  views: {
-    timeGrid: {
-      eventLimit: 1 // adjust to 6 only for timeGridWeek/timeGridDay
-    },
-    dayGrid: {
-      eventLimit: 1 // כאן אתה יכול לקבוע את המגבלה עבור תצוגת DayGrid בלבד
-    }
-  },
+
+  // views: {
+  //   timeGrid: {
+  //     eventLimit: 1 
+  //   },
+  //   dayGrid: {
+  //     eventLimit: 1
+  //   }
+  // },
   eventTimeFormat: { // like '14:30:00'
     hour: '2-digit',
     minute: '2-digit',
@@ -104,27 +99,23 @@ export class CalendarComponent {
     const eventEl = info.el;
     const extendedProps= info.event.extendedProps
     console.log(extendedProps)
-    const lesson_title= extendedProps.lesson_title
-    const teacher_name= extendedProps.teacher_name
-    const student_name= extendedProps.student_name
-    const teacher_id=extendedProps.teacher_id;
-    const student_id=extendedProps.student_id;
     const userProfile=JSON.parse(localStorage.getItem('userProfile'));
-    const partner_id=userProfile._id===teacher_id?student_id:teacher_id;
-    const partner=userProfile.name===teacher_name?student_name:teacher_name;
-
     const tooltipContainerElement = document.getElementById('tooltipContainer');
     if (!tooltipContainerElement) return;
-
-    // Update tooltipContainer content
     const lessonTitleEl = tooltipContainerElement.querySelector('#lesson_title');
     const partnerEl = tooltipContainerElement.querySelector('#partner');
 
 
 
   
-    // מיקום ה-tooltipContainer על פי מיקום העכבר
     eventEl.addEventListener('mouseenter', (event: MouseEvent) => {
+      const lesson_title= extendedProps.lesson_title
+      const teacher_name= extendedProps.teacher_name
+      const student_name= extendedProps.student_name
+      const teacher_id=extendedProps.teacher_id;
+      const student_id=extendedProps.student_id;
+      this.partner_id=userProfile._id===teacher_id?student_id:teacher_id;
+      const partner=userProfile.name===teacher_name?student_name:teacher_name;
       if (lessonTitleEl) lessonTitleEl.textContent = lesson_title;
       if (partnerEl) partnerEl.textContent = partner;
       tooltipContainerElement.style.display = 'block';
@@ -150,17 +141,10 @@ export class CalendarComponent {
     tooltipContainerElement.addEventListener('mouseleave', handleMouseLeave);
 
     tooltipContainerElement.querySelector('#partner')?.addEventListener('click', () => {
-      this.router.navigate(['/user-view'], { state: { partner_id: partner_id } });
+      this.router.navigate(['/user-view'], { state: { partner_id: this.partner_id } });
   });
  }
 
-  // navigateToUserView(partner_id: any){
-  //     this.router.navigate(['/user-view'], { state: { partner_id: partner_id } });
-  //   }
-  // currentEvents: EventApi[] = [];
-  // tooltipContent: string;
-  // workDays: number[] = [];
-  // workHours: string[] = [];
   
   ngAfterViewInit() {
     this.nextButton = document.querySelector(
@@ -237,50 +221,8 @@ export class CalendarComponent {
     
   }
 
-  // getLessonsForUser(userId: string) {
-  //   this.newService.createLessons(userId).subscribe(lessons => {
-  //     // עשה משהו עם השיעורים שהתקבלו
-  //     console.log(lessons);
-  //   });
-  // }
-
-  // handleCalendarToggle() {
-  //   this.calendarVisible = !this.calendarVisible;
-  // }
-
-  // handleWeekendsToggle() {
-  //   const { calendarOptions } = this;
-  //   calendarOptions.weekends = !calendarOptions.weekends;
-  // }
-
-  // //קביעת אירוע
-  // handleDateSelect(selectInfo: DateSelectArg) {
-  //   const title = prompt('Please enter a new title for your event');
-  //   const calendarApi = selectInfo.view.calendar;
-
-  //   calendarApi.unselect(); // clear date selection
-
-  //   if (title) {
-   
-  //     calendarApi.addEvent({
-  //       id: createEventId(),
-  //       title,
-  //       start: selectInfo.startStr,
-  //       end: selectInfo.endStr,
-  //       allDay: selectInfo.allDay
-  //     });
-      
-  //      this.myDate = selectInfo.start; // שמירת התאריך שנבחר למשתנה 
-
-
-
-  //   }
-  // }
-//מחיקת אירוע
- // קומפוננטה שפותחת את הדיאלוג
 handleEventClick(clickInfo: EventClickArg) {
   const dialog = this.dialog.open(DeleteLessonDialogComponent, {
-    // data: { email: clickInfo.event. }
   });
 
   dialog.afterClosed().subscribe((result) => {
@@ -299,69 +241,6 @@ handleEventClick(clickInfo: EventClickArg) {
   });
 }
 
-
-
-
-  // handleEvents(events: EventApi[]) {
-  //   this.currentEvents = events;
-  //   this.changeDetector.detectChanges();
-  // }
-
-
-// toggleWorkDay(event: any, day: string) {
-//   if (event.checked) {
-//     this.workDays.push(new Date().getDay());
-//   } else {
-//     const index = this.workDays.indexOf(new Date().getDay());
-//     if (index > -1) {
-//       this.workDays.splice(index, 1);
-//     }
-//   }
-// }
-
-// selectWorkHours(event: MatSelectChange) {
-//   this.workHours = event.value;
-// }
-
-// saveAvailability() {
-//   console.log('Work Days:', this.workDays);
-//   console.log('Work Hours:', this.workHours);
-//   // אתה יכול לעדכן את האפשרויות של הלוח כאן על פי הערכים שנבחרו
-// }
-// updateCalendarAvailability() {
-//   const { calendarOptions, workDays, workHours } = this;
-  
-//   calendarOptions.eventConstraint = {
-//     daysOfWeek: workDays, // ימי העבודה שנבחרו
-//     startTime: workHours[0], // השעה הראשונה בטווח השעות הנבחר
-//     endTime: workHours[workHours.length - 1] // השעה האחרונה בטווח השעות הנבחר
-//   };
-// }
-
-// tooltip:
-
-// handleEventMouseEnter(mouseEnterInfo: any) {
-  
-  // const event = mouseEnterInfo.event;
-  // this.tooltipContent = `${event.title}\n${event.start.toISOString()} - ${event.end ? event.end.toISOString() : 'hhhhhhh'}`;
-  // const tooltipContainerElement = document.createElement('div');
-  // tooltipContainerElement.className = 'tooltip';
-  // tooltipContainerElement.textContent = this.tooltipContent;
-  // document.body.appendChild(tooltipContainerElement);
-
-  // const mouseEnterEvent = mouseEnterInfo.jsEvent;
-  // tooltipContainerElement.style.position = 'absolute';
-  // tooltipContainerElement.style.left = `${mouseEnterEvent.pageX + 10}px`;
-  // tooltipContainerElement.style.top = `${mouseEnterEvent.pageY + 10}px`;
-  // alert('is working')
-// }
-
-// handleEventMouseLeave() {
-  // const tooltipElement = document.querySelector('.tooltip');
-  // if (tooltipElement) {
-  //   tooltipElement.remove();
-  // }
-// }
 
 }
 

@@ -37,6 +37,7 @@
   <!-- <p-fieldset  legend="Header"> -->
 
   <p-carousel
+  *ngIf="AllproductsArray"
   id="p-carousel-center"
     [value]="AllproductsArray"
     [numVisible]=" AllproductsArray.length < 4 ? AllproductsArray.length : 4"
@@ -99,6 +100,7 @@
   <!-- <p-fieldset  legend="Header"> -->
 
   <p-carousel
+  *ngIf="AllusersArray"
   id="p-carousel-center"
     [value]="AllusersArray"
     [numVisible]=" AllusersArray.length < 4 ? AllusersArray.length : 4"

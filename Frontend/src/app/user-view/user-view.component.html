@@ -1,4 +1,4 @@
-<div class="flex flex-wrap">
+<div *ngIf="userProfile" class="flex flex-wrap">
   <!-- left box -->
   <div class="flex flex-1 flex-column align-items-center lg:flex-none">
     <p-card
@@ -17,7 +17,7 @@
         matTooltip="Available after lesson participation"
         [readonly]="true"
         [cancel]="false"
-        [attr.data-rater-counter]="raterCounter"
+        [attr.data-rater-counter]="userProfile.raterCounter"
       ></p-rating>
       <ng-template pTemplate="header">
         <img

@@ -1,47 +1,27 @@
 <h1 class="mb-4 text-3xl">My Calendar</h1>
 
 <h3 class="mb-0 text-lg text-300">
-  Here you can view all your scheduled lessons, whether you are a teacher or a student.
+  Here you can view all your scheduled lessons, whether you are a teacher or a
+  student.
 </h3>
 <h3 class="mb-0 text-lg text-300">
-  <span style="color: #E67E22;">Orange </span> indicates lessons where you are the <strong>teacher</strong>.
+  <span style="color: #e67e22">Orange </span> indicates lessons where you are
+  the <strong>teacher</strong>.
 </h3>
 <h3 class="mb-2 text-lg text-300">
-  <span style="color: #3788d8;">Sky blue</span> indicates lessons where you are the <strong>student</strong>.
+  <span style="color: #3788d8">Sky blue</span> indicates lessons where you are
+  the <strong>student</strong>.
 </h3>
 <h3 class="mb-4 text-lg text-300">
-  To cancel a lesson, simply click on it. A notification will be sent to both the teacher and the student to inform them of the cancellation.
+  To cancel a lesson, simply click on it. A notification will be sent to both
+  the teacher and the student to inform them of the cancellation.
 </h3>
-<!-- <div class='demo-app'>
 
-  <div class='demo-app-main'> -->
-    <full-calendar  #calendar [options]='calendarOptions'>
-      <!-- <ng-template #eventContent let-arg>
-        <b>{{ arg.event.start |date:' HH:mm' }}-{{ arg.event.end |date:' HH:mm' }}</b> -->
-        <!-- <i>{{ arg.event.title }}</i> -->
-      <!-- </ng-template> -->
-    </full-calendar>
-    <div id="tooltipContainer">
-<div id="tooltip" ><strong id="lesson_title"></strong> <br>
-  <span>with: <strong id="partner"></strong></span></div></div>
+<full-calendar #calendar [options]="calendarOptions"> </full-calendar>
 
-  <!-- </div>
-  
- </div> -->
-<div> 
-  <!-- <input #f/> -->
-  <!-- <h2>Select Work Days</h2>
-  <mat-checkbox *ngFor="let day of ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']" (change)="toggleWorkDay($event, day)">{{day}}</mat-checkbox>
-  
-  <h2>Select Work Hours</h2>
-  <mat-form-field appearance="fill">
-    <mat-label>Select Hours</mat-label>
-    <mat-select (selectionChange)="selectWorkHours($event)">
-      <mat-option *ngFor="let hour of ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM']" [value]="hour">{{hour}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <button mat-raised-button color="primary" (click)="saveAvailability()">Save Availability</button> -->
+<div id="tooltipContainer">
+  <div id="tooltip">
+    <strong id="lesson_title"></strong> <br />
+    <span>with: <strong id="partner" matTooltip="Click to move to the profile"></strong></span>
   </div>
-
-  
-
+</div>

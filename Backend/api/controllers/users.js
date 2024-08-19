@@ -6,8 +6,8 @@ const { createCanvas } = require('canvas');
 
 //פונקציה המגרילה צבע רנדומלי
 function getRandomColor() {
-    const minBrightness = 100; // ערך מינימלי של בהירות
-    const maxBrightness = 255; // ערך מקסימלי של בהירות
+    const minBrightness = 100; 
+    const maxBrightness = 255; 
     let r, g, b;
 
     do {
@@ -30,7 +30,6 @@ function createBlueProfileImage(name) {
  //רקע בנוי משם המשתמש 
     context.fillStyle = 'white';
     context.font = '15px  Georgia, Times New Roman, Times, serif';
-    // context.font = '15px  Gabriola';
     context.textAlign = 'left';
     context.textBaseline = 'top';
 
@@ -82,7 +81,6 @@ module.exports = {
                     });
                 }
 
-            // שימוש בפונקציית יצירת תמונה
             const profileImage =  createBlueProfileImage(name); // יצירת התמונה
                 const user = new User({
                     _id: new mongoose.Types.ObjectId(),
@@ -93,9 +91,6 @@ module.exports = {
 
                 });
                 user.save().then((result) => {
-                    console.log(result);
-                    // const myUser=set.localStorage(myUser, result);
-    
                     res.status(200).json({
                         message: 'User created'
                     });
@@ -158,16 +153,25 @@ module.exports = {
         )
     },
     getProfile: (req, res) => {
-        const userId = req.query.id; // Use the data from the middleware
+        const userId = req.query._id; 
 
         User.findById(userId)
-            .select('_id email profileImage name description totalRating raterCounter') // Select the fields you want to retrieve
+            .select('_id email profileImage name description totalRating raterCounter') 
             .exec()
             .then(user => {
                 if (!user) {
                     return res.status(404).json({ message: 'User not found' });
                 }
-                res.status(200).json({ message: 'User retrieved successfully', user:user });
+                const formattedUser =({
+                    email: user.email,
+                    profileImage: user.profileImage,
+                    name:user.name,
+                    _id:user._id,
+                    description:user.description,
+                    raterCounter:user.raterCounter,
+                    avgRating:(user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0
+                })
+                res.status(200).json({ message: 'User retrieved successfully', user:formattedUser });
             })
             .catch(err => {
                 res.status(500).json({ error: 'Server error' });
@@ -175,7 +179,7 @@ module.exports = {
     },
     getAllUsers: (req, res) => {
         User.find()
-            .select('_id email profileImage name description totalRating raterCounter') // בחר את השדות שתרצה להחזיר
+            .select('_id email profileImage name description totalRating raterCounter') 
             .exec()
             .then(users => {
                 if (!users || users.length === 0) {
@@ -188,7 +192,6 @@ module.exports = {
                     name:user.name,
                     _id:user._id,
                     description:user.description,
-                    // totalRating:user.totalRating,
                     raterCounter:user.raterCounter,
                     avgRating:(user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0
                 }));
@@ -205,7 +208,7 @@ module.exports = {
         const { description } = req.body;
 
         User.findByIdAndUpdate(userId, { description: description }, { new: true })
-            .select('description') // החזרת השדות שאתה רוצה
+            .select('description') 
             .exec()
             .then(user => {
                 if (!user) {

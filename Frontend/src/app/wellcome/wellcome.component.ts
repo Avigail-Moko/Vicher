@@ -40,7 +40,6 @@ export class WellcomeComponent {
 
     this.newService.getAllProduct().subscribe(
       (data) => {
-        console.log('Response:', data);
         this.AllproductsArray = data.product;
       },
       (error) => {
@@ -49,11 +48,8 @@ export class WellcomeComponent {
     );
 
     this.newService.getAllUsers().subscribe(
-      (data) => {
-        console.log('Response:', data);
-        
+      (data) => {        
         this.AllusersArray = data.users;
-
       },
       (error) => {
         console.error('Error:', error.error.message);
