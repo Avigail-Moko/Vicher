@@ -1,5 +1,6 @@
 <div class="p-5 text-white">
-<h3 >You're about to cancel the lesson. Are you sure you want to proceed?</h3>
+<h3 >You're about to cancel the <span class="">{{ lesson.lesson_title }}</span> lesson which dated at <span class="">{{ lesson.myDate | date: 'dd MMM yyyy, HH:mm' }}</span> with <span class=""></span>. 
+    Are you sure you want to proceed?</h3>
 <h3>If you click "Yes", a notification will be sent to your student.</h3>
 <h3>If you click "No", you'll return to the site without making any changes.</h3>
 <h3> (Note: When canceling, it's a good idea to reach out to your partner personally to inform them of the cancellation and arrange a new time.)</h3>

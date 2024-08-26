@@ -115,8 +115,8 @@ export class AvailabilityScheduleComponent {
 
       for (let item = 0; item < this.objectsArray.length; item++) {
         if (
-          this.objectsArray[item].start === clickInfo.event.startStr &&
-          this.objectsArray[item].end === clickInfo.event.endStr
+          new Date(this.objectsArray[item].start).getTime() === new Date(clickInfo.event.startStr).getTime() &&
+          new Date(this.objectsArray[item].end).getTime() === new Date(clickInfo.event.endStr).getTime()
         ) {
           this.indexOfEvent = item;
         }

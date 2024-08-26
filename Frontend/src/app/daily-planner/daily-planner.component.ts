@@ -415,10 +415,10 @@ export class DailyPlannerComponent {
       );
       emptyArray.push({ numOfLessons, startDate });
     });
-    this.saparatedHoursForLessons(emptyArray);
+    this.separatedHoursForLessons(emptyArray);
   }
 
-  saparatedHoursForLessons(emptyArray) {
+  separatedHoursForLessons(emptyArray) {
     this.comparisonArray = [];
     this.lessonsArray = [];
     emptyArray.forEach((person) => {

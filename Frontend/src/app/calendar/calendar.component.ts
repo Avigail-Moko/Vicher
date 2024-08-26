@@ -208,6 +208,7 @@ export class CalendarComponent {
             student_name:object.student_name,
             teacher_id:object.teacher_id,
             student_id:object.student_id,
+            myDate:object.myDate
           }}
           this.objectsArray.push(newObj);
         });
@@ -222,7 +223,12 @@ export class CalendarComponent {
   }
 
 handleEventClick(clickInfo: EventClickArg) {
+  const extendedProps= clickInfo.event.extendedProps
+
   const dialog = this.dialog.open(DeleteLessonDialogComponent, {
+    data:{
+      lesson:extendedProps
+    }
   });
 
   dialog.afterClosed().subscribe((result) => {
