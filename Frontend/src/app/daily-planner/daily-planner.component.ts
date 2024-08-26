@@ -44,7 +44,7 @@ export class DailyPlannerComponent {
   availableDays: Set<number> = new Set();
   busyEventArray: any[] = [];
   isStepCompleted: boolean = false;
-  takenLessonArray: any[] = [];
+  takenLessonsArray: any[] = [];
   dailyTakenArray: any[] = [];
   isTaken: boolean;
   CalendarCounter: number = 0;
@@ -209,13 +209,14 @@ export class DailyPlannerComponent {
 
     this.newService.getLessonByTeacher(this.product.userId).subscribe(
       (data) => {
-        for (let index = 0; index < data.lesson.length; index++) {
+        for (let index = 0; index < data.lessons.length; index++) {
+          
           const newDate = {
-            start: new Date(data.lesson[index].myDate),
-            end: new Date(data.lesson[index].endDate),
+            start: new Date(data.lessons[index].myDate),
+            end: new Date(data.lessons[index].endDate),
           };
 
-          this.takenLessonArray.push(newDate);
+          this.takenLessonsArray.push(newDate);
         }
       },
       (error) => {
@@ -260,18 +261,18 @@ export class DailyPlannerComponent {
           start: new Date(this.busyEventArray[index].startDate),
           end: new Date(this.busyEventArray[index].endDate),
         };
-        this.takenLessonArray.push(newDate);
+        this.takenLessonsArray.push(newDate);
       } else {
         const startnewDate = {
           start: new Date(this.busyEventArray[index].startDate),
           end: new Date(startOnlyDate.setHours(23, 59)),
         };
-        this.takenLessonArray.push(startnewDate);
+        this.takenLessonsArray.push(startnewDate);
         const endnewDate = {
           start: new Date(endOnlyDate.setHours(0, 0)),
           end: new Date(this.busyEventArray[index].endDate),
         };
-        this.takenLessonArray.push(endnewDate);
+        this.takenLessonsArray.push(endnewDate);
       }
 
       if (dayDifference > 1) {
@@ -284,7 +285,7 @@ export class DailyPlannerComponent {
             end: new Date(newOnlyDate.setHours(23, 59)),
           };
 
-          this.takenLessonArray.push(newDate);
+          this.takenLessonsArray.push(newDate);
         }
       }
     }
@@ -325,14 +326,14 @@ export class DailyPlannerComponent {
         this.newObjArray.push(this.teacherAvailabilityArray[index]);
       }
     }
-    for (let index = 0; index < this.takenLessonArray.length; index++) {
+    for (let index = 0; index < this.takenLessonsArray.length; index++) {
       if (
         this.datePipe.transform(
-          this.takenLessonArray[index].start,
+          this.takenLessonsArray[index].start,
           'yyyy-MM-dd'
         ) === this.datePipe.transform(this.myDate, 'yyyy-MM-dd')
       ) {
-        this.dailyTakenArray.push(this.takenLessonArray[index]);
+        this.dailyTakenArray.push(this.takenLessonsArray[index]);
       }
     }
 
