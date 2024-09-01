@@ -17,6 +17,7 @@ import { StepperOrientation } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {map} from 'rxjs/operators';
+import { Message } from 'primeng/api';
 
 
 
@@ -53,6 +54,8 @@ export class DailyPlannerComponent {
   timeRanges: string[] = ['morning', 'noon', 'afternoon', 'evening'];
   appointmentGuid: number = 1;
   userProfile = JSON.parse(localStorage.getItem('userProfile'));
+  messages: Message[] | undefined;
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -518,11 +521,18 @@ export class DailyPlannerComponent {
           console.log('Response:', data);
           this.dialogClosed.emit();
           this.dialog.closeAll();
+          
         },
         (error) => {
+            this.messages = [
+                { severity: 'warn', summary: 'The selected lesson is already booked. Please choose a different lesson' }
+            ];
+        
           console.error('Error:', error.error.message);
           this.errorMessage = error.error.message;
+          
         }
       );
   }
+
 }

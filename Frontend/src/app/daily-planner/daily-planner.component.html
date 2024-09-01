@@ -70,6 +70,9 @@
 
   <mat-step>
     <ng-template matStepLabel><i class="pi pi-check-circle"></i></ng-template>
+    <div class="card">
+      <p-messages [(value)]="messages" [enableService]="false" />
+  </div>
     <div class="flex justify-content-center">
       <div class="max-w-30rem mx-3">
     <p class="line-height-1 text-2xl text-white mt-2">Your Lesson is Almost Booked!</p>
@@ -92,6 +95,7 @@ Hit "Save Date" to confirm your spot and start your adventure in {{product.categ
       *ngIf="!(this.lessonsArray.length == this.comparisonArray.length)"
       >Save Date</p-button
     >
+    
 </div>
 </div>
 <div class="flex justify-content-end">

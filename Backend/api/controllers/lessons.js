@@ -3,6 +3,7 @@ const Lesson = require("../models/lessons");
 const Notification = require("../models/notification");
 const { createNote } = require("./notification");
 const Agenda = require("agenda");
+const lessons = require("../models/lessons");
 
 // socket
 let io;
@@ -51,6 +52,26 @@ module.exports = {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
+    
+          // בדיקה אם קיים כבר שיעור עבור המורה באותו תאריך וזמן
+          const existingLesson = await Lesson.findOne({
+            teacher_id,
+            myDate: {
+                $lte: endDate, // בדיקה אם תחילת השיעור החדש חופפת לשיעור קיים
+            },
+            endDate: {
+                $gte: startDate, // בדיקה אם סיום השיעור החדש חופפת לשיעור קיים
+            },
+        }).exec();
+
+        if (existingLesson) {
+            // אם נמצא שיעור מתנגש, מחזירים הודעת שגיאה
+            return res.status(400).json({
+                message: `A lesson already exists for this teacher on the selected date and time.`,
+            });
+        }
+
+
       await lesson.save({ session });
 const lesson_id= lesson._id
       await createNote(

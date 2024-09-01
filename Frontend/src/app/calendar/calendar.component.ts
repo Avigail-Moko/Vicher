@@ -129,7 +129,7 @@ export class CalendarComponent {
 
     const handleMouseLeave = (event: MouseEvent) => {
       const relatedTarget = event.relatedTarget as HTMLElement;
-      
+
         if (
           !tooltipContainerElement.contains(relatedTarget) &&
           relatedTarget !== eventEl
@@ -137,6 +137,7 @@ export class CalendarComponent {
           tooltipContainerElement.style.display = 'none';
         };
     };
+    
     eventEl.addEventListener('mouseleave', handleMouseLeave);
     tooltipContainerElement.addEventListener('mouseleave', handleMouseLeave);
 
