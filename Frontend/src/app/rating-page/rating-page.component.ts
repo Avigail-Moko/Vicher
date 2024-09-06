@@ -23,7 +23,7 @@ export class RatingPageComponent {
     this.newService.rating(this.teacher_id, rating).subscribe(
       (data) => {
         console.log('Response:', data);
-        this.router.navigate(['/wellcome'])
+        this.router.navigate(['/welcome'])
       },
       (error) => {
         console.error('Error:', error.error.message);

@@ -7,11 +7,11 @@ import { Message, MessageService } from 'primeng/api';
 import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-wellcome',
-  templateUrl: './wellcome.component.html',
-  styleUrls: ['./wellcome.component.scss'],
+  selector: 'app-welcome',
+  templateUrl: './welcome.component.html',
+  styleUrls: ['./welcome.component.scss'],
 })
-export class WellcomeComponent {
+export class WelcomeComponent {
   AllproductsArray: any;
   AllusersArray: any;
   responsiveOptions: any[] | undefined;
@@ -121,5 +121,29 @@ export class WellcomeComponent {
       },
     };
     this.router.navigate(['/user-view'], navigationExtras);
+  }
+  //sort
+  products = [
+    { name: 'מוצר 1', price: 100, size: 'S', rating: 4 },
+    { name: 'מוצר 2', price: 200, size: 'M', rating: 5 },
+    // עוד מוצרים
+  ];
+
+  searchTerm: string = '';
+  filterType: string = '';
+
+  filterBy(type: string) {
+    this.filterType = type;
+  }
+
+  filteredProducts() {
+    return this.products.filter(product => {
+      return product.name.includes(this.searchTerm);
+    }).sort((a, b) => {
+      if (this.filterType === 'price') return a.price - b.price;
+      if (this.filterType === 'size') return a.size.localeCompare(b.size);
+      if (this.filterType === 'rating') return b.rating - a.rating;
+      return 0;
+    });
   }
 }

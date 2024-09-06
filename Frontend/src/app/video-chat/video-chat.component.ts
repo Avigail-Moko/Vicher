@@ -157,7 +157,7 @@ handleVideoConferenceLeft = () => {
     this.router.navigate(['/end-and-rate'], { state: { teacher_id: this.teacher_id } });
 
   }
-  else this.router.navigate(['/wellcome']);
+  else this.router.navigate(['/welcome']);
   console.log('user id:',this.userId,'teacher id:',this.teacher_id)
 
 }

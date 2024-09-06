@@ -40,101 +40,205 @@
         <div *ngIf="alerts.length === 0">
           No notifications available at this time.
         </div>
-        
+
         <div *ngFor="let alert of alerts">
           <!-- reminder: -->
           <button
-            *ngIf="alert.startLesson&&!alert.deleteLesson"
+            *ngIf="alert.startLesson && !alert.deleteLesson"
             mat-button
             class="btn-note text-yellow-200 h-7rem"
           >
             <span *ngIf="userId == alert.teacher_id"
-              >Hello Teacher, just a reminder that your class is scheduled to start at {{ alert.myDate |date:'HH:mm' }}.    
-              Click below to start the lesson and connect with your student:
-              <br>
-              <a class="joinLesson" [href]="'/video-chat?_id=' + alert.lesson_id">
+              >Hello Teacher, just a reminder that your class is scheduled to
+              start at {{ alert.myDate | date : "HH:mm" }}. Click below to start
+              the lesson and connect with your student:
+              <br />
+              <a
+                class="joinLesson"
+                [href]="'/video-chat?_id=' + alert.lesson_id"
+              >
                 Join the Lesson
               </a></span
             >
             <span *ngIf="userId == alert.student_id"
-              >Hello Student, this is a reminder that your class is scheduled to start at {{ alert.myDate |date:'HH:mm' }}.
-              Click below to join your lesson and get ready:
-              <br>
-              <a class="joinLesson" [href]="'/video-chat?_id=' + alert.lesson_id" >
+              >Hello Student, this is a reminder that your class is scheduled to
+              start at {{ alert.myDate | date : "HH:mm" }}. Click below to join
+              your lesson and get ready:
+              <br />
+              <a
+                class="joinLesson"
+                [href]="'/video-chat?_id=' + alert.lesson_id"
+              >
                 Join the Lesson
               </a></span
             >
           </button>
           <!-- notifications:-->
           <button
-            *ngIf="!alert.startLesson && !alert.deleteLesson && userId===alert.student_id &&alert.studentStatus!='delete'"
-            (click)="alert.studentStatus === 'unread' ? readNote(alert._id) : (alert.studentStatus === 'read' ?
-             deleteNote(alert._id) : deleteNote(alert._id))"
-            [color]="alert.studentStatus === 'read' ? 'primary' : (alert.studentStatus === 'unread' ? 'inherit' : 'inherit')"
-            [ngStyle]="{ color: alert.studentStatus === 'read' ? 'grey' : (alert.studentStatus === 'unread' ? 'white' : 'white')}"
-            [matTooltip]="alert.studentStatus === 'read' ? 'Tap to delete' : (alert.studentStatus === 'unread' ? 'Tap to mark as read' : '')"
-            mat-button
-            class="btn-note "
-          >
-              Success! Your lesson has been scheduled. <br />
-              We look forward to seeing you soon
-            
-          </button>
-          <button
-          *ngIf="!alert.startLesson && !alert.deleteLesson && userId===alert.teacher_id&& alert.teacherStatus!='delete'"
-          (click)="alert.teacherStatus === 'unread' ? readNote(alert._id) : (alert.teacherStatus === 'read' ? deleteNote(alert._id) : deleteNote(alert._id))"
-          [color]="alert.teacherStatus === 'read' ? 'primary' : (alert.teacherStatus === 'unread' ? 'inherit' : 'inherit')"
-          [ngStyle]="{ color: alert.teacherStatus === 'read' ? 'grey' : (alert.teacherStatus === 'unread' ? 'white' : 'white')}"
-          [matTooltip]="alert.teacherStatus === 'read' ? 'Click to delete' : (alert.teacherStatus === 'unread' ? '' : '')"
+            *ngIf="
+              !alert.startLesson &&
+              !alert.deleteLesson &&
+              userId === alert.student_id &&
+              alert.studentStatus != 'delete'
+            "
+            (click)="
+              alert.studentStatus === 'unread'
+                ? readNote(alert._id)
+                : alert.studentStatus === 'read'
+                ? deleteNote(alert._id)
+                : deleteNote(alert._id)
+            "
+            [color]="
+              alert.studentStatus === 'read'
+                ? 'primary'
+                : alert.studentStatus === 'unread'
+                ? 'inherit'
+                : 'inherit'
+            "
+            [ngStyle]="{
+              color:
+                alert.studentStatus === 'read'
+                  ? 'grey'
+                  : alert.studentStatus === 'unread'
+                  ? 'white'
+                  : 'white'
+            }"
+            [matTooltip]="
+              alert.studentStatus === 'read'
+                ? 'Tap to delete'
+                : alert.studentStatus === 'unread'
+                ? 'Tap to mark as read'
+                : ''
+            "
             mat-button
             class="btn-note"
           >
-              New Lesson Alert: A student has scheduled a lesson with you.
-              Check your calendar for details. Happy teaching!
-
+            Success! Your lesson has been scheduled. <br />
+            We look forward to seeing you soon
+          </button>
+          <button
+            *ngIf="
+              !alert.startLesson &&
+              !alert.deleteLesson &&
+              userId === alert.teacher_id &&
+              alert.teacherStatus != 'delete'
+            "
+            (click)="
+              alert.teacherStatus === 'unread'
+                ? readNote(alert._id)
+                : alert.teacherStatus === 'read'
+                ? deleteNote(alert._id)
+                : deleteNote(alert._id)
+            "
+            [color]="
+              alert.teacherStatus === 'read'
+                ? 'primary'
+                : alert.teacherStatus === 'unread'
+                ? 'inherit'
+                : 'inherit'
+            "
+            [ngStyle]="{
+              color:
+                alert.teacherStatus === 'read'
+                  ? 'grey'
+                  : alert.teacherStatus === 'unread'
+                  ? 'white'
+                  : 'white'
+            }"
+            [matTooltip]="
+              alert.teacherStatus === 'read'
+                ? 'Click to delete'
+                : alert.teacherStatus === 'unread'
+                ? ''
+                : ''
+            "
+            mat-button
+            class="btn-note"
+          >
+            New Lesson Alert: A student has scheduled a lesson with you. Check
+            your calendar for details. Happy teaching!
           </button>
           <!-- attention -->
           <button
-            *ngIf="alert.deleteLesson && userId===alert.student_id &&alert.studentStatus!='delete'"
-            (click)="alert.studentStatus === 'unread' ? readNote(alert._id) : (alert.studentStatus === 'read' ?
-             deleteNote(alert._id) : deleteNote(alert._id))"
-            [color]="alert.studentStatus === 'read' ? 'primary' : (alert.studentStatus === 'unread' ? 'inherit' : 'inherit')"
-            [ngClass]="{'text-yellow-800': alert.studentStatus === 'read','text-yellow-200': alert.studentStatus !== 'read'}"
-            [matTooltip]="alert.studentStatus === 'read' ? 'Tap to delete' : (alert.studentStatus === 'unread' ? 'Tap to mark as read' : '')"
+            *ngIf="
+              alert.deleteLesson &&
+              userId === alert.student_id &&
+              alert.studentStatus != 'delete'
+            "
+            (click)="
+              alert.studentStatus === 'unread'
+                ? readNote(alert._id)
+                : alert.studentStatus === 'read'
+                ? deleteNote(alert._id)
+                : deleteNote(alert._id)
+            "
+            [color]="
+              alert.studentStatus === 'read'
+                ? 'primary'
+                : alert.studentStatus === 'unread'
+                ? 'inherit'
+                : 'inherit'
+            "
+            [ngClass]="{
+              'text-yellow-800': alert.studentStatus === 'read',
+              'text-yellow-200': alert.studentStatus !== 'read'
+            }"
+            [matTooltip]="
+              alert.studentStatus === 'read'
+                ? 'Tap to delete'
+                : alert.studentStatus === 'unread'
+                ? 'Tap to mark as read'
+                : ''
+            "
             mat-button
-            class="btn-note "
+            class="btn-note"
           >
-          Hello Student, We would like to inform you that the class scheduled for
-          {{ alert.myDate |date:'dd/MM/yy HH:mm' }} at {{alert.lesson_title}} has been canceled. 
-            
+            Hello Student, We would like to inform you that the class scheduled
+            for
+            {{ alert.myDate | date : "dd/MM/yy HH:mm" }} at
+            {{ alert.lesson_title }} has been canceled.
           </button>
           <button
-          *ngIf="alert.deleteLesson && userId===alert.teacher_id&& alert.teacherStatus!='delete'"
-          (click)="alert.teacherStatus === 'unread' ? readNote(alert._id) : (alert.teacherStatus === 'read' ?
-          deleteNote(alert._id) : deleteNote(alert._id))"
-          [color]="alert.teacherStatus === 'read' ? 'primary' : (alert.teacherStatus === 'unread' ? 'inherit' : 'inherit')"
-        [ngClass]="{'text-yellow-800': alert.teacherStatus === 'read','text-yellow-200': alert.teacherStatus !== 'read'}"
-          [matTooltip]="alert.teacherStatus === 'read' ? 'Click to delete' : (alert.teacherStatus === 'unread' ? '' : '')"
+            *ngIf="
+              alert.deleteLesson &&
+              userId === alert.teacher_id &&
+              alert.teacherStatus != 'delete'
+            "
+            (click)="
+              alert.teacherStatus === 'unread'
+                ? readNote(alert._id)
+                : alert.teacherStatus === 'read'
+                ? deleteNote(alert._id)
+                : deleteNote(alert._id)
+            "
+            [color]="
+              alert.teacherStatus === 'read'
+                ? 'primary'
+                : alert.teacherStatus === 'unread'
+                ? 'inherit'
+                : 'inherit'
+            "
+            [ngClass]="{
+              'text-yellow-800': alert.teacherStatus === 'read',
+              'text-yellow-200': alert.teacherStatus !== 'read'
+            }"
+            [matTooltip]="
+              alert.teacherStatus === 'read'
+                ? 'Click to delete'
+                : alert.teacherStatus === 'unread'
+                ? ''
+                : ''
+            "
             mat-button
-            class="btn-note "
+            class="btn-note"
           >
-          Hello Teacher, We would like to inform you that the class scheduled for
-          {{ alert.myDate |date:'dd/MM/yy HH:mm' }} at {{alert.lesson_title}} has been canceled. 
-
+            Hello Teacher, We would like to inform you that the class scheduled
+            for
+            {{ alert.myDate | date : "dd/MM/yy HH:mm" }} at
+            {{ alert.lesson_title }} has been canceled.
           </button>
-
         </div>
       </p-overlayPanel>
-
-      <!-- <button
-        mat-flat-button
-        class="btn"
-        color="primary"
-        *ngIf="newService.isAuthenticated()"
-        (click)="logout()"
-      >
-        <mat-icon>power_settings_new</mat-icon>Log Out
-      </button> -->
 
       <button
         mat-icon-button
@@ -148,39 +252,18 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <!-- הכנה לתיבת חיפוש, להשתמש ב autocomplete -->
-  <!-- <mat-toolbar *ngIf="newService.isAuthenticated()" class="toolbar2 mt-7 p-0">
-    <input type="search"/>
-  </mat-toolbar> -->
-
   <!-- tab menu -->
-  <!-- כרגע משאירה בהערה-אין תוכן רלוונטי לאיזור זה בעמוד. בהמשך ניתן להכניס כאן ערכים -->
   <mat-toolbar class="mt-7 p-0">
     <p-tabMenu
       class="tabMenu"
       [model]="items"
       (activeItemChange)="onActiveItemChange($event)"
     ></p-tabMenu>
-    <!-- searching chart: -->
-    <!-- <form class="example-form">
-      <input
-        type="text"
-        placeholder="Search for a street"
-        [formControl]="control"
-        [matAutocomplete]="auto"
-        class="example-input"
-      />
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-          {{ user }}
-        </mat-option>
-      </mat-autocomplete>
-    </form> -->
   </mat-toolbar>
 
-<div class=" py-7 px-3 sm:px-7">
-  <router-outlet ></router-outlet>
-</div>
+  <div class="py-7 px-3 sm:px-7">
+    <router-outlet></router-outlet>
+  </div>
 
   <mat-drawer
     #drawer
@@ -210,7 +293,7 @@
       mat-button
       color="primary"
       class="menu-item"
-      (click)="navigateToWellcomePage()"
+      (click)="navigateToWelcomePage()"
     >
       <mat-icon>home</mat-icon>Home Page
     </button>
@@ -241,9 +324,6 @@
     >
       <mat-icon>access_time</mat-icon>Availability
     </button>
-
-    <!-- <p *ngIf="showFiller">עכשיו אמור להמחק הקומפוננטה של הפרטים וכפתור העריכה ולהופיע במקומה קומפוננטת עריכת פרטים עם כפתור שמירה שיחזיר את הקומפוננטה הרגילה כולל הדברים החדשים שנשמרו</p> -->
-    <!-- <button mat-stroked-button color="primary"(click)="showFiller = !showFiller"><mat-icon>edit</mat-icon>click here to edit</button> -->
     <button
       mat-flat-button
       class="btn flex flex-1 mt-4 mx-auto"
@@ -254,8 +334,4 @@
       <mat-icon>power_settings_new</mat-icon>Log Out
     </button>
   </mat-drawer>
-  <!-- <mat-drawer   #drawer
-  class="example-sidenav"
-  mode="over"
-  position="end"></mat-drawer> -->
 </mat-drawer-container>

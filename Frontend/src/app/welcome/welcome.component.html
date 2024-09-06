@@ -1,11 +1,28 @@
-<h1>Wellcome to Vicher!</h1>
+<div style="text-align: center;">
+  <h1 class="text-6xl quattrocento-sans-regular">Welcome to Vicher!</h1>
+  <h2 class="text-3xl quattrocento-sans-regular">Find the <span class="merinada">virtual teacher</span> for you</h2>
+
+</div>
+<p-toolbar class="flex justify-content-center flex-wrap mt-6">
+  <div class="flex align-items-center justify-content-center bg-primary font-bold border-round m-2" style="min-width: 200px; min-height: 50px">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="search" [(ngModel)]="searchTerm">
+    </span></div>
+    <div class="flex align-items-center justify-content-center bg-primary font-bold border-round m-2" style="min-width: 200px; min-height: 50px">
+    <button pButton type="button" icon="pi pi-filter" label="price" (click)="filterBy('price')"></button>
+    <button pButton type="button" icon="pi pi-sort" label="length" (click)="filterBy('size')"></button>
+    <button pButton type="button" icon="pi pi-star" label="rating" (click)="filterBy('rating')"></button>
+  </div>
+ 
+</p-toolbar>
+
 <div class="flex row div1">
-  <h2>How can we help you today?</h2>
-  <img
+  <!-- <img
     style="width: 800px; opacity: 0.5"
     class="image9"
     src="assets/image (9).png"
-  />
+  /> -->
 </div>
 
 <!-- <div class="flex  justify-content-evenly flex-row "[style]="{width:'100%'}">

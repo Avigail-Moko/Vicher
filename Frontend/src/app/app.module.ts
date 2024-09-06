@@ -25,7 +25,7 @@ import { CardModule } from 'primeng/card';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DividerModule } from 'primeng/divider';
 import { TabMenuModule } from 'primeng/tabmenu';
-import { WellcomeComponent } from './wellcome/wellcome.component';
+import { WelcomeComponent } from './welcome/welcome.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -49,7 +49,7 @@ import { DeleteItemComponent } from './delete-item/delete-item.component';
 import { AvailabilityScheduleComponent } from './availability-schedule/availability-schedule.component';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
-import { DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common'; 
 import { UserViewComponent } from './user-view/user-view.component';  
 import { BadgeModule } from 'primeng/badge';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -67,7 +67,7 @@ import { DeleteLessonDialogComponent } from './delete-lesson-dialog/delete-lesso
     SignupDialogComponent,
     LoginDialogComponent,
     UserProfileComponent,
-    WellcomeComponent,
+    WelcomeComponent,
     ProductStepperComponent,
     AboutComponent,
     ProductsEditDialogComponent,

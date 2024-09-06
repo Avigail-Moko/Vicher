@@ -40,7 +40,7 @@ export class NewService {
         // alert('Good bye');
       } else {
         this.socketService.connect();
-        // alert('Wellcome ');
+        // alert('Welcome ');
       }
     }
     return !isTokenExpired;
