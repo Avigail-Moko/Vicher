@@ -5,13 +5,17 @@
 </div>
 <p-toolbar class="flex justify-content-center flex-wrap mt-6">
   <div class="flex align-items-center justify-content-center bg-primary font-bold border-round m-2" style="min-width: 200px; min-height: 50px">
+    <button pButton type="button" icon="pi pi-user" label="users" (click)="filterBy('users')"></button>
+    <button pButton type="button" icon="pi pi-qrcode" label="products" (click)="filterBy('product')"></button>
+  </div>
+  <div class="flex align-items-center justify-content-center bg-primary font-bold border-round m-2" style="min-width: 200px; min-height: 50px">
     <span class="p-input-icon-left">
       <i class="pi pi-search"></i>
       <input pInputText type="text" placeholder="search" [(ngModel)]="searchTerm">
     </span></div>
     <div class="flex align-items-center justify-content-center bg-primary font-bold border-round m-2" style="min-width: 200px; min-height: 50px">
-    <button pButton type="button" icon="pi pi-filter" label="price" (click)="filterBy('price')"></button>
-    <button pButton type="button" icon="pi pi-sort" label="length" (click)="filterBy('size')"></button>
+    <button pButton type="button" icon="pi pi-dollar" label="price" (click)="filterBy('price')"></button>
+    <button pButton type="button" icon="pi pi-clock" label="length" (click)="filterBy('length')"></button>
     <button pButton type="button" icon="pi pi-star" label="rating" (click)="filterBy('rating')"></button>
   </div>
  
