@@ -18,6 +18,8 @@ export class WelcomeComponent {
   responsiveOptions2: any[] | undefined;
   messages: Message[] | undefined;
   userId = localStorage.getItem('userId');
+  usersFlag:any;
+  productsFlag:any;
   
   constructor(
     private newService: NewService,
@@ -38,23 +40,23 @@ export class WelcomeComponent {
       }
     });
 
-    this.newService.getAllProduct().subscribe(
-      (data) => {
-        this.AllproductsArray = data.product;
-      },
-      (error) => {
-        console.error('Error:', error.error.message);
-      }
-    );
+    // this.newService.getAllProduct().subscribe(
+    //   (data) => {
+    //     this.AllproductsArray = data.product;
+    //   },
+    //   (error) => {
+    //     console.error('Error:', error.error.message);
+    //   }
+    // );
 
-    this.newService.getAllUsers().subscribe(
-      (data) => {        
-        this.AllusersArray = data.users;
-      },
-      (error) => {
-        console.error('Error:', error.error.message);
-      }
-    );
+    // this.newService.getAllUsers().subscribe(
+    //   (data) => {        
+    //     this.AllusersArray = data.users;
+    //   },
+    //   (error) => {
+    //     console.error('Error:', error.error.message);
+    //   }
+    // );
 
     this.responsiveOptions = [
       {
@@ -146,4 +148,34 @@ export class WelcomeComponent {
       return 0;
     });
   }
+  getAllUsers(){
+    this.newService.getAllUsers().subscribe(
+      (data) => {        
+        this.AllusersArray = data.users;
+        this.usersFlag=true;
+        this.productsFlag=false;
+
+      },
+      (error) => {
+        console.error('Error:', error.error.message);
+      }
+    );
+  }
+  // productsFlag
+getAllProducts(){
+  this.newService.getAllProduct().subscribe(
+    (data) => {
+      this.AllproductsArray = data.product;
+      this.productsFlag=true;
+      this.usersFlag=false;
+
+
+    },
+    (error) => {
+      console.error('Error:', error.error.message);
+    }
+  );
+}
+
+  
 }

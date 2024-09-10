@@ -108,15 +108,24 @@ width: 32px;
   font-weight: 400;
   font-style: normal;
 }
-// sort:
-.p-toolbar-group {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
+
+::ng-deep .p-toolbar{
+  width: 100% ;
+}
+.search-input{
+  width: 100%;
 }
 
 
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* ריווח בין הכרטיסים */
+}
+
+.product-card {
+  flex: 1 1 calc(25% - 16px); /* קובע כמה כרטיסים יופיעו בשורה */
+  max-width: 250px; /* הגדרת רוחב מקסימלי לכרטיסים */
+}
 
 

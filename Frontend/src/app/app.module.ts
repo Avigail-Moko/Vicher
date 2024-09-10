@@ -59,6 +59,7 @@ import { RatingPageComponent } from './rating-page/rating-page.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DeleteLessonDialogComponent } from './delete-lesson-dialog/delete-lesson-dialog.component';
+import { SearchingChartComponent } from './searching-chart/searching-chart.component';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { DeleteLessonDialogComponent } from './delete-lesson-dialog/delete-lesso
     VideoChatComponent,
     RatingPageComponent,
     DeleteLessonDialogComponent,
+    SearchingChartComponent,
     
     
   ],

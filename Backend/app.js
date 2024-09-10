@@ -27,6 +27,19 @@ const busyEventsRoutes = require("./api/routes/busyEvents");
 
 const checkAuth = require("./api/middlewares/checkAuth");
 
+
+// Endpoint לחיפוש
+app.get('/search', async (req, res) => {
+  const query = req.query.q;
+  try {
+    // ביצוע חיפוש עם regex (חיפוש חלקי ולא רגיש לאותיות גדולות/קטנות)
+    const results = await Item.find({ name: new RegExp(query, 'i') });
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to search' });
+  }
+});
+//
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(

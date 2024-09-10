@@ -4,60 +4,116 @@
 
 </div>
 <p-toolbar class="flex justify-content-center flex-wrap mt-6">
-  <div class="flex align-items-center justify-content-center bg-primary font-bold border-round m-2" style="min-width: 200px; min-height: 50px">
-    <button pButton type="button" icon="pi pi-user" label="users" (click)="filterBy('users')"></button>
-    <button pButton type="button" icon="pi pi-qrcode" label="products" (click)="filterBy('product')"></button>
+  <div class="flex align-items-center justify-content-around  lg:w-min w-full max-w-5-rem" >
+    <button pButton type="button" icon="pi pi-user" label="users" class="mr-2" (click)="getAllUsers()"></button>
+    <button pButton type="button" icon="pi pi-qrcode" label="products" (click)="getAllProducts()"></button>
   </div>
-  <div class="flex align-items-center justify-content-center bg-primary font-bold border-round m-2" style="min-width: 200px; min-height: 50px">
-    <span class="p-input-icon-left">
+    <span class="p-input-icon-left search-span flex-grow-1 mx-2">
       <i class="pi pi-search"></i>
-      <input pInputText type="text" placeholder="search" [(ngModel)]="searchTerm">
-    </span></div>
-    <div class="flex align-items-center justify-content-center bg-primary font-bold border-round m-2" style="min-width: 200px; min-height: 50px">
-    <button pButton type="button" icon="pi pi-dollar" label="price" (click)="filterBy('price')"></button>
-    <button pButton type="button" icon="pi pi-clock" label="length" (click)="filterBy('length')"></button>
+      <app-searching-chart></app-searching-chart>
+      <!-- <input pInputText type="text" class="search-input" placeholder="search" [(ngModel)]="searchTerm"> -->
+    </span>
+    <div class="flex align-items-center justify-content-around lg:w-min w-full max-w-5-rem" >
+    <button pButton type="button" icon="pi pi-dollar" label="price" class="mr-2" (click)="filterBy('price')"></button>
+    <button pButton type="button" icon="pi pi-clock" label="length" class="mr-2" (click)="filterBy('length')"></button>
     <button pButton type="button" icon="pi pi-star" label="rating" (click)="filterBy('rating')"></button>
   </div>
  
 </p-toolbar>
 
-<div class="flex row div1">
-  <!-- <img
-    style="width: 800px; opacity: 0.5"
-    class="image9"
-    src="assets/image (9).png"
-  /> -->
+<div class="card" *ngIf="productsFlag">
+  <ng-container *ngIf="AllproductsArray">
+    <div class="cards-container">
+      <mat-card
+        class="product-card m-2"
+        *ngFor="let product of AllproductsArray"
+        (click)="openDailyPlanner(product)"
+      >
+        <mat-card-header class="flex flex-column p-0">
+          <img
+            class="header-image"
+            [src]="product.image.src"
+            width="250px"
+            alt="{{ product.image.filename }}"
+          />
+          <div class="flex px-2">
+            <div
+              mat-card-avatar
+              class="content-image"
+              [style.background-image]="'url(' + product.userProfileImage + ')'"
+            ></div>
+            <mat-card-title class="text-sm ml-2 font-italic">
+              <span class="text-400">מודעה מאת </span>
+              {{ product.userProfileName }}
+            </mat-card-title>
+          </div>
+        </mat-card-header>
+        <mat-card-content class="p-3">
+          <mat-card-title>{{ product.lesson_title }}</mat-card-title>
+          <div class="flex flex-row justify-content-between">
+            <mat-card-subtitle>
+              <i class="pi pi-tag text-sm"></i>
+              {{ product.category }}
+            </mat-card-subtitle>
+            <span class="font-bold text-100">{{ "₪" + " " + product.price }}</span>
+          </div>
+          <mat-card-subtitle>
+            משך השיעור: {{ product.length }} דקות.
+          </mat-card-subtitle>
+        </mat-card-content>
+        <mat-card-footer class="px-3 product-footer">
+          <p class="product-description">
+            {{ product.description }}
+          </p>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </ng-container>
 </div>
 
-<!-- <div class="flex  justify-content-evenly flex-row "[style]="{width:'100%'}">
-  <mat-card class="product-card m-2" *ngFor="let product of AllproductsArray; let i = index" (click)="setARate(product)" >
-    
-    <mat-card-header class="flex flex-column p-0" >
-      <img class="header-image" [src]="product.image.src" width="250px" alt="{{product.image.filename}}">
-      <div class="flex px-2">
-        <div mat-card-avatar class="content-image " [style.background-image]="'url(' + product.userProfileImage + ')'"></div>
-        <mat-card-title class="text-sm ml-2 font-italic "> <span class="text-400">Ad by </span> {{ product.userProfileName }}</mat-card-title>
-      </div>
-    </mat-card-header>
-    <mat-card-content class="p-3">
-      <mat-card-title >{{product.lesson_title}}</mat-card-title>
-      <div class="flex flex-row justify-content-between">
-        <mat-card-subtitle><i class="pi pi-tag text-sm"></i> {{product.category}}</mat-card-subtitle>
-        <span class="font-bold text-100">{{ '₪' +' '+ product.price }}</span>
-      </div>
-      <mat-card-subtitle>lesson length: {{ product.length }} min.</mat-card-subtitle>
-    </mat-card-content>
-    <mat-card-footer class="px-3">
-      <p class=" overflow-hidden text-overflow-ellipsis" >{{product.description}}</p>
-     
-    </mat-card-footer>
-  </mat-card>
-</div> -->
+<div class="card" *ngIf="usersFlag">
+  <ng-container *ngIf="AllusersArray">
+    <div class="cards-container">
+      <mat-card
+        class="product-card m-2"
+        *ngFor="let user of AllusersArray"
+        (click)="openUserView(user)"
+      >
+        <mat-card-header class="flex flex-column p-2">
+          <div
+            class="header-image"
+            [style.background-image]="'url(' + user.profileImage + ')'"
+            width="250px"
+          ></div>
+        </mat-card-header>
+        <mat-card-content class="p-3">
+          <p class="overflow-hidden text-overflow-ellipsis">
+            {{ user.name }}
+          </p>
+          <p-rating
+            class="p-rating mb-3"
+            [(ngModel)]="user.avgRating"
+            [readonly]="true"
+            [cancel]="false"
+            [attr.data-rater-counter]="user.raterCounter"
+          ></p-rating>
+          <div class="flex px-2">
+            <mat-card-title class="text-sm ml-2 font-italic">
+              <span class="text-400">Email: </span>
+              {{ user.email }}
+            </mat-card-title>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </ng-container>
+</div>
 
-<div class="card">
+
+<!-- <div class="card" > -->
   <!-- <p-fieldset  legend="Header"> -->
 
-  <p-carousel
+  <!-- <p-carousel
   *ngIf="AllproductsArray"
   id="p-carousel-center"
     [value]="AllproductsArray"
@@ -107,20 +163,20 @@
         <mat-card-footer class="px-3 product-footer">
           <p class="product-description">
             {{ product.description }}
-          </p>
+          </p> -->
 
           <!-- <p-button  icon="pi pi-trash" class="m-2" *ngIf="isButtonsVisible" (click)="deleteProduct(product._id)" mat-raised-button matTooltip="Delete Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button>
               <p-button  icon="pi pi-user-edit" class="m-2" *ngIf="isButtonsVisible" (click)="openProductsEditDialog(product,userProfile)"  mat-raised-button matTooltip="Edit Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button> -->
-        </mat-card-footer>
+        <!-- </mat-card-footer>
       </mat-card>
     </ng-template>
-  </p-carousel>
+  </p-carousel> -->
   <!-- </p-fieldset> -->
-</div>
-<div class="card">
+<!-- </div> -->
+<!-- <div class="card"> -->
   <!-- <p-fieldset  legend="Header"> -->
 
-  <p-carousel
+  <!-- <p-carousel
   *ngIf="AllusersArray"
   id="p-carousel-center"
     [value]="AllusersArray"
@@ -161,9 +217,9 @@
         
       </mat-card>
     </ng-template>
-  </p-carousel>
+  </p-carousel> -->
   <!-- </p-fieldset> -->
-</div>
+<!-- </div> -->
 
 <div class="card">
   <p-toast [life]="5000"></p-toast>
