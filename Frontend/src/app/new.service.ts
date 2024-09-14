@@ -190,9 +190,6 @@ export class NewService {
     const url = `http://localhost:3000/lessons/deleteLesson?_id=${_id}`;
     return this.http.delete(url);
   }
-  //searching func:
-  search(query: string): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:3000/search?q=${query}`);
-  }
+
 
 }

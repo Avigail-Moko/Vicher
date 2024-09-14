@@ -10,8 +10,10 @@
   </div>
     <span class="p-input-icon-left search-span flex-grow-1 mx-2">
       <i class="pi pi-search"></i>
-      <app-searching-chart></app-searching-chart>
       <!-- <input pInputText type="text" class="search-input" placeholder="search" [(ngModel)]="searchTerm"> -->
+      <div class="card flex justify-content-center">
+        <p-autoComplete [(ngModel)]="selectedObject" [suggestions]="filteredObjects" (completeMethod)="filterObject($event)" [field]="usersFlag ? 'name' : 'lesson_title'"  (ngModelChange)="onTextChange($event)"></p-autoComplete>
+    </div>
     </span>
     <div class="flex align-items-center justify-content-around lg:w-min w-full max-w-5-rem" >
     <button pButton type="button" icon="pi pi-dollar" label="price" class="mr-2" (click)="filterBy('price')"></button>
@@ -21,12 +23,12 @@
  
 </p-toolbar>
 
-<div class="card" *ngIf="productsFlag">
+<div class="card" *ngIf="!usersFlag">
   <ng-container *ngIf="AllproductsArray">
     <div class="cards-container">
       <mat-card
         class="product-card m-2"
-        *ngFor="let product of AllproductsArray"
+        *ngFor="let product of (filteredObjects?.length > 0 ? filteredObjects : AllproductsArray)"
         (click)="openDailyPlanner(product)"
       >
         <mat-card-header class="flex flex-column p-0">
@@ -76,7 +78,7 @@
     <div class="cards-container">
       <mat-card
         class="product-card m-2"
-        *ngFor="let user of AllusersArray"
+        *ngFor="let user of (filteredObjects?.length > 0 ? filteredObjects : AllusersArray)"
         (click)="openUserView(user)"
       >
         <mat-card-header class="flex flex-column p-2">

@@ -11,12 +11,23 @@ export class SearchingChartComponent {
   results: any[] = [];
 
   constructor(private newService:NewService){}
+  // onSearch() {
+  //   // בדיקה אם השאילתה ריקה
+  //   if (!this.query) {
+  //     console.error('שאילתה ריקה');
+  //     return;
+  //   }
+  
+  //   // קריאה לשירות החיפוש
+  //   this.newService.search(this.query).subscribe(
+  //     (data) => (this.results = data),
+  //     (error) => {
+  //       console.error('שגיאה בקבלת תוצאות החיפוש', error);
+  //       alert('נכשלה קבלת תוצאות החיפוש, נסה שוב מאוחר יותר');
+  //     }
+  //   );
+  // }
 
-  onSearch() {
-    this.newService.search(this.query).subscribe(
-      (data) => (this.results = data),
-      (error) => console.error('Error fetching search results', error)
-    );
-  }
+
 
 }

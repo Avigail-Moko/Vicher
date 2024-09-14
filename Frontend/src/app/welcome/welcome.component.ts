@@ -6,6 +6,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Message, MessageService } from 'primeng/api';
 import { NavigationExtras, Router } from '@angular/router';
 
+interface AutoCompleteCompleteEvent {
+  originalEvent: Event;
+  query: string;
+}
+
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
@@ -19,7 +24,6 @@ export class WelcomeComponent {
   messages: Message[] | undefined;
   userId = localStorage.getItem('userId');
   usersFlag:any;
-  productsFlag:any;
   
   constructor(
     private newService: NewService,
@@ -29,7 +33,42 @@ export class WelcomeComponent {
     public router: Router
   ) {}
 
+  objects: any[] | undefined;
 
+    selectedObject: any | undefined;
+
+    filteredObjects: any[] | undefined;
+
+
+    filterObject(event: AutoCompleteCompleteEvent) {
+        let filtered: any[] = [];
+        let query = event.query;
+
+
+      
+        for (let i = 0; i < (this.objects as any[]).length; i++) {
+            let Object = (this.objects as any[])[i];
+            if (this.usersFlag) {
+               if (Object.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(Object);
+            }
+            }
+            else if (!this.usersFlag) {
+              if (Object.lesson_title.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(Object);
+            }
+            }
+           
+        }
+
+        this.filteredObjects = filtered;
+    }
+    onTextChange(query: string) {
+      if (!query) {
+          this.filteredObjects = this.objects; // מאתחל את הרשימה במקרה שהשדה ריק
+      }
+  }
+  
 
   ngOnInit() {
     this.newService.getAuthStatusListener().subscribe(isAuthenticated => {
@@ -39,24 +78,7 @@ export class WelcomeComponent {
         this.userId = null;
       }
     });
-
-    // this.newService.getAllProduct().subscribe(
-    //   (data) => {
-    //     this.AllproductsArray = data.product;
-    //   },
-    //   (error) => {
-    //     console.error('Error:', error.error.message);
-    //   }
-    // );
-
-    // this.newService.getAllUsers().subscribe(
-    //   (data) => {        
-    //     this.AllusersArray = data.users;
-    //   },
-    //   (error) => {
-    //     console.error('Error:', error.error.message);
-    //   }
-    // );
+    
 
     this.responsiveOptions = [
       {
@@ -153,7 +175,8 @@ export class WelcomeComponent {
       (data) => {        
         this.AllusersArray = data.users;
         this.usersFlag=true;
-        this.productsFlag=false;
+        this.objects=data.users;
+
 
       },
       (error) => {
@@ -166,9 +189,8 @@ getAllProducts(){
   this.newService.getAllProduct().subscribe(
     (data) => {
       this.AllproductsArray = data.product;
-      this.productsFlag=true;
       this.usersFlag=false;
-
+      this.objects=data.product;
 
     },
     (error) => {

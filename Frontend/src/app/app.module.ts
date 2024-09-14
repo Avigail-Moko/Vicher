@@ -60,6 +60,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DeleteLessonDialogComponent } from './delete-lesson-dialog/delete-lesson-dialog.component';
 import { SearchingChartComponent } from './searching-chart/searching-chart.component';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
   declarations: [
@@ -150,6 +151,7 @@ import { SearchingChartComponent } from './searching-chart/searching-chart.compo
     TagModule,
     InputNumberModule,
     ToggleButtonModule,
+    AutoCompleteModule,
     
   ],
 })

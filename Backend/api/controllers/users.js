@@ -195,6 +195,10 @@ module.exports = {
                     raterCounter:user.raterCounter,
                     avgRating:(user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0
                 }));
+                const usersName=users.map(user=>({
+                    email: user.email,
+                    name:user.name,
+                }))
 
                 res.status(200).json({ message: 'Users retrieved successfully', users: formattedUsers });
             })
