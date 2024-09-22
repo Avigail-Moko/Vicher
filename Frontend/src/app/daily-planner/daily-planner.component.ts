@@ -254,12 +254,14 @@ export class DailyPlannerComponent {
         this.busyEventArray[index].endDate,
         'yyyy-MM-dd'
       );
+      //טווח התחלה וסיום של זמני עסוק
       const startOnlyDate = new Date(startOnlyDateString);
       const endOnlyDate = new Date(endOnlyDateString);
+      //בודקת מה הטיים ביניהם וממירה אותו לימים
       const timeDifference = endOnlyDate.getTime() - startOnlyDate.getTime();
       const dayDifference = timeDifference / (1000 * 3600 * 24);
 
-      if (dayDifference === 0) {
+      if (dayDifference === 0) {//בודק האם יש פחות מיממה שלמה בטווח
         const newDate = {
           start: new Date(this.busyEventArray[index].startDate),
           end: new Date(this.busyEventArray[index].endDate),
@@ -278,6 +280,7 @@ export class DailyPlannerComponent {
         this.takenLessonsArray.push(endnewDate);
       }
 
+      //במידה ויש יותר מיממה אחת, מתקדם ביום אחד ומתחיל להכניס יממות למערך השיעורים התפוסים
       if (dayDifference > 1) {
         for (let day = 1; day < dayDifference; day++) {
           const newOnlyDate = new Date(startOnlyDate);
