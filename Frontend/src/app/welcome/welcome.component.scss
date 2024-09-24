@@ -13,10 +13,8 @@
 background-color:var(--surface-900);
 border:1px solid var(--surface-800);
 border-radius:20px;
-  // width: 220px;
-  // height: 480px;
-  width: 240px;
-  height: 520px;
+width: 240px;
+height: 520px;
 }
 
 .header-image{
@@ -33,28 +31,14 @@ height: 32px;
 width: 32px;
 }
 
-.fieldset{
-  width: 100px;
-}
-.image9{
-  position: relative;
-  // top: 0;
-  // left: 0;
-  // z-index: -1; 
-}
-.div1 h2{
-  position: absolute;
-  // top: 0;
-  left: 0;
-}
-.card{
-  margin-top: 20px;
-}
+// .fieldset{
+//   width: 100px;
+// }
 
-::ng-deep #p-carousel-center > *> *> * > * > *> *{
-  display: flex;
-  justify-content: center;
-}
+// ::ng-deep #p-carousel-center > *> *> * > * > *> *{
+//   display: flex;
+//   justify-content: center;
+// }
 
 .product-footer {
   height: 100%;
@@ -62,7 +46,7 @@ width: 32px;
   justify-content: center;
   align-items: center;
 }
-.product-description {
+.description {
   display: -webkit-box; /* Uses the WebKit box model for layout */
   -webkit-box-orient: vertical; /* Arranges child elements in a vertical direction */  
   -webkit-line-clamp: 6; /* Limits the paragraph to 6 lines */
@@ -76,6 +60,7 @@ width: 32px;
   content: '('attr(data-rater-counter)')';
   color: rgb(163, 171, 168);
 }
+
 /* src/app/your-component/your-component.component.css */
 :host {
   font-family: 'Roboto', sans-serif;
@@ -112,9 +97,9 @@ width: 32px;
 ::ng-deep .p-toolbar{
   width: 100% ;
 }
-.search-input{
-  width: 100%;
-}
+// .search-input{
+//   width: 100%;
+// }
 
 
 .cards-container {
@@ -126,6 +111,11 @@ width: 32px;
 .product-card {
   flex: 1 1 calc(25% - 16px); /* קובע כמה כרטיסים יופיעו בשורה */
   max-width: 250px; /* הגדרת רוחב מקסימלי לכרטיסים */
+}
+
+
+::ng-deep .p-inputtext{
+  border-color: $primary !important;
 }
 
 

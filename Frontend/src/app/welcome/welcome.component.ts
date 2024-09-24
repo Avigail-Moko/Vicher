@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NewService } from '../new.service';
-import { HttpClient } from '@angular/common/http';
 import { DailyPlannerComponent } from '../daily-planner/daily-planner.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Message, MessageService } from 'primeng/api';
@@ -17,17 +16,16 @@ interface AutoCompleteCompleteEvent {
   styleUrls: ['./welcome.component.scss'],
 })
 export class WelcomeComponent {
-  AllproductsArray: any;
-  AllusersArray: any;
   responsiveOptions: any[] | undefined;
   responsiveOptions2: any[] | undefined;
   messages: Message[] | undefined;
   userId = localStorage.getItem('userId');
   usersFlag: any;
+  searchLabel:any;
+  isLoading: boolean = false;  // Declare the isLoading property
 
   constructor(
     private newService: NewService,
-    private http: HttpClient,
     public dialog: MatDialog,
     public messageService: MessageService,
     public router: Router
@@ -40,29 +38,22 @@ export class WelcomeComponent {
   filteredObjects: any[] | undefined;
 
   filterObject(event: AutoCompleteCompleteEvent) {
-    let filtered: any[] = [];
     let query = event.query;
-    for (let i = 0; i < (this.objects as any[]).length; i++) {
-      let Object = (this.objects as any[])[i];
-      if (this.usersFlag) {
-        if (Object.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-          filtered.push(Object);
-        }
-      } else if (!this.usersFlag) {
-        if (
-          Object.lesson_title.toLowerCase().indexOf(query.toLowerCase()) == 0
-        ) {
-          filtered.push(Object);
-        }
-      }
-    }
-    this.filteredObjects = filtered;
+
+    this.filteredObjects = (this.objects as any[]).filter(obj => 
+      this.usersFlag
+        ? obj.name.toLowerCase().indexOf(query.toLowerCase()) === 0
+        : obj.lesson_title.toLowerCase().indexOf(query.toLowerCase()) === 0
+    );
   }
 
   onTextChange(query: string) {
     if (!query) {
       this.filteredObjects = this.objects;
     }
+  }
+  onObjectSelect(selectedObject: any) {
+    this.filteredObjects = [selectedObject];
   }
 
   ngOnInit() {
@@ -166,9 +157,9 @@ export class WelcomeComponent {
   getAllUsers() {
     this.newService.getAllUsers().subscribe(
       (data) => {
-        this.AllusersArray = data.users;
         this.usersFlag = true;
         this.objects = data.users;
+        this.searchLabel='Search for users by name';
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -180,9 +171,9 @@ export class WelcomeComponent {
     
     this.newService.getAllProduct().subscribe(
       (data) => {
-        this.AllproductsArray = data.product;
         this.usersFlag = false;
         this.objects = data.product;
+        this.searchLabel='Search for products by name';
       },
       (error) => {
         console.error('Error:', error.error.message);

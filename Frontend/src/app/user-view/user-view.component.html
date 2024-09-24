@@ -32,7 +32,7 @@
         [style]="{ backgroundColor: 'var(--surface-800)' }"
       >
         <div>
-          <p *ngIf="!userProfile.description">
+          <p *ngIf="!userProfile.description" class="text-400">
             The user has not yet provided a personal description.
           </p>
           <p class="user-description">{{ userProfile.description }}</p>

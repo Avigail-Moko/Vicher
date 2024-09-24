@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-  <h1 class="text-6xl quattrocento-sans-regular">Welcome to Vicher!</h1>
+  <h1 class="text-6xl quattrocento-sans-regular line-height-1">Welcome to Vicher!</h1>
   <h2 class="text-3xl quattrocento-sans-regular">Find the <span class="merinada">virtual teacher</span> for you</h2>
 
 </div>
@@ -8,13 +8,16 @@
     <button pButton type="button" icon="pi pi-user" label="users" class="mr-2"  (click)="getAllUsers()"></button>
     <button pButton type="button" icon="pi pi-qrcode" label="products" (click)="getAllProducts()"></button>
   </div>
-    <span class="p-input-icon-left search-span flex-grow-1 mx-2">
-      <i class="pi pi-search"></i>
+    <!-- <span class="p-input-icon-left search-span flex-grow-1 mx-2 "> -->
+      
       <!-- <input pInputText type="text" class="search-input" placeholder="search" [(ngModel)]="searchTerm"> -->
-      <div class="card flex justify-content-center">
-        <p-autoComplete [(ngModel)]="selectedObject" [suggestions]="filteredObjects" (completeMethod)="filterObject($event)" [field]="usersFlag ? 'name' : 'lesson_title'"  (ngModelChange)="onTextChange($event)"></p-autoComplete>
-    </div>
-    </span>
+      <!-- <div class=" flex-grow-1 mx-2 "> -->
+        <span class=" p-float-label flex-grow-1 mx-2">
+        <p-autoComplete class="searchBox" inputId="searchLabel" [(ngModel)]="selectedObject" [suggestions]="filteredObjects" (completeMethod)="filterObject($event)" [field]="usersFlag ? 'name' : 'lesson_title'" (onSelect)="onObjectSelect($event)" (ngModelChange)="onTextChange($event)"></p-autoComplete>
+        <label for="searchLabel"> <i class="pi pi-search mx-2 text-400 "></i> <span class="text-400 vertical-align-text-top">{{searchLabel}}</span></label>
+        </span>
+      <!-- </div> -->
+    <!-- </span> -->
     <div class="flex align-items-center justify-content-around lg:w-min w-full max-w-5-rem" >
     <button pButton type="button" icon="pi pi-dollar" label="price" class="mr-2" (click)="filterBy('price')"></button>
     <button pButton type="button" icon="pi pi-clock" label="length" class="mr-2" (click)="filterBy('length')"></button>
@@ -24,11 +27,11 @@
 </p-toolbar>
 
 <div class="card" *ngIf="!usersFlag">
-  <ng-container *ngIf="AllproductsArray">
+  <ng-container *ngIf="objects">
     <div class="cards-container">
       <mat-card
         class="product-card m-2"
-        *ngFor="let product of (filteredObjects?.length > 0 ? filteredObjects : AllproductsArray)"
+        *ngFor="let product of (filteredObjects? filteredObjects : objects)"
         (click)="openDailyPlanner(product)"
       >
         <mat-card-header class="flex flex-column p-0">
@@ -45,7 +48,7 @@
               [style.background-image]="'url(' + product.userProfileImage + ')'"
             ></div>
             <mat-card-title class="text-sm ml-2 font-italic">
-              <span class="text-400">מודעה מאת </span>
+              <span class="text-400">Ad by</span>
               {{ product.userProfileName }}
             </mat-card-title>
           </div>
@@ -60,11 +63,11 @@
             <span class="font-bold text-100">{{ "₪" + " " + product.price }}</span>
           </div>
           <mat-card-subtitle>
-            משך השיעור: {{ product.length }} דקות.
+            lesson length: {{ product.length }} min.
           </mat-card-subtitle>
         </mat-card-content>
         <mat-card-footer class="px-3 product-footer">
-          <p class="product-description">
+          <p class="description">
             {{ product.description }}
           </p>
         </mat-card-footer>
@@ -74,11 +77,11 @@
 </div>
 
 <div class="card" *ngIf="usersFlag">
-  <ng-container *ngIf="AllusersArray">
+  <ng-container *ngIf="objects">
     <div class="cards-container">
       <mat-card
         class="product-card m-2"
-        *ngFor="let user of (filteredObjects?.length > 0 ? filteredObjects : AllusersArray)"
+        *ngFor="let user of (filteredObjects? filteredObjects : objects)"
         (click)="openUserView(user)"
       >
         <mat-card-header class="flex flex-column p-2">
@@ -99,13 +102,19 @@
             [cancel]="false"
             [attr.data-rater-counter]="user.raterCounter"
           ></p-rating>
-          <div class="flex px-2">
-            <mat-card-title class="text-sm ml-2 font-italic">
-              <span class="text-400">Email: </span>
+          
+            <mat-card-title class="text-sm ">
+              <!-- <span class="text-400">Email: </span> -->
               {{ user.email }}
             </mat-card-title>
-          </div>
+      
         </mat-card-content>
+        <mat-card-footer class="px-3 product-footer">
+            <p *ngIf="!user.description" class="text-400">
+              The user has not yet provided a personal description.
+            </p>
+            <p class="description">{{ user.description }}</p>
+        </mat-card-footer>
       </mat-card>
     </div>
   </ng-container>
