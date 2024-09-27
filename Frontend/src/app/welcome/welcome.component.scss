@@ -95,27 +95,81 @@ width: 32px;
 }
 
 ::ng-deep .p-toolbar{
-  width: 100% ;
+  width: 80% ;
 }
-// .search-input{
-//   width: 100%;
-// }
-
 
 .cards-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px; /* ריווח בין הכרטיסים */
+  gap: 16px; //space between cards
 }
 
 .product-card {
-  flex: 1 1 calc(25% - 16px); /* קובע כמה כרטיסים יופיעו בשורה */
-  max-width: 250px; /* הגדרת רוחב מקסימלי לכרטיסים */
+  flex: 1 1 calc(25% - 16px); //cards per row
+  max-width: 250px; 
 }
 
 
 ::ng-deep .p-inputtext{
   border-color: $primary !important;
 }
+
+//שני אלו אחראיים על תיבת החיפוש שתיהיה ארוכה
+::ng-deep .p-autocomplete {
+  display: flex;  
+  width: 100%;
+}
+
+::ng-deep .p-autocomplete-input {
+  flex-grow: 1;        
+  width: 100% !important;  
+}
+
+// ::ng-deep .p-autocomplete-panel {
+//   width: 100% !important;  /* מאלץ את הפאנל הפנימי להתאים את עצמו */
+// }
+// .searchBox {
+//   width: 100%;         /* תיבת החיפוש תתפוס את כל הרוחב של הקונטיינר */
+// }
+.p-inputgroup-addon {
+  background-color: transparent;   /* הופך את רקע האייקון לשקוף */
+  border: none;                    /* מסיר גבול מהאייקון */
+}
+
+.p-inputgroup .pi-search {
+  color: #6c757d;  /* צבע האייקון */
+}
+
+.button-container {
+  justify-content: center; /* מוודא שהכפתורים מיושרים במרכז */
+}
+
+h4{
+color: $primary;
+text-align: center;
+align-items: center;
+}
+
+.accordion {
+  text-align: center;
+  align-items: center;
+}
+
+
+.accordion {
+  display: flex;
+  justify-content: center; /* Align horizontally in the center */
+  align-items: center; /* Align vertically in the center */
+  // height: 100vh; /* Full height of the viewport */
+}
+
+.custom-panel {
+  width: 700px; /* Custom width of the panel */
+  max-height: 400px; /* Custom maximum height */
+  // overflow-y: auto; /* Allow scrolling if content exceeds height */
+}
+
+
+
 
 

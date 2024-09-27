@@ -4,6 +4,7 @@ import { DailyPlannerComponent } from '../daily-planner/daily-planner.component'
 import { MatDialog } from '@angular/material/dialog';
 import { Message, MessageService } from 'primeng/api';
 import { NavigationExtras, Router } from '@angular/router';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -23,6 +24,9 @@ export class WelcomeComponent {
   usersFlag: any;
   searchLabel:any;
   isLoading: boolean = false;  // Declare the isLoading property
+  p: number = 1;
+  panelOpenState = false;
+
 
   constructor(
     private newService: NewService,
@@ -57,6 +61,7 @@ export class WelcomeComponent {
   }
 
   ngOnInit() {
+    this.getAllUsers();
     this.newService.getAuthStatusListener().subscribe((isAuthenticated) => {
       if (isAuthenticated) {
         this.userId = localStorage.getItem('userId');

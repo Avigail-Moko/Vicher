@@ -61,6 +61,8 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DeleteLessonDialogComponent } from './delete-lesson-dialog/delete-lesson-dialog.component';
 import { SearchingChartComponent } from './searching-chart/searching-chart.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import {NgxPaginationModule} from 'ngx-pagination'
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -152,7 +154,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     InputNumberModule,
     ToggleButtonModule,
     AutoCompleteModule,
-    
+    NgxPaginationModule,
+    MatExpansionModule
   ],
 })
 export class AppModule {}

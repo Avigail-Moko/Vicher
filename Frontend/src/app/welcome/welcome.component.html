@@ -4,34 +4,69 @@
 
 </div>
 <p-toolbar class="flex justify-content-center flex-wrap mt-6">
-  <div class="flex align-items-center justify-content-around  lg:w-min w-full max-w-5-rem" >
-    <button pButton type="button" icon="pi pi-user" label="users" class="mr-2"  (click)="getAllUsers()"></button>
-    <button pButton type="button" icon="pi pi-qrcode" label="products" (click)="getAllProducts()"></button>
-  </div>
-    <!-- <span class="p-input-icon-left search-span flex-grow-1 mx-2 "> -->
-      
-      <!-- <input pInputText type="text" class="search-input" placeholder="search" [(ngModel)]="searchTerm"> -->
-      <!-- <div class=" flex-grow-1 mx-2 "> -->
-        <span class=" p-float-label flex-grow-1 mx-2">
-        <p-autoComplete class="searchBox" inputId="searchLabel" [(ngModel)]="selectedObject" [suggestions]="filteredObjects" (completeMethod)="filterObject($event)" [field]="usersFlag ? 'name' : 'lesson_title'" (onSelect)="onObjectSelect($event)" (ngModelChange)="onTextChange($event)"></p-autoComplete>
-        <label for="searchLabel"> <i class="pi pi-search mx-2 text-400 "></i> <span class="text-400 vertical-align-text-top">{{searchLabel}}</span></label>
+  <!-- <div class="p-grid align-items-center justify-content-around  lg:w-min w-full max-w-5-rem p-grid" >
+    <button pButton type="button" icon="pi pi-user" label="users" class="mr-2  m-1"  (click)="getAllUsers()"></button>
+    <button pButton type="button" icon="pi pi-qrcode" label="products" class="m-1" (click)="getAllProducts()"></button>
+  </div> -->
+          <span class=" flex-grow-1 mx-2 span">          
+          <div class="p-float-label">
+          <p-autoComplete class="searchBox" inputId="searchLabel"
+                          [(ngModel)]="selectedObject"
+                          [suggestions]="filteredObjects"
+                          (completeMethod)="filterObject($event)"
+                          [field]="usersFlag ? 'name' : 'lesson_title'"
+                          (onSelect)="onObjectSelect($event)"
+                          (ngModelChange)="onTextChange($event)">
+          </p-autoComplete>
+          <label for="searchLabel"> 
+            <i class="pi pi-search mx-2 text-400"></i> 
+            <span class="text-400 vertical-align-text-top">{{searchLabel}}</span>
+          </label>
+          
+        </div>
+        <mat-chip-listbox aria-label="Sort option" class="p-grid align-items-center justify-content-around pt-2">
+          <mat-chip-option color="primary" class="m-1" selected (click)="getAllUsers()">Users</mat-chip-option>
+          <mat-chip-option color="primary" class="m-1" (click)="getAllProducts()" >products</mat-chip-option>
+        </mat-chip-listbox>
+        
         </span>
-      <!-- </div> -->
-    <!-- </span> -->
-    <div class="flex align-items-center justify-content-around lg:w-min w-full max-w-5-rem" >
-    <button pButton type="button" icon="pi pi-dollar" label="price" class="mr-2" (click)="filterBy('price')"></button>
-    <button pButton type="button" icon="pi pi-clock" label="length" class="mr-2" (click)="filterBy('length')"></button>
-    <button pButton type="button" icon="pi pi-star" label="rating" (click)="filterBy('rating')"></button>
+    <div class="p-grid align-items-center justify-content-center button-container" >
+    <button pButton type="button"  label=".NET" class="col-3 m-1" (click)="filterBy('price')"></button>
+    <button pButton type="button"  label="Cobol" class="col-3 m-1" (click)="filterBy('length')"></button>  
+    <button pButton type="button"  label="Angular" class="col-3 m-1" (click)="filterBy('rating')"></button>
+    <button pButton type="button"  label="Python" class="col-3 m-1" (click)="filterBy('rating')"></button>
+    <button pButton type="button"  label="Java Script" class="col-3 m-1" (click)="filterBy('rating')"></button>
+    <button pButton type="button"  label="BI" class="col-3 m-1" (click)="filterBy('rating')"></button>
   </div>
- 
+
 </p-toolbar>
+
+<mat-accordion class="accordion p-4">
+<mat-expansion-panel class="custom-panel">
+<mat-expansion-panel-header>
+  <mat-panel-title><h4>see more lesson categories</h4></mat-panel-title>
+  <mat-panel-description>
+   
+  </mat-panel-description>
+</mat-expansion-panel-header>
+<div class="p-grid align-items-center justify-content-center button-container" >
+  <button pButton type="button"  label="PHP" class="col-3 m-1" (click)="filterBy('')"></button>
+  <button pButton type="button"  label="GO" class="col-3 m-1" (click)="filterBy('')"></button>  
+  <button pButton type="button"  label="Java" class="col-3 m-1" (click)="filterBy('')"></button>
+  <button pButton type="button"  label="TypeScript" class="col-3 m-1" (click)="filterBy('')"></button>
+  <button pButton type="button"  label="Java Script" class="col-3 m-1" (click)="filterBy('')"></button>
+  <button pButton type="button"  label="BI" class="col-3 m-1" (click)="filterBy('')"></button>
+</div>
+</mat-expansion-panel>
+</mat-accordion>
+
 
 <div class="card" *ngIf="!usersFlag">
   <ng-container *ngIf="objects">
     <div class="cards-container">
       <mat-card
         class="product-card m-2"
-        *ngFor="let product of (filteredObjects? filteredObjects : objects)"
+        *ngFor="let product of (filteredObjects? filteredObjects : objects | paginate: { itemsPerPage: 10, currentPage: p })"
         (click)="openDailyPlanner(product)"
       >
         <mat-card-header class="flex flex-column p-0">
@@ -72,6 +107,8 @@
           </p>
         </mat-card-footer>
       </mat-card>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+
     </div>
   </ng-container>
 </div>
@@ -81,11 +118,12 @@
     <div class="cards-container">
       <mat-card
         class="product-card m-2"
-        *ngFor="let user of (filteredObjects? filteredObjects : objects)"
+        *ngFor="let user of (filteredObjects? filteredObjects : objects | paginate: { itemsPerPage: 10, currentPage: p })"
         (click)="openUserView(user)"
       >
+
         <mat-card-header class="flex flex-column p-2">
-          <div
+          <div 
             class="header-image"
             [style.background-image]="'url(' + user.profileImage + ')'"
             width="250px"
@@ -116,6 +154,8 @@
             <p class="description">{{ user.description }}</p>
         </mat-card-footer>
       </mat-card>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+
     </div>
   </ng-container>
 </div>
