@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Message, MessageService } from 'primeng/api';
 import { NavigationExtras, Router } from '@angular/router';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { combineLatest, map } from 'rxjs';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -26,6 +27,11 @@ export class WelcomeComponent {
   isLoading: boolean = false;  // Declare the isLoading property
   p: number = 1;
   panelOpenState = false;
+  category_name:any;
+  categories:any[]=[];
+  products: any[] = [];
+  filteredCategories: any[] = [];
+  filteredProducts: any[] = [];
 
 
   constructor(
@@ -61,6 +67,7 @@ export class WelcomeComponent {
   }
 
   ngOnInit() {
+    this.loadCategoriesAndProducts();
     this.getAllUsers();
     this.newService.getAuthStatusListener().subscribe((isAuthenticated) => {
       if (isAuthenticated) {
@@ -164,7 +171,7 @@ export class WelcomeComponent {
       (data) => {
         this.usersFlag = true;
         this.objects = data.users;
-        this.searchLabel='Search for users by name';
+        this.searchLabel='search for users by name';
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -185,4 +192,54 @@ export class WelcomeComponent {
       }
     );
   }
+
+getCategory(){
+  this.newService.getCategory().subscribe((data)=>{
+    this.categories = data.Categories;
+       
+  },
+  (error) => {
+        console.error('Error:', error.error.message);
+      }) 
+}
+
+
+loadCategoriesAndProducts() {
+  combineLatest([this.newService.getCategory(), this.newService.getAllProduct()])
+    .pipe(
+      map(([categoryResponse, productResponse]) => {
+        const categories = categoryResponse.Categories;
+        const products = productResponse.product 
+
+        console.log('Raw categories data:', categories); // בדוק את הנתונים שמתקבלים
+        if (!Array.isArray(categories)) {
+          console.error('Categories is not an array:', categories);
+          return;
+        }
+
+        if (!Array.isArray(products)) {
+          console.error('Products is not an array:', products);
+          return;
+        }
+
+        this.products = products;
+        console.log('Loaded products:', products);  // בדיקה אם המוצרים נטענים
+        
+        // סינון הקטגוריות בהתבסס על המוצרים הזמינים
+        this.filteredCategories = categories.filter((category: any) =>
+          products.some((product: any) => product.category === category.name)
+        );
+        console.log('Filtered categories:', this.filteredCategories);  // בדיקה אם הקטגוריות סוננו
+
+      })
+    )
+    .subscribe(     () => {
+      console.log('Data loading complete');
+    },
+    (error) => {
+      console.error('Error loading data:', error);  // בדיקת שגיאות בטעינת הנתונים
+    });
+}
+
+
 }

@@ -164,12 +164,19 @@ align-items: center;
 }
 
 .custom-panel {
-  width: 700px; /* Custom width of the panel */
-  max-height: 400px; /* Custom maximum height */
+  width: 800px; /* Custom width of the panel */
+  max-height: 800px; /* Custom maximum height */
   // overflow-y: auto; /* Allow scrolling if content exceeds height */
 }
-
-
+.oswald-sharp {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+::ng-deep .mat-typography h2{
+  margin: 0 0 1px !important;
+}
 
 
 

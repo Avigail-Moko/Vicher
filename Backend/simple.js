@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
 const app = require('./app');
 const server = http.createServer(app);
 
+
 const { Server } = require('socket.io');
 const io = new Server(server, {
   cors: {
@@ -12,6 +13,8 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
+
+
 
 const notificationController = require('./api/controllers/notification');
 notificationController.setIo(io);

@@ -10,6 +10,15 @@ import { MatStepper, MatStepperIntl } from '@angular/material/stepper';
 import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
+
+interface AutoCompleteCompleteEvent {
+  originalEvent: Event;
+  query: string;
+}
+interface res{
+  name:String;
+}
 
 @Component({
   selector: 'app-product-stepper',
@@ -19,12 +28,16 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ProductStepperComponent {
   @ViewChild('stepper') stepper!: MatStepper;
   displayPart: any;
+categories:res[] | undefined;
+filteredCategories:any[] | undefined;
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuild: FormBuilder,
     private newService: NewService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private http: HttpClient
   ) {
     this.displayPart = data.displayPart; // השמה של ערך המשתנה שהועבר דרך ה-DATA
   }
@@ -63,6 +76,13 @@ export class ProductStepperComponent {
     this.value = event.selectedIndex * Math.floor(100 / (totalSteps - 1));
   }
 
+ 
+  ngOnInit() {
+    this.http.get<any[]>('assets/categories.JSON').subscribe((data) => {
+      this.categories = data;
+    });
+  }
+
   /*התהליך מצליח
   יש תקלה רק במידה ומנסים לעלות קובץ מעל 3 מגהבייט ואחכ מנסים להחליף למשהו קטן יותר, לא מצליחים לשמור את המוצר. */
   onFileSelected(event: any) {
@@ -97,7 +117,7 @@ export class ProductStepperComponent {
     // Adding form values
     Object.entries({
       ...this.firstFormGroup.value,
-      ...this.secondFormGroup.value,
+      category:this.secondFormGroup.value.category,
       ...this.thirdFormGroup.value,
       length: this.fourthFormGroup.value.length,
       ...this.fifthFormGroup.value,
@@ -133,4 +153,19 @@ export class ProductStepperComponent {
   validationMessages = {
     image: [{ type: 'sizeLimitExceeded', message: 'הקובץ עולה על 2 MB' }],
   };
+
+
+  filterCategory(event: AutoCompleteCompleteEvent) {
+    let filtered: any[] = [];
+    let query = event.query;
+
+    for (let i = 0; i < this.data.categories; i++) {
+        let country = (this.categories as any[])[i];
+        if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+            filtered.push(country);
+        }
+    }
+
+    this.filteredCategories = filtered;
+}
 }

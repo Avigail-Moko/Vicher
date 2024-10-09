@@ -59,7 +59,6 @@ import { RatingPageComponent } from './rating-page/rating-page.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DeleteLessonDialogComponent } from './delete-lesson-dialog/delete-lesson-dialog.component';
-import { SearchingChartComponent } from './searching-chart/searching-chart.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import {NgxPaginationModule} from 'ngx-pagination'
 import {MatExpansionModule} from '@angular/material/expansion';
@@ -84,7 +83,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     VideoChatComponent,
     RatingPageComponent,
     DeleteLessonDialogComponent,
-    SearchingChartComponent,
     
     
   ],

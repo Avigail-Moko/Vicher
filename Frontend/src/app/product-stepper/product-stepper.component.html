@@ -23,11 +23,11 @@
       <form [formGroup]="secondFormGroup">
         <ng-template matStepLabel>Category</ng-template>
         <p>Choose the category most suitable for your service.</p>
-        <mat-form-field>
           <mat-label>category</mat-label>
-          <input matInput formControlName="category" placeholder="category"
-                 required>
-        </mat-form-field>
+
+          <p-autoComplete formControlName="category" [suggestions]="filteredCategories" 
+          (completeMethod)="filterCategory($event)" field="name" [required]></p-autoComplete>
+
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>

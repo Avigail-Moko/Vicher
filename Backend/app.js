@@ -3,7 +3,12 @@ const app = express();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require('body-parser');
 
+const PORT = 3000;
+const jsonFilePath = path.join(__dirname, 'categories.json');
 
 mongoose.connect(
   `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.5rd1vlt.mongodb.net/?retryWrites=true&w=majority`,
@@ -17,15 +22,16 @@ mongoose.connection.on("connected", () => {
   console.log("MongoDB Connected!");
 });
 
-
 const usersRoutes = require("./api/routes/users");
 const productsRoutes = require("./api/routes/products");
 const lessonsRoutes = require("./api/routes/lessons");
+const categoriesRoutes = require("./api/routes/categories");
 const scheduleRoutes = require("./api/routes/schedule");
 const notificationRoutes = require("./api/routes/notification");
 const busyEventsRoutes = require("./api/routes/busyEvents");
 
 const checkAuth = require("./api/middlewares/checkAuth");
+
 
 //
 app.use((req, res, next) => {
@@ -63,6 +69,7 @@ app.use("/lessons", lessonsRoutes);
 app.use("/schedule", scheduleRoutes);
 app.use("/notification", notificationRoutes);
 app.use("/busyEvents", busyEventsRoutes);
+app.use("/categories", categoriesRoutes);
 
 // ניצור מידלוור נוסף
 

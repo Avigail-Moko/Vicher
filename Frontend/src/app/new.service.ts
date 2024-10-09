@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class NewService {
   private authStatusListener = new Subject<boolean>();
   private previousAuthenticationState: boolean = true; // המשתנה הזה ישמור את המצב הקודם של ההתחברות
+  private jsonUrl = 'assets/categories.JSON';
 
   constructor(
     private http: HttpClient,
@@ -190,6 +191,12 @@ export class NewService {
     const url = `http://localhost:3000/lessons/deleteLesson?_id=${_id}`;
     return this.http.delete(url);
   }
-
+  // createCategory(values: any) {
+  //   const url = `http://localhost:3000/categories/createCategory`;
+  //   return this.http.post(url, values );
+  // }
+  getCategory(): Observable<any> {
+    return this.http.get<any>(this.jsonUrl);
+  }
 
 }

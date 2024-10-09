@@ -1,72 +1,71 @@
-<div style="text-align: center;">
-  <h1 class="text-6xl quattrocento-sans-regular line-height-1">Welcome to Vicher!</h1>
-  <h2 class="text-3xl quattrocento-sans-regular">Find the <span class="merinada">virtual teacher</span> for you</h2>
-
+<div style="text-align: center">
+  <h1 class="text-6xl quattrocento-sans-regular line-height-1">
+    Welcome to Vicher!
+  </h1>
+  <h2 class="text-3xl quattrocento-sans-regular">
+    Find the <span class="merinada">virtual teacher</span> for you
+  </h2>
 </div>
 <p-toolbar class="flex justify-content-center flex-wrap mt-6">
-  <!-- <div class="p-grid align-items-center justify-content-around  lg:w-min w-full max-w-5-rem p-grid" >
-    <button pButton type="button" icon="pi pi-user" label="users" class="mr-2  m-1"  (click)="getAllUsers()"></button>
-    <button pButton type="button" icon="pi pi-qrcode" label="products" class="m-1" (click)="getAllProducts()"></button>
-  </div> -->
-          <span class=" flex-grow-1 mx-2 span">          
-          <div class="p-float-label">
-          <p-autoComplete class="searchBox" inputId="searchLabel"
-                          [(ngModel)]="selectedObject"
-                          [suggestions]="filteredObjects"
-                          (completeMethod)="filterObject($event)"
-                          [field]="usersFlag ? 'name' : 'lesson_title'"
-                          (onSelect)="onObjectSelect($event)"
-                          (ngModelChange)="onTextChange($event)">
-          </p-autoComplete>
-          <label for="searchLabel"> 
-            <i class="pi pi-search mx-2 text-400"></i> 
-            <span class="text-400 vertical-align-text-top">{{searchLabel}}</span>
-          </label>
-          
-        </div>
-        <mat-chip-listbox aria-label="Sort option" class="p-grid align-items-center justify-content-around pt-2">
-          <mat-chip-option color="primary" class="m-1" selected (click)="getAllUsers()">Users</mat-chip-option>
-          <mat-chip-option color="primary" class="m-1" (click)="getAllProducts()" >products</mat-chip-option>
-        </mat-chip-listbox>
-        
-        </span>
-    <div class="p-grid align-items-center justify-content-center button-container" >
-    <button pButton type="button"  label=".NET" class="col-3 m-1" (click)="filterBy('price')"></button>
-    <button pButton type="button"  label="Cobol" class="col-3 m-1" (click)="filterBy('length')"></button>  
-    <button pButton type="button"  label="Angular" class="col-3 m-1" (click)="filterBy('rating')"></button>
-    <button pButton type="button"  label="Python" class="col-3 m-1" (click)="filterBy('rating')"></button>
-    <button pButton type="button"  label="Java Script" class="col-3 m-1" (click)="filterBy('rating')"></button>
-    <button pButton type="button"  label="BI" class="col-3 m-1" (click)="filterBy('rating')"></button>
+  <span class="flex-grow-1 mx-2 span">
+    <div class="p-float-label">
+      <p-autoComplete
+        class="searchBox"
+        inputId="searchLabel"
+        [(ngModel)]="selectedObject"
+        [suggestions]="filteredObjects"
+        (completeMethod)="filterObject($event)"
+        [field]="usersFlag ? 'name' : 'lesson_title'"
+        (onSelect)="onObjectSelect($event)"
+        (ngModelChange)="onTextChange($event)"
+      >
+      </p-autoComplete>
+      <label for="searchLabel">
+        <i class="pi pi-search mx-2 text-400"></i>
+        <span class="text-400 vertical-align-text-top">{{ searchLabel }}</span>
+      </label>
+    </div>
+    <mat-chip-listbox
+      aria-label="Sort option"
+      class="p-grid align-items-center justify-content-around pt-2"
+    >
+      <mat-chip-option
+        color="primary"
+        class="m-1"
+        selected
+        (click)="getAllUsers()"
+        >Users</mat-chip-option
+      >
+      <mat-chip-option color="primary" class="m-1" (click)="getAllProducts()"
+        >Products</mat-chip-option
+      >
+    </mat-chip-listbox>
+  </span>
+  <div
+    *ngIf="!usersFlag"
+    class="p-grid align-items-center justify-content-center button-container ml-5"
+  >
+    <h2 class="oswald-sharp">Most Popular Categories</h2>
+    <button
+      *ngFor="let category of filteredCategories"
+      pButton
+      type="button"
+      class="col-4 m-1"
+    >
+      {{ category.name }}
+    </button>
   </div>
-
 </p-toolbar>
 
-<mat-accordion class="accordion p-4">
-<mat-expansion-panel class="custom-panel">
-<mat-expansion-panel-header>
-  <mat-panel-title><h4>see more lesson categories</h4></mat-panel-title>
-  <mat-panel-description>
-   
-  </mat-panel-description>
-</mat-expansion-panel-header>
-<div class="p-grid align-items-center justify-content-center button-container" >
-  <button pButton type="button"  label="PHP" class="col-3 m-1" (click)="filterBy('')"></button>
-  <button pButton type="button"  label="GO" class="col-3 m-1" (click)="filterBy('')"></button>  
-  <button pButton type="button"  label="Java" class="col-3 m-1" (click)="filterBy('')"></button>
-  <button pButton type="button"  label="TypeScript" class="col-3 m-1" (click)="filterBy('')"></button>
-  <button pButton type="button"  label="Java Script" class="col-3 m-1" (click)="filterBy('')"></button>
-  <button pButton type="button"  label="BI" class="col-3 m-1" (click)="filterBy('')"></button>
-</div>
-</mat-expansion-panel>
-</mat-accordion>
-
-
 <div class="card" *ngIf="!usersFlag">
-  <ng-container *ngIf="objects">
+  <ng-container *ngIf="products">
     <div class="cards-container">
       <mat-card
         class="product-card m-2"
-        *ngFor="let product of (filteredObjects? filteredObjects : objects | paginate: { itemsPerPage: 10, currentPage: p })"
+        *ngFor="
+          let product of products
+            | paginate : { itemsPerPage: 10, currentPage: p }
+        "
         (click)="openDailyPlanner(product)"
       >
         <mat-card-header class="flex flex-column p-0">
@@ -95,7 +94,9 @@
               <i class="pi pi-tag text-sm"></i>
               {{ product.category }}
             </mat-card-subtitle>
-            <span class="font-bold text-100">{{ "₪" + " " + product.price }}</span>
+            <span class="font-bold text-100">{{
+              "₪" + " " + product.price
+            }}</span>
           </div>
           <mat-card-subtitle>
             lesson length: {{ product.length }} min.
@@ -108,7 +109,6 @@
         </mat-card-footer>
       </mat-card>
       <pagination-controls (pageChange)="p = $event"></pagination-controls>
-
     </div>
   </ng-container>
 </div>
@@ -118,12 +118,15 @@
     <div class="cards-container">
       <mat-card
         class="product-card m-2"
-        *ngFor="let user of (filteredObjects? filteredObjects : objects | paginate: { itemsPerPage: 10, currentPage: p })"
+        *ngFor="
+          let user of filteredObjects
+            ? filteredObjects
+            : (objects | paginate : { itemsPerPage: 10, currentPage: p })
+        "
         (click)="openUserView(user)"
       >
-
         <mat-card-header class="flex flex-column p-2">
-          <div 
+          <div
             class="header-image"
             [style.background-image]="'url(' + user.profileImage + ')'"
             width="250px"
@@ -140,138 +143,22 @@
             [cancel]="false"
             [attr.data-rater-counter]="user.raterCounter"
           ></p-rating>
-          
-            <mat-card-title class="text-sm ">
-              <!-- <span class="text-400">Email: </span> -->
-              {{ user.email }}
-            </mat-card-title>
-      
+
+          <mat-card-title class="text-sm">
+            {{ user.email }}
+          </mat-card-title>
         </mat-card-content>
         <mat-card-footer class="px-3 product-footer">
-            <p *ngIf="!user.description" class="text-400">
-              The user has not yet provided a personal description.
-            </p>
-            <p class="description">{{ user.description }}</p>
+          <p *ngIf="!user.description" class="text-400">
+            The user has not yet provided a personal description.
+          </p>
+          <p class="description">{{ user.description }}</p>
         </mat-card-footer>
       </mat-card>
       <pagination-controls (pageChange)="p = $event"></pagination-controls>
-
     </div>
   </ng-container>
 </div>
-
-
-<!-- <div class="card" > -->
-  <!-- <p-fieldset  legend="Header"> -->
-
-  <!-- <p-carousel
-  *ngIf="AllproductsArray"
-  id="p-carousel-center"
-    [value]="AllproductsArray"
-    [numVisible]=" AllproductsArray.length < 4 ? AllproductsArray.length : 4"
-    [numScroll]="AllproductsArray.length === 1 ? 1 : (AllproductsArray.length < 4 ? AllproductsArray.length - 1 : 3)"
-     [circular]="true"
-     [responsiveOptions]="AllproductsArray.length <= 2 ? responsiveOptions2 : responsiveOptions"
-     [autoplayInterval]="6000"
-  >
-    >
-    <ng-template let-product pTemplate="item">
-      <mat-card class="product-card m-2" (click)="openDailyPlanner(product)">
-        <mat-card-header class="flex flex-column p-0">
-          <img
-            class="header-image"
-            [src]="product.image.src"
-            width="250px"
-            alt="{{ product.image.filename }}"
-          />
-          <div class="flex px-2">
-            <div
-              mat-card-avatar
-              class="content-image"
-              [style.background-image]="'url(' + product.userProfileImage + ')'"
-            ></div>
-            <mat-card-title class="text-sm ml-2 font-italic">
-              <span class="text-400">Ad by </span>
-              {{ product.userProfileName }}</mat-card-title
-            >
-          </div>
-        </mat-card-header>
-        <mat-card-content class="p-3">
-          <mat-card-title>{{ product.lesson_title }}</mat-card-title>
-          <div class="flex flex-row justify-content-between">
-            <mat-card-subtitle
-              ><i class="pi pi-tag text-sm"></i>
-              {{ product.category }}</mat-card-subtitle
-            >
-            <span class="font-bold text-100">{{
-              "₪" + " " + product.price
-            }}</span>
-          </div>
-          <mat-card-subtitle
-            >lesson length: {{ product.length }} min.</mat-card-subtitle
-          >
-        </mat-card-content>
-        <mat-card-footer class="px-3 product-footer">
-          <p class="product-description">
-            {{ product.description }}
-          </p> -->
-
-          <!-- <p-button  icon="pi pi-trash" class="m-2" *ngIf="isButtonsVisible" (click)="deleteProduct(product._id)" mat-raised-button matTooltip="Delete Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button>
-              <p-button  icon="pi pi-user-edit" class="m-2" *ngIf="isButtonsVisible" (click)="openProductsEditDialog(product,userProfile)"  mat-raised-button matTooltip="Edit Item" aria-label="Button that displays a tooltip when focused or hovered over"></p-button> -->
-        <!-- </mat-card-footer>
-      </mat-card>
-    </ng-template>
-  </p-carousel> -->
-  <!-- </p-fieldset> -->
-<!-- </div> -->
-<!-- <div class="card"> -->
-  <!-- <p-fieldset  legend="Header"> -->
-
-  <!-- <p-carousel
-  *ngIf="AllusersArray"
-  id="p-carousel-center"
-    [value]="AllusersArray"
-    [numVisible]=" AllusersArray.length < 4 ? AllusersArray.length : 4"
-    [numScroll]="AllusersArray.length === 1 ? 1 : (AllusersArray.length < 4 ? AllusersArray.length - 1 : 3)"
-    [circular]="true"
-    [responsiveOptions]="AllusersArray.length <= 2 ? responsiveOptions2 : responsiveOptions"
-    [autoplayInterval]="6000"
-  >
-    >
-    <ng-template let-users pTemplate="item">
-      <mat-card class="product-card m-2" (click)="openUserView(users)">
-        <mat-card-header class="flex flex-column p-2">
-          <div
-            class="header-image"
-            [style.background-image]="'url(' + users.profileImage + ')'"
-            width="250px"
-          ></div>
-          <mat-card-content class="p-3">
-          <p class="overflow-hidden text-overflow-ellipsis">
-            {{ users.name }}
-          </p>
-          <p-rating
-        class="p-rating mb-3"
-        [(ngModel)]="users.avgRating"
-        [readonly]="true"
-        [cancel]="false"
-        [attr.data-rater-counter]="users.raterCounter"
-      ></p-rating>
-        </mat-card-content>
-          <div class="flex px-2">
-            <mat-card-title class="text-sm ml-2 font-italic">
-              <span class="text-400">Email: </span>
-              {{ users.email }}</mat-card-title
-            >
-          </div>
-        </mat-card-header>
-        
-      </mat-card>
-    </ng-template>
-  </p-carousel> -->
-  <!-- </p-fieldset> -->
-<!-- </div> -->
-
 <div class="card">
   <p-toast [life]="5000"></p-toast>
 </div>
