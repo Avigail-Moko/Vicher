@@ -62,6 +62,7 @@ import { DeleteLessonDialogComponent } from './delete-lesson-dialog/delete-lesso
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import {NgxPaginationModule} from 'ngx-pagination'
 import {MatExpansionModule} from '@angular/material/expansion';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [
@@ -153,7 +154,10 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ToggleButtonModule,
     AutoCompleteModule,
     NgxPaginationModule,
-    MatExpansionModule
+    MatExpansionModule,
+    ScrollingModule,
+    
+
   ],
 })
 export class AppModule {}

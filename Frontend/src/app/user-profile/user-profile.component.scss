@@ -2,6 +2,10 @@
 .p-card-header {
   text-align: center;
 }
+.teacher-card{
+  width: 70%;
+
+}
 
 .profileImage {
   border-radius: 50%;
@@ -45,6 +49,7 @@ p-carousel {
 
 ::ng-deep .p-card-footer {
   padding: 0 !important;
+  margin-top: 0 !important;
 }
 .product-footer {
   height: 100%;

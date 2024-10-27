@@ -128,9 +128,10 @@ module.exports = {
                         email: user.email,
                     },
                     process.env.JWT_KEY,
-                    {
-                        expiresIn: "1H"
-                    });
+                    // {
+                    //     expiresIn: "1H"
+                    // }
+                );
                     return res.status(200).json({
                         message: 'Auth successful',
                         token,

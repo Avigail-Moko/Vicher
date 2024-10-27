@@ -15,7 +15,7 @@
         [(ngModel)]="selectedObject"
         [suggestions]="filteredObjects"
         (completeMethod)="filterObject($event)"
-        [field]="usersFlag ? 'name' : 'lesson_title'"
+        [field]="usersFlag ? 'name' : 'category'"
         (onSelect)="onObjectSelect($event)"
         (ngModelChange)="onTextChange($event)"
       >
@@ -25,49 +25,35 @@
         <span class="text-400 vertical-align-text-top">{{ searchLabel }}</span>
       </label>
     </div>
-    <mat-chip-listbox
-      aria-label="Sort option"
-      class="p-grid align-items-center justify-content-around pt-2"
-    >
-      <mat-chip-option
-        color="primary"
-        class="m-1"
-        selected
-        (click)="getAllUsers()"
-        >Users</mat-chip-option
-      >
-      <mat-chip-option color="primary" class="m-1" (click)="getAllProducts()"
-        >Products</mat-chip-option
-      >
+    <mat-chip-listbox aria-label="Sort option"
+      class="p-grid align-items-center justify-content-around pt-2">
+      <mat-chip-option color="primary" class="m-1" selected (click)="getAllUsers()">Users</mat-chip-option>
+      <mat-chip-option color="primary" class="m-1" (click)="getAllProducts()">Products</mat-chip-option>
     </mat-chip-listbox>
   </span>
   <div
     *ngIf="!usersFlag"
-    class="p-grid align-items-center justify-content-center button-container ml-5"
+    class="p-grid align-items-center justify-content-center button-container "
   >
     <h2 class="oswald-sharp">Most Popular Categories</h2>
-    <button
-      *ngFor="let category of filteredCategories"
-      pButton
-      type="button"
-      class="col-4 m-1"
-    >
-      {{ category.name }}
+    <button *ngFor="let category of filteredCategories"
+     pButton type="button" [ngClass]="getColumnClass()">
+      <i class="pi pi-tag text-sm mr-1"></i> {{ category.name }}
     </button>
   </div>
 </p-toolbar>
 
 <div class="card" *ngIf="!usersFlag">
-  <ng-container *ngIf="products">
-    <div class="cards-container">
+  <ng-container *ngIf="objects">
+    <div class="cards-container"
+    >
       <mat-card
         class="product-card m-2"
         *ngFor="
-          let product of products
-            | paginate : { itemsPerPage: 10, currentPage: p }
-        "
+          let product of filteredObjects ? filteredObjects : (objects | paginate : { itemsPerPage: 10, currentPage: p }) "
         (click)="openDailyPlanner(product)"
       >
+      
         <mat-card-header class="flex flex-column p-0">
           <img
             class="header-image"

@@ -7,6 +7,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { combineLatest, map } from 'rxjs';
 
+
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
   query: string;
@@ -32,6 +33,9 @@ export class WelcomeComponent {
   products: any[] = [];
   filteredCategories: any[] = [];
   filteredProducts: any[] = [];
+  objects: any[] | undefined;
+  selectedObject: any | undefined;
+  filteredObjects: any[] | undefined;
 
 
   constructor(
@@ -41,19 +45,14 @@ export class WelcomeComponent {
     public router: Router
   ) {}
 
-  objects: any[] | undefined;
-
-  selectedObject: any | undefined;
-
-  filteredObjects: any[] | undefined;
 
   filterObject(event: AutoCompleteCompleteEvent) {
-    let query = event.query;
+    const query = event.query;
 
     this.filteredObjects = (this.objects as any[]).filter(obj => 
       this.usersFlag
         ? obj.name.toLowerCase().indexOf(query.toLowerCase()) === 0
-        : obj.lesson_title.toLowerCase().indexOf(query.toLowerCase()) === 0
+        : obj.category.toLowerCase().indexOf(query.toLowerCase()) === 0
     );
   }
 
@@ -185,7 +184,7 @@ export class WelcomeComponent {
       (data) => {
         this.usersFlag = false;
         this.objects = data.product;
-        this.searchLabel='Search for products by name';
+        this.searchLabel='Search for products by product category';
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -240,6 +239,19 @@ loadCategoriesAndProducts() {
       console.error('Error loading data:', error);  // בדיקת שגיאות בטעינת הנתונים
     });
 }
+getColumnClass(): string {
+  if (this.filteredCategories.length % 2 === 0) {
+    return 'col-4 m-1'; 
+  } else {
+    return 'col-3 m-1'; 
+  }
+}
+
+
+// onScroll() {
+//   this.loadMoreProducts();
+// }
+
 
 
 }
