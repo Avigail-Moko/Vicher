@@ -8,7 +8,7 @@
     <mat-step [stepControl]="firstFormGroup">
       <form [formGroup]="firstFormGroup">
         <ng-template matStepLabel>Lesson Title</ng-template>
-        <p>give you're lesson a name!</p>
+        <p class="text-white">give you're lesson a name!</p>
         <mat-form-field>
           <mat-label>lesson title</mat-label>
           <input matInput placeholder="" formControlName="lesson_title" required>
@@ -22,13 +22,21 @@
     <mat-step [stepControl]="secondFormGroup">
       <form [formGroup]="secondFormGroup">
         <ng-template matStepLabel>Category</ng-template>
-        <p>Choose the category most suitable for your service.</p>
-          <mat-label>category</mat-label>
-
-          <p-autoComplete formControlName="category" [suggestions]="filteredCategories" 
-          (completeMethod)="filterCategory($event)" field="name" [required]></p-autoComplete>
-
-        <div>
+        <p class="text-white">Choose the category most suitable for your service.</p>
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="Choose a category"
+            formControlName="category"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption  >
+            <mat-option *ngFor="let category of filteredCategories | async" [value]="category"> {{ category }} </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+             
+          <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
         </div>
@@ -39,7 +47,7 @@
     <mat-step [stepControl]="thirdFormGroup">
       <form [formGroup]="thirdFormGroup">
         <ng-template matStepLabel>price</ng-template>
-        <p>write here the price for your lesson.</p>
+        <p class="text-white">write here the price for your lesson.</p>
         <mat-form-field>
           <mat-label>price</mat-label>
           <input type="number" matInput placeholder="price ₪" formControlName="price" required >
@@ -54,7 +62,7 @@
     <mat-step [stepControl]="fourthFormGroup">
       <form [formGroup]="fourthFormGroup">
         <ng-template matStepLabel>Length of Lesson </ng-template>
-        <p>write here the price for your lesson.</p>
+        <p class="text-white">write here the price for your lesson.</p>
         <mat-radio-group formControlName="length">
           <mat-radio-button value="45" >45 minutes</mat-radio-button>
           <mat-radio-button value="60" >60 minutes</mat-radio-button>
@@ -69,7 +77,7 @@
     <mat-step [stepControl]="fifthFormGroup">
       <form [formGroup]="fifthFormGroup">
         <ng-template matStepLabel>Description </ng-template>
-        <p>write here the description for your lesson.</p>
+        <p class="text-white">write here the description for your lesson.</p>
         <mat-form-field>
           <mat-label>description</mat-label>
           <textarea  matInput placeholder="description of lesson" [(ngModel)]="textInput"
@@ -86,7 +94,7 @@
     <mat-step [stepControl]="sixthFormGroup">
       <form [formGroup]="sixthFormGroup" >
         <ng-template matStepLabel>Product Image </ng-template>
-        <p>upload an image to show your product</p>
+        <p class="text-white">upload an image to show your product</p>
         <!-- <mat-form-field> -->
           <!-- <mat-label>Product Image</mat-label> -->
           <!-- <input matInput placeholder="Product Image" formControlName="image" required> -->
@@ -107,7 +115,7 @@
 
     <mat-step >
       <ng-template matStepLabel >Done</ng-template>
-      <p>You are done now.</p>
+      <p class="text-white">You are done now.</p>
       <div>
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button type="submit" (click)="createProduct()">Done</button>

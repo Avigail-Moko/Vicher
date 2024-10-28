@@ -151,7 +151,6 @@ export class NewService {
   }
   updateDescription(id: any, values: any): Observable<any> {
     const url = `http://localhost:3000/users/updateDescription?id=${id}`;
-    console.log('im updating the description:', values);
     return this.http.patch(url, values);
   }
   getNote(userId: any): Observable<any> {

@@ -97,16 +97,18 @@ width: 32px;
 ::ng-deep .p-toolbar{
   width: 80% ;
 }
-
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px; //space between cards
+@media (max-width: 499px) {
+  ::ng-deep .p-toolbar {
+    width: 100%; /* מרחיב את הרוחב של ה-toolbar כדי למנוע גלישת טקסט */
+    padding: 1.25rem  0.7rem ;
+  }
 }
 
-.product-card {
-  flex: 1 1 calc(25% - 16px); //cards per row
-  max-width: 250px; 
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* מגדיר מספר עמודות אוטומטי */
+  gap: 16px; //space between cards
+  place-items: center; 
 }
 
 
@@ -114,7 +116,6 @@ width: 32px;
   border-color: $primary !important;
 }
 
-//שני אלו אחראיים על תיבת החיפוש שתיהיה ארוכה
 ::ng-deep .p-autocomplete {
   display: flex;  
   width: 100%;
@@ -179,5 +180,14 @@ align-items: center;
 }
 
 
+::ng-deep .ngx-pagination a {
+  color: white !important;
+}
+::ng-deep .ngx-pagination a:hover {
+  background-color: rgb(137, 133, 133) !important;
+}
 
+::ng-deep .ngx-pagination {
+padding: 0;
+}
 

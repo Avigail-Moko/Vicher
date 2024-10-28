@@ -6,7 +6,7 @@
     Find the <span class="merinada">virtual teacher</span> for you
   </h2>
 </div>
-<p-toolbar class="flex justify-content-center flex-wrap mt-6">
+<p-toolbar class="flex justify-content-center flex-wrap mt-6 mb-5">
   <span class="flex-grow-1 mx-2 span">
     <div class="p-float-label">
       <p-autoComplete
@@ -94,14 +94,13 @@
           </p>
         </mat-card-footer>
       </mat-card>
-      <pagination-controls (pageChange)="p = $event"></pagination-controls>
     </div>
   </ng-container>
 </div>
 
-<div class="card" *ngIf="usersFlag">
+<div *ngIf="usersFlag">
   <ng-container *ngIf="objects">
-    <div class="cards-container">
+    <div class="cards-container " >
       <mat-card
         class="product-card m-2"
         *ngFor="
@@ -141,10 +140,11 @@
           <p class="description">{{ user.description }}</p>
         </mat-card-footer>
       </mat-card>
-      <pagination-controls (pageChange)="p = $event"></pagination-controls>
     </div>
   </ng-container>
 </div>
+<pagination-controls class="ml-4" (pageChange)="p = $event"></pagination-controls>
+
 <div class="card">
   <p-toast [life]="5000"></p-toast>
 </div>

@@ -19,11 +19,10 @@ interface AutoCompleteCompleteEvent {
   styleUrls: ['./welcome.component.scss'],
 })
 export class WelcomeComponent {
-  responsiveOptions: any[] | undefined;
-  responsiveOptions2: any[] | undefined;
+
   messages: Message[] | undefined;
   userId = localStorage.getItem('userId');
-  usersFlag: any;
+  usersFlag: boolean=true;
   searchLabel:any;
   isLoading: boolean = false;  // Declare the isLoading property
   p: number = 1;
@@ -76,30 +75,7 @@ export class WelcomeComponent {
       }
     });
 
-    this.responsiveOptions = [
-      {
-        breakpoint: '1260px',
-        numVisible: 3,
-        numScroll: 2,
-      },
-      {
-        breakpoint: '1000px',
-        numVisible: 2,
-        numScroll: 1,
-      },
-      {
-        breakpoint: '750px',
-        numVisible: 1,
-        numScroll: 1,
-      },
-    ];
-    this.responsiveOptions2 = [
-      {
-        breakpoint: '750px',
-        numVisible: 1,
-        numScroll: 1,
-      },
-    ];
+   
   }
 
   openDailyPlanner(product: any) {
@@ -184,7 +160,7 @@ export class WelcomeComponent {
       (data) => {
         this.usersFlag = false;
         this.objects = data.product;
-        this.searchLabel='Search for products by product category';
+        this.searchLabel='Search for products by category';
       },
       (error) => {
         console.error('Error:', error.error.message);

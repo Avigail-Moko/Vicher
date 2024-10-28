@@ -11,14 +11,15 @@ import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
 
-interface AutoCompleteCompleteEvent {
-  originalEvent: Event;
-  query: string;
-}
-interface res{
-  name:String;
-}
+// interface AutoCompleteCompleteEvent {
+//   originalEvent: Event;
+//   query: string;
+// }
+// interface res{
+//   name:String;
+// }
 
 @Component({
   selector: 'app-product-stepper',
@@ -28,8 +29,8 @@ interface res{
 export class ProductStepperComponent {
   @ViewChild('stepper') stepper!: MatStepper;
   displayPart: any;
-categories:res[] | undefined;
-filteredCategories:any[] | undefined;
+  categories: any[] = ['']; // Property to hold the categories
+  filteredCategories: Observable<string[]>;
 
 
   constructor(
@@ -79,9 +80,20 @@ filteredCategories:any[] | undefined;
  
   ngOnInit() {
     this.http.get<any[]>('assets/categories.JSON').subscribe((data) => {
-      this.categories = data;
+      this.categories = data; // שמירה של הקטגוריות
+      this.filteredCategories = this.secondFormGroup.get('category')!.valueChanges.pipe(
+        map(value => this._filter(value))
+      );
     });
   }
+
+private _filter(value: string): string[] {
+  const filterValue = value.toLowerCase();
+  return this.categories
+    .map(category => category.name)
+    .filter(name => name.toLowerCase().includes(filterValue));
+}
+
 
   /*התהליך מצליח
   יש תקלה רק במידה ומנסים לעלות קובץ מעל 3 מגהבייט ואחכ מנסים להחליף למשהו קטן יותר, לא מצליחים לשמור את המוצר. */
@@ -155,17 +167,4 @@ filteredCategories:any[] | undefined;
   };
 
 
-  filterCategory(event: AutoCompleteCompleteEvent) {
-    let filtered: any[] = [];
-    let query = event.query;
-
-    for (let i = 0; i < this.data.categories; i++) {
-        let country = (this.categories as any[])[i];
-        if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-            filtered.push(country);
-        }
-    }
-
-    this.filteredCategories = filtered;
-}
 }
