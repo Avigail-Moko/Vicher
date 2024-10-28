@@ -24,18 +24,24 @@
         <ng-template matStepLabel>Category</ng-template>
         <p class="text-white">Choose the category most suitable for your service.</p>
         <mat-form-field>
+          <mat-label>Select a category</mat-label>
           <input
             type="text"
             matInput
-            placeholder="Choose a category"
             formControlName="category"
             [matAutocomplete]="auto"
+            class="text-400"
+            [ngClass]="{'selected-option': isCategorySelected()}" 
+
           />
-          <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption  >
+          <mat-autocomplete #auto="matAutocomplete" >
             <mat-option *ngFor="let category of filteredCategories | async" [value]="category"> {{ category }} </mat-option>
           </mat-autocomplete>
+          <mat-error *ngIf="secondFormGroup.get('category')?.hasError('invalidCategory')">
+          select only from the list
+          </mat-error>
         </mat-form-field>
-             
+
           <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>

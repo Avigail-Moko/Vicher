@@ -5,6 +5,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   FormGroup,
+  AbstractControl,
 } from '@angular/forms';
 import { MatStepper, MatStepperIntl } from '@angular/material/stepper';
 import { NewService } from '../new.service';
@@ -31,6 +32,7 @@ export class ProductStepperComponent {
   displayPart: any;
   categories: any[] = ['']; // Property to hold the categories
   filteredCategories: Observable<string[]>;
+  isOptionSelected: boolean = false;
 
 
   constructor(
@@ -57,7 +59,7 @@ export class ProductStepperComponent {
     lesson_title: ['', Validators.required],
   });
   secondFormGroup = this.formBuild.group({
-    category: ['', Validators.required],
+    category: ['', [Validators.required, this.categoryValidator.bind(this)]],
   });
   thirdFormGroup = this.formBuild.group({
     price: ['', Validators.required],
@@ -86,6 +88,7 @@ export class ProductStepperComponent {
       );
     });
   }
+  
 
 private _filter(value: string): string[] {
   const filterValue = value.toLowerCase();
@@ -93,6 +96,19 @@ private _filter(value: string): string[] {
     .map(category => category.name)
     .filter(name => name.toLowerCase().includes(filterValue));
 }
+// onCategorySelected(event: any) {
+//   const selectedCategory = event.option.value;
+//   this.secondFormGroup.patchValue({ category: selectedCategory });
+//   this.isOptionSelected = true;}
+categoryValidator(control: AbstractControl): { [key: string]: any } | null {
+  return this.categories.map(c => c.name).includes(control.value)
+    ? null
+    : { invalidCategory: true };
+}
+isCategorySelected(): boolean {
+  return this.categories.map(c => c.name).includes(this.secondFormGroup.get('category')?.value);
+}
+
 
 
   /*התהליך מצליח
