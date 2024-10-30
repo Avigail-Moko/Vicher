@@ -48,13 +48,16 @@ export class WelcomeComponent {
 
   filterObject(event: AutoCompleteCompleteEvent) {
     const query = event.query;
-
-    this.filteredObjects = (this.objects as any[]).filter(obj => 
-      this.usersFlag
-        ? obj.name.toLowerCase().indexOf(query.toLowerCase()) === 0
-        : obj.lesson_title.toLowerCase().indexOf(query.toLowerCase()) === 0
-    );
+  
+    this.filteredObjects = (this.objects as any[]).filter(obj => {
+      const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(obj.category);
+      const matchesQuery = this.usersFlag
+        ? obj.name.toLowerCase().startsWith(query.toLowerCase())
+        : obj.lesson_title.toLowerCase().startsWith(query.toLowerCase());
+      return matchesCategory && matchesQuery;
+    });
   }
+  
 
   onTextChange(query: string) {
     if (!query) {
@@ -124,7 +127,7 @@ export class WelcomeComponent {
         this.usersFlag = true;
         this.objects = data.users;
         this.filteredObjects = data.users;
-        this.searchLabel='search for users by name';
+        this.searchLabel='search users by name';
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -140,7 +143,7 @@ export class WelcomeComponent {
         this.objects = data.product;
         this.filteredObjects = data.product;
         this.selectedCategories = [];
-        this.searchLabel='Search for products by lesson title';
+        this.searchLabel='Search products by lesson title';
         this.loadCategories()
       },
       (error) => {
