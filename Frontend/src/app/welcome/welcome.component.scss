@@ -189,3 +189,15 @@ align-items: center;
 padding: 0;
 }
 
+::ng-deep .p-button.p-button-outlined{
+  color: white !important;
+}
+
+:host ::ng-deep #clear>*:focus{
+  box-shadow: none !important; 
+}
+:host ::ng-deep #clear >* {
+  padding-right: 0.4rem !important;
+  padding-left: 0.4rem !important;
+}
+

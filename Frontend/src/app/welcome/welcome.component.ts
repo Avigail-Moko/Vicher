@@ -4,8 +4,7 @@ import { DailyPlannerComponent } from '../daily-planner/daily-planner.component'
 import { MatDialog } from '@angular/material/dialog';
 import { Message, MessageService } from 'primeng/api';
 import { NavigationExtras, Router } from '@angular/router';
-import {NgxPaginationModule} from 'ngx-pagination';
-import { combineLatest, map } from 'rxjs';
+
 
 
 interface AutoCompleteCompleteEvent {
@@ -24,17 +23,19 @@ export class WelcomeComponent {
   userId = localStorage.getItem('userId');
   usersFlag: boolean=true;
   searchLabel:any;
-  isLoading: boolean = false;  // Declare the isLoading property
+  // isLoading: boolean = false;  // Declare the isLoading property
   p: number = 1;
-  panelOpenState = false;
-  category_name:any;
-  categories:any[]=[];
-  products: any[] = [];
+  // panelOpenState = false;
+  // category_name:any;
+  // categories:any[]=[];
+  // products: any[] = [];
   filteredCategories: any[] = [];
-  filteredProducts: any[] = [];
+  // filteredProducts: any[] = [];
   objects: any[] | undefined;
   selectedObject: any | undefined;
   filteredObjects: any[] | undefined;
+  selectedCategories: string[] = [];
+
 
 
   constructor(
@@ -51,7 +52,7 @@ export class WelcomeComponent {
     this.filteredObjects = (this.objects as any[]).filter(obj => 
       this.usersFlag
         ? obj.name.toLowerCase().indexOf(query.toLowerCase()) === 0
-        : obj.category.toLowerCase().indexOf(query.toLowerCase()) === 0
+        : obj.lesson_title.toLowerCase().indexOf(query.toLowerCase()) === 0
     );
   }
 
@@ -65,7 +66,6 @@ export class WelcomeComponent {
   }
 
   ngOnInit() {
-    this.loadCategoriesAndProducts();
     this.getAllUsers();
     this.newService.getAuthStatusListener().subscribe((isAuthenticated) => {
       if (isAuthenticated) {
@@ -117,30 +117,13 @@ export class WelcomeComponent {
     };
     this.router.navigate(['/user-view'], navigationExtras);
   }
-  //sort
-  // products = [
-  //   { name: 'מוצר 1', price: 100, size: 'S', rating: 4 },
-  //   { name: 'מוצר 2', price: 200, size: 'M', rating: 5 },
-  //   // עוד מוצרים
-  // ];
 
-
-
-  // filteredProducts() {
-  //   return this.products.filter(product => {
-  //     return product.name.includes(this.searchTerm);
-  //   }).sort((a, b) => {
-  //     if (this.filterType === 'price') return a.price - b.price;
-  //     if (this.filterType === 'size') return a.size.localeCompare(b.size);
-  //     if (this.filterType === 'rating') return b.rating - a.rating;
-  //     return 0;
-  //   });
-  // }
   getAllUsers() {
     this.newService.getAllUsers().subscribe(
       (data) => {
         this.usersFlag = true;
         this.objects = data.users;
+        this.filteredObjects = data.users;
         this.searchLabel='search for users by name';
       },
       (error) => {
@@ -148,14 +131,17 @@ export class WelcomeComponent {
       }
     );
   }
-  // productsFlag
+
   getAllProducts() {
     
     this.newService.getAllProduct().subscribe(
       (data) => {
         this.usersFlag = false;
         this.objects = data.product;
-        this.searchLabel='Search for products by category';
+        this.filteredObjects = data.product;
+        this.selectedCategories = [];
+        this.searchLabel='Search for products by lesson title';
+        this.loadCategories()
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -163,61 +149,39 @@ export class WelcomeComponent {
     );
   }
 
-// getCategory(){
-//   this.newService.getCategory().subscribe((data)=>{
-//     this.categories = data;
-    
+  loadCategories(){
+  this.newService.getCategory().subscribe((data)=>{
+    const categories = data;
+    const products = this.objects 
+    this.filteredCategories = categories.filter((category: any) =>
+      products.some((product: any) => product.category === category.name)
+    );
+    console.log('Filtered categories:', this.filteredCategories);
        
-//   },
-//   (error) => {
-//         console.error('Error:', error.error.message);
-//       }) 
-// }
-
-
-loadCategoriesAndProducts() {
-  combineLatest([this.newService.getCategory(), this.newService.getAllProduct()])
-    .pipe(
-      map(([categoryResponse, productResponse]) => {
-        const categories = categoryResponse;
-        const products = productResponse.product 
-
-        console.log('Raw categories data:', categories); // בדוק את הנתונים שמתקבלים
-        if (!Array.isArray(categories)) {
-          console.error('Categories is not an array:', categories);
-          return;
-        }
-
-        if (!Array.isArray(products)) {
-          console.error('Products is not an array:', products);
-          return;
-        }
-
-        this.products = products;
-        console.log('Loaded products:', products);  // בדיקה אם המוצרים נטענים
-        
-        // סינון הקטגוריות בהתבסס על המוצרים הזמינים
-        this.filteredCategories = categories.filter((category: any) =>
-          products.some((product: any) => product.category === category.name)
-        );
-        console.log('Filtered categories:', this.filteredCategories);  // בדיקה אם הקטגוריות סוננו
-
-      })
-    )
-    .subscribe(     () => {
-      console.log('Data loading complete');
-    },
-    (error) => {
-      console.error('Error loading data:', error);  // בדיקת שגיאות בטעינת הנתונים
-    });
+  },
+  (error) => {
+        console.error('Error:', error.error.message);
+      }) 
 }
 
-
-
-// onScroll() {
-//   this.loadMoreProducts();
-// }
-
+toggleCategorySelection(category: string) {
+  const index = this.selectedCategories.indexOf(category);
+  if (index === -1) {
+    this.selectedCategories.push(category);
+  } else {
+    this.selectedCategories.splice(index, 1);
+  }
+  
+  // סינון לפי הקטגוריות הנבחרות
+  if (this.selectedCategories.length) {
+    this.filteredObjects = this.objects?.filter(obj =>
+      this.selectedCategories.includes(obj.category)
+    ) || [];
+  } else {
+    // אם אין קטגוריות נבחרות, הצג את כל האובייקטים
+    this.filteredObjects = this.objects;
+  }
+}
 
 
 }
