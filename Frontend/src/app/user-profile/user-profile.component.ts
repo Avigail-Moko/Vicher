@@ -127,7 +127,8 @@ export class UserProfileComponent {
     dialogRef.afterClosed().subscribe((result) => {
       dialogRef2.close();
       this.isButtonsVisible=true
-      console.log('The dialog was closed');
+      console.log('The dialog was closed1');
+      window.location.reload();   
     });
   }
   // אישור מחיקה
@@ -140,7 +141,7 @@ export class UserProfileComponent {
     dialog.afterClosed().subscribe((result) => {
       dialog.close();
       this.isButtonsVisible=true
-      console.log('The dialog was closed');
+      console.log('The dialog was closed2');
     });
   }
   save() {

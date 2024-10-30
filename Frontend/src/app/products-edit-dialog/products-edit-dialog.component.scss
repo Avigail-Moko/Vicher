@@ -40,3 +40,9 @@
     background-color: var(--surface-900)!important;	
 
   }
+  ::ng-deep .p-autocomplete-input {
+    width: 150px ;
+    margin-bottom: 24px;
+    background-color: var(--surface-900);	
+
+  }

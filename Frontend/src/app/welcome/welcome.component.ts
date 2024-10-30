@@ -124,12 +124,7 @@ export class WelcomeComponent {
   //   // עוד מוצרים
   // ];
 
-  // searchTerm: string = '';
-  filterType: string = '';
 
-  filterBy(type: string) {
-    this.filterType = type;
-  }
 
   // filteredProducts() {
   //   return this.products.filter(product => {
@@ -170,7 +165,8 @@ export class WelcomeComponent {
 
 getCategory(){
   this.newService.getCategory().subscribe((data)=>{
-    this.categories = data.Categories;
+    this.categories = data;
+    
        
   },
   (error) => {
@@ -183,7 +179,7 @@ loadCategoriesAndProducts() {
   combineLatest([this.newService.getCategory(), this.newService.getAllProduct()])
     .pipe(
       map(([categoryResponse, productResponse]) => {
-        const categories = categoryResponse.Categories;
+        const categories = categoryResponse;
         const products = productResponse.product 
 
         console.log('Raw categories data:', categories); // בדוק את הנתונים שמתקבלים
