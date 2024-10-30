@@ -33,11 +33,12 @@
   </span>
   <div
     *ngIf="!usersFlag"
-    class="p-grid align-items-center justify-content-center button-container "
+    class=" flex flex-wrap gap-3 "
   >
-    <h2 class="oswald-sharp">Most Popular Categories</h2>
+    <h2 class="oswald-sharp w-full">Category Filters</h2>
+
     <button *ngFor="let category of filteredCategories"
-     pButton type="button" [ngClass]="getColumnClass()">
+     pButton type="button">
       <i class="pi pi-tag text-sm mr-1"></i> {{ category.name }}
     </button>
   </div>

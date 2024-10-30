@@ -163,16 +163,16 @@ export class WelcomeComponent {
     );
   }
 
-getCategory(){
-  this.newService.getCategory().subscribe((data)=>{
-    this.categories = data;
+// getCategory(){
+//   this.newService.getCategory().subscribe((data)=>{
+//     this.categories = data;
     
        
-  },
-  (error) => {
-        console.error('Error:', error.error.message);
-      }) 
-}
+//   },
+//   (error) => {
+//         console.error('Error:', error.error.message);
+//       }) 
+// }
 
 
 loadCategoriesAndProducts() {
@@ -211,13 +211,7 @@ loadCategoriesAndProducts() {
       console.error('Error loading data:', error);  // בדיקת שגיאות בטעינת הנתונים
     });
 }
-getColumnClass(): string {
-  if (this.filteredCategories.length % 2 === 0) {
-    return 'col-4 m-1'; 
-  } else {
-    return 'col-3 m-1'; 
-  }
-}
+
 
 
 // onScroll() {

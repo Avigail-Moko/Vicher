@@ -131,7 +131,7 @@ export class UserProfileComponent {
       window.location.reload();   
     });
   }
-  // אישור מחיקה
+  
   confirm(product: any) {
     const dialog = this.dialog.open(DeleteItemComponent, {
       data: { product: product },

@@ -63,6 +63,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import {NgxPaginationModule} from 'ngx-pagination'
 import {MatExpansionModule} from '@angular/material/expansion';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @NgModule({
   declarations: [
@@ -156,6 +157,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     NgxPaginationModule,
     MatExpansionModule,
     ScrollingModule,
+    SelectButtonModule,
     
 
   ],
