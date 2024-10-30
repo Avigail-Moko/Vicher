@@ -12,7 +12,7 @@ import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { map, Observable, startWith } from 'rxjs';
 
 // interface AutoCompleteCompleteEvent {
 //   originalEvent: Event;
@@ -82,9 +82,10 @@ export class ProductStepperComponent {
  
   ngOnInit() {
     this.http.get<any[]>('assets/categories.JSON').subscribe((data) => {
-      this.categories = data; // שמירה של הקטגוריות
+      this.categories = data; 
       this.filteredCategories = this.secondFormGroup.get('category')!.valueChanges.pipe(
-        map(value => this._filter(value))
+        startWith(''),
+        map(value => this._filter(value || ''))
       );
     });
   }
@@ -96,10 +97,7 @@ private _filter(value: string): string[] {
     .map(category => category.name)
     .filter(name => name.toLowerCase().includes(filterValue));
 }
-// onCategorySelected(event: any) {
-//   const selectedCategory = event.option.value;
-//   this.secondFormGroup.patchValue({ category: selectedCategory });
-//   this.isOptionSelected = true;}
+
 categoryValidator(control: AbstractControl): { [key: string]: any } | null {
   return this.categories.map(c => c.name).includes(control.value)
     ? null
@@ -110,9 +108,6 @@ isCategorySelected(): boolean {
 }
 
 
-
-  /*התהליך מצליח
-  יש תקלה רק במידה ומנסים לעלות קובץ מעל 3 מגהבייט ואחכ מנסים להחליף למשהו קטן יותר, לא מצליחים לשמור את המוצר. */
   onFileSelected(event: any) {
     const files = event.target.files;
     if (files.length > 0) {
@@ -152,17 +147,12 @@ isCategorySelected(): boolean {
     }).forEach(([key, value]) => {
       this.formData.append(key, value);
     });
-    /* למה אין פה את אותה שורה שמיוחדת לשמירת התמונה? הצאט ממליץ על :
-     ngOnInit() {
-    this.sixthFormGroup = this.formBuilder.group({
-      image: [''] // You may need to adjust this based on your actual form structure
-    });
-  }*/
+
     this.newService.createProduct(this.formData).subscribe(
       (data) => {
         console.log('Response:', data);
         this.dialog.closeAll();
-        window.location.reload(); // רענון העמוד
+        window.location.reload(); 
       },
       (error) => {
         console.error('Error:', error.error.message);
@@ -175,9 +165,6 @@ isCategorySelected(): boolean {
     return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2);
   }
 
-  // updateNoteCount() {
-  //   this.noteCount = this.textInput.length;
-  // }
   validationMessages = {
     image: [{ type: 'sizeLimitExceeded', message: 'הקובץ עולה על 2 MB' }],
   };
