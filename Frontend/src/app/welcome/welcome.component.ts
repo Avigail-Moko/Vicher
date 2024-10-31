@@ -23,14 +23,8 @@ export class WelcomeComponent {
   userId = localStorage.getItem('userId');
   usersFlag: boolean=true;
   searchLabel:any;
-  // isLoading: boolean = false;  // Declare the isLoading property
   p: number = 1;
-  // panelOpenState = false;
-  // category_name:any;
-  // categories:any[]=[];
-  // products: any[] = [];
   filteredCategories: any[] = [];
-  // filteredProducts: any[] = [];
   objects: any[] | undefined;
   selectedObject: any | undefined;
   filteredObjects: any[] | undefined;
@@ -181,13 +175,11 @@ toggleCategorySelection(category: string) {
     this.selectedCategories.splice(index, 1);
   }
   
-  // סינון לפי הקטגוריות הנבחרות
   if (this.selectedCategories.length) {
     this.filteredObjects = this.objects?.filter(obj =>
       this.selectedCategories.includes(obj.category)
     ) || [];
   } else {
-    // אם אין קטגוריות נבחרות, הצג את כל האובייקטים
     this.filteredObjects = this.objects;
   }
 }

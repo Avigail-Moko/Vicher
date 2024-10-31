@@ -31,15 +31,6 @@ height: 32px;
 width: 32px;
 }
 
-// .fieldset{
-//   width: 100px;
-// }
-
-// ::ng-deep #p-carousel-center > *> *> * > * > *> *{
-//   display: flex;
-//   justify-content: center;
-// }
-
 .product-footer {
   height: 100%;
   display: flex;
@@ -61,25 +52,9 @@ width: 32px;
   color: rgb(163, 171, 168);
 }
 
-/* src/app/your-component/your-component.component.css */
 :host {
   font-family: 'Roboto', sans-serif;
 }
-// <uniquifier>: Use a unique and descriptive class name
-// <weight>: Use a value from 300 to 700
-
-// .fredoka-<uniquifier> {
-//   font-family: "Fredoka", sans-serif;
-//   font-optical-sizing: auto;
-//   font-weight: 600;
-//   font-style: normal;
-//   font-variation-settings:
-//     "wdth" 100;
-// }
-
-// <uniquifier>: Use a unique and descriptive class name
-// <weight>: Use a value from 200 to 800
-
 
 .merinada {
   font-family: "Merienda", cursive;
@@ -99,14 +74,14 @@ width: 32px;
 }
 @media (max-width: 499px) {
   ::ng-deep .p-toolbar {
-    width: 100%; /* מרחיב את הרוחב של ה-toolbar כדי למנוע גלישת טקסט */
+    width: 100%; 
     padding: 1.25rem  0.7rem ;
   }
 }
 
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* מגדיר מספר עמודות אוטומטי */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
   gap: 16px; //space between cards
   place-items: center; 
 }
@@ -126,19 +101,14 @@ width: 32px;
   width: 100% !important;  
 }
 
-// ::ng-deep .p-autocomplete-panel {
-//   width: 100% !important;  /* מאלץ את הפאנל הפנימי להתאים את עצמו */
-// }
-// .searchBox {
-//   width: 100%;         /* תיבת החיפוש תתפוס את כל הרוחב של הקונטיינר */
-// }
+
 .p-inputgroup-addon {
-  background-color: transparent;   /* הופך את רקע האייקון לשקוף */
-  border: none;                    /* מסיר גבול מהאייקון */
+  background-color: transparent;   
+  border: none;                  
 }
 
 .p-inputgroup .pi-search {
-  color: #6c757d;  /* צבע האייקון */
+  color: #6c757d;  
 }
 
 
