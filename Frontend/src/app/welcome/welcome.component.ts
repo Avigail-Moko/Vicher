@@ -61,7 +61,13 @@ export class WelcomeComponent {
 
   onTextChange(query: string) {
     if (!query) {
-      this.filteredObjects = this.objects;
+      if (this.selectedCategories.length) {
+        this.filteredObjects = this.objects?.filter(obj =>
+          this.selectedCategories.includes(obj.category)
+        ) || [];
+      } else {
+        this.filteredObjects = this.objects;
+      }
     }
   }
   onObjectSelect(selectedObject: any) {
