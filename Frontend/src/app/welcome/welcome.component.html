@@ -17,7 +17,7 @@
         (completeMethod)="filterObject($event)"
         [field]="usersFlag ? 'name' : 'lesson_title'"
         (onSelect)="onObjectSelect($event)"
-        (ngModelChange)="onTextChange($event)"
+        (ngModelChange)="filterObject($event)"
       >
       </p-autoComplete>
       <label for="searchLabel">
@@ -35,7 +35,7 @@
   <div *ngIf="!usersFlag" class=" flex flex-wrap gap-3">
   <h2 class="oswald-sharp w-full">Category Filters</h2>
   
-    <p-button size="small" class="bg-white border-round-xl" id="clear" [text]="true" [raised]="true"(click)="selectedCategories = []; filteredObjects = objects">
+    <p-button size="small" class="bg-white border-round-xl" id="clear" [text]="true" [raised]="true"(click)="selectedCategories = []; applyFilters() ">
       <i class="pi pi-times-circle mr-1 "></i>
       Clear
     </p-button>

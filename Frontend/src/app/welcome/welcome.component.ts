@@ -29,6 +29,7 @@ export class WelcomeComponent {
   selectedObject: any | undefined;
   filteredObjects: any[] | undefined;
   selectedCategories: string[] = [];
+  searchQuery: string = '';
 
 
 
@@ -41,29 +42,10 @@ export class WelcomeComponent {
 
 
   filterObject(event: AutoCompleteCompleteEvent) {
-    const query = event.query;
-  
-    this.filteredObjects = (this.objects as any[]).filter(obj => {
-      const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(obj.category);
-      const matchesQuery = this.usersFlag
-        ? obj.name.toLowerCase().startsWith(query.toLowerCase())
-        : obj.lesson_title.toLowerCase().startsWith(query.toLowerCase());
-      return matchesCategory && matchesQuery;
-    });
+    this.searchQuery = event.query ? event.query.trim() : ''; 
+    this.applyFilters(); 
   }
   
-
-  onTextChange(query: string) {
-    if (!query) {
-      if (this.selectedCategories.length) {
-        this.filteredObjects = this.objects?.filter(obj =>
-          this.selectedCategories.includes(obj.category)
-        ) || [];
-      } else {
-        this.filteredObjects = this.objects;
-      }
-    }
-  }
   onObjectSelect(selectedObject: any) {
     this.filteredObjects = [selectedObject];
   }
@@ -174,14 +156,17 @@ toggleCategorySelection(category: string) {
   } else {
     this.selectedCategories.splice(index, 1);
   }
-  
-  if (this.selectedCategories.length) {
-    this.filteredObjects = this.objects?.filter(obj =>
-      this.selectedCategories.includes(obj.category)
-    ) || [];
-  } else {
-    this.filteredObjects = this.objects;
-  }
+  this.applyFilters(); 
+}
+
+applyFilters() {
+  this.filteredObjects = (this.objects as any[]).filter(obj => {
+    const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(obj.category);
+    const matchesQuery = !this.searchQuery || (this.usersFlag
+      ? obj.name.toLowerCase().startsWith(this.searchQuery.toLowerCase())
+      : obj.lesson_title.toLowerCase().startsWith(this.searchQuery.toLowerCase()));
+    return matchesCategory && matchesQuery;
+  });
 }
 
 
