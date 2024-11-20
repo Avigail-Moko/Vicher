@@ -42,11 +42,17 @@ export class WelcomeComponent {
 
 
   filterObject(event: AutoCompleteCompleteEvent) {
-    this.searchQuery = event.query ? event.query.trim() : ''; 
+    this.searchQuery =event?.query?.trim();
     this.applyFilters(); 
   }
+
   
-  onObjectSelect(selectedObject: any) {
+  onObjectSelect(event: any) {
+    const selectedObject = event?.value;
+    if (!selectedObject) {
+      console.error('Selected object is undefined');
+      return;
+    }
     this.filteredObjects = [selectedObject];
   }
 
@@ -106,6 +112,7 @@ export class WelcomeComponent {
   getAllUsers() {
     this.newService.getAllUsers().subscribe(
       (data) => {
+        this.selectedObject = null;
         this.usersFlag = true;
         this.objects = data.users;
         this.filteredObjects = data.users;
@@ -121,6 +128,7 @@ export class WelcomeComponent {
     
     this.newService.getAllProduct().subscribe(
       (data) => {
+        this.selectedObject = null;
         this.usersFlag = false;
         this.objects = data.product;
         this.filteredObjects = data.product;

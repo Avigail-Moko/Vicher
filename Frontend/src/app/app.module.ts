@@ -7,12 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { SignupDialogComponent } from './signup-dialog/signup-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  GoogleSigninButtonModule,
-  SocialAuthServiceConfig,
-  SocialLoginModule,
-} from '@abacritt/angularx-social-login';
-import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
@@ -94,24 +88,6 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     JwtHelperService,
     DatePipe,
     {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              '906186434728-g411kdddupn0spcvbscftskilvsl4uge.apps.googleusercontent.com'
-            ), 
-            
-          },
-        ],
-        onError: (err) => {
-          console.error(err);
-        },
-      } as SocialAuthServiceConfig,
-    },
-    {
       provide: JWT_OPTIONS,
       useValue: JWT_OPTIONS,
     },
@@ -123,8 +99,6 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     BrowserAnimationsModule,
     MaterialModule,
     ReactiveFormsModule,
-    SocialLoginModule,
-    GoogleSigninButtonModule,
     HttpClientModule,
     MatSidenavModule,
     MatListModule,

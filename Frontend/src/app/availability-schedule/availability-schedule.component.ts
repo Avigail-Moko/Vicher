@@ -14,9 +14,8 @@ import {
   MatSnackBar,
 } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, NavigationStart } from '@angular/router';
 
-// import { Dropdown, DropdownItem } from 'primeng/dropdown';
-// import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-availability-schedule',
@@ -44,12 +43,18 @@ export class AvailabilityScheduleComponent {
     public newService: NewService,
     public messageService: MessageService,
     private _snackBar: MatSnackBar,
-    private fb: FormBuilder
+    private fb: FormBuilder, private router: Router
   ) {
     this.myForm = this.fb.group({
       nameEvent: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
+    });
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this._snackBar.dismiss();
+      }
     });
   }
 

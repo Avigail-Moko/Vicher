@@ -17,7 +17,7 @@
         (completeMethod)="filterObject($event)"
         [field]="usersFlag ? 'name' : 'lesson_title'"
         (onSelect)="onObjectSelect($event)"
-        (ngModelChange)="filterObject($event)"
+        (ngModelChange)="$event ? null : filterObject($event)"
       >
       </p-autoComplete>
       <label for="searchLabel">

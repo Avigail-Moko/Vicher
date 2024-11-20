@@ -78,16 +78,6 @@ export class NewService {
     return this.http.post(url, values);
   }
 
-
-  // getUserProfile(): Observable<any> {
-  //   const url = 'http://localhost:3000/users/getProfile';
-  //   const token = localStorage.getItem('token');
-  //   let headers = new HttpHeaders();
-  //   if (token) {
-  //     headers = headers.set('Authorization', 'Bearer ' + token);
-  //   }
-  //   return this.http.get(url, { headers });
-  // }
   createProduct(values: any): Observable<any> {
     console.log(values);
     const url = 'http://localhost:3000/products/createProduct';
@@ -190,10 +180,7 @@ export class NewService {
     const url = `http://localhost:3000/lessons/deleteLesson?_id=${_id}`;
     return this.http.delete(url);
   }
-  // createCategory(values: any) {
-  //   const url = `http://localhost:3000/categories/createCategory`;
-  //   return this.http.post(url, values );
-  // }
+
   getCategory(): Observable<any> {
     return this.http.get<any>(this.jsonUrl);
   }

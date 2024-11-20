@@ -1,13 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 $primary:#c2185b;
 $light-primary:#c3829c;
-$dark-primary:#941246;
+// $dark-primary:#941246;
+$dark-primary:scale-color($primary, $lightness: -5%);
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 // @import "primeng/resources/themes/lara-light-blue/theme.css";
-@import "primeng/resources/themes/NNN/theme.css";
+// @import "primeng/resources/themes/NNN/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 @import "/node_modules/primeflex/primeflex.css";
