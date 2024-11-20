@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { createCanvas } = require('canvas');
@@ -74,7 +74,7 @@ module.exports = {
             }
              else {
 
-            bcrypt.hash(password, 10, (error, hash) => {
+            bcryptjs.hash(password, 10, (error, hash) => {
                 if (error) {
                     return res.status(500).json({
                         message: 'password not secured'
@@ -116,10 +116,10 @@ module.exports = {
             const [ user ] = users;
             const userId=user._id;
 
-            bcrypt.compare(password, user.password, (error, result) => {
+            bcryptjs.compare(password, user.password, (error, result) => {
                 if (error) {
                     return res.status(401).json({
-                        message: 'bcrypt error'
+                        message: 'bcryptjs error'
                     });
                 }
                 if (result) {
