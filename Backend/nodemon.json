@@ -1,8 +1,0 @@
-{
-    "env":{
-"MONGO_USERNAME":"vic0406r",
-"MONGO_PASSWORD":"0UMMom4TEBLRZjtf",
-"CLUSTER_URL":"vicher.3zz49.mongodb.net",
-"JWT_KEY":"my secret"
-    }
-}
