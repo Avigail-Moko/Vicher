@@ -12,7 +12,7 @@ const setIo = (socketIo) => {
   io = socketIo;
 };
 // agenda
-const mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.5rd1vlt.mongodb.net/?retryWrites=true&w=majority`;
+const mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.CLUSTER_URL}/?retryWrites=true&w=majority`;
 
 const agenda = new Agenda({
   db: { address: mongoUri, collection: "notificationJobs" },
