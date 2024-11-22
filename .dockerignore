@@ -1,0 +1,53 @@
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+~$*
+
+# MongoDB 
+*.lock
+*.ldb
+dump/
+
+# Node.js (backend)
+backend/node_modules/
+backend/dist/
+backend/.env
+backend/.env.*
+backend/logs/
+backend/tmp/
+
+# Angular (frontend)
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.env
+frontend/.env.*
+frontend/tmp/
+
+# Docker specific
+.dockerignore
+docker-compose.override.yml
+docker-*.log  
+
+# Windows
+Thumbs.db
+Desktop.ini
+*.log
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# npm/yarn
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Git
+.git/
+.gitignore
+
+
+
