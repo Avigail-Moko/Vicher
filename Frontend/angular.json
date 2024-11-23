@@ -17,6 +17,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "optimization": true,
+            "buildOptimizer": true,
             "outputPath": "dist/web-site",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -52,7 +54,8 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "aot": true
             },
             "development": {
               "buildOptimizer": false,
