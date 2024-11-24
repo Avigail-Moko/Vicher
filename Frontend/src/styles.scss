@@ -11,9 +11,6 @@ $dark-primary: darken($primary, 5%);
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-@import "primeng/resources/primeng.css";
-@import "primeicons/primeicons.css";
-@import "/node_modules/primeflex/primeflex.css";
 
 .custom-container >*>*>* {
     border-radius: 20px !important;
