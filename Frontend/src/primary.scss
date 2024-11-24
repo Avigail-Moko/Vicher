@@ -1,0 +1,4 @@
+$primary:#c2185b;
+$light-primary:#c3829c;
+// $dark-primary:#941246;
+$dark-primary:scale-color($primary, $lightness: -5%);
