@@ -1,5 +1,5 @@
-import {  AfterViewInit, Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Router } from '@angular/router';
 import { NewService } from '../new.service';
 declare var JitsiMeetExternalAPI: any;
 import { ActivatedRoute } from '@angular/router';

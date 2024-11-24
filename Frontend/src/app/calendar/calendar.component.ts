@@ -1,17 +1,14 @@
-import { Component, signal, ChangeDetectorRef, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
+import { Component, ViewChild } from '@angular/core';
+import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { NewService } from '../new.service';
-import { MatSelectChange } from '@angular/material/select';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { DeleteLessonDialogComponent } from '../delete-lesson-dialog/delete-lesson-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Renderer2 } from '@angular/core';
 
 
 @Component({
