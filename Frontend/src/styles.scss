@@ -1,17 +1,19 @@
 
+$primary: #c2185b;
+$light-primary:#c3829c;
+$dark-primary: darken($primary, 5%);
+
+:root {
+    --primary: #{$primary};
+    --light-primary: #{$light-primary};
+    --dark-primary: #{$dark-primary};
+  }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-// @import "primeng/resources/themes/lara-light-blue/theme.css";
-// @import "primeng/resources/themes/NNN/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 @import "/node_modules/primeflex/primeflex.css";
-// @import 'assets/theme.css';
-// @import "primeng/resources/themes/saga-blue/theme.css";
-// @import "primeng/resources/primeng.min.css";
-// @import "primeicons/primeicons.css";
-
 
 .custom-container >*>*>* {
     border-radius: 20px !important;

@@ -1,5 +1,6 @@
-@import '../../src/primary.scss'; 
-
+h4{
+  color: var(--dark-primary);
+}
 .p-card-header {
   text-align: center;
 }
@@ -61,7 +62,7 @@ width: 32px;
   font-optical-sizing: auto;
   font-weight: 200;
   font-style: normal;
-  color: $primary;
+  color: var(--primary);
 }
 .quattrocento-sans-regular {
   font-family: "Quattrocento Sans", sans-serif;
@@ -88,7 +89,7 @@ width: 32px;
 
 
 ::ng-deep .p-inputtext{
-  border-color: $primary !important;
+  border-color: var(--primary) !important;
 }
 
 ::ng-deep .p-autocomplete {
@@ -102,41 +103,14 @@ width: 32px;
 }
 
 
-.p-inputgroup-addon {
-  background-color: transparent;   
-  border: none;                  
-}
-
-.p-inputgroup .pi-search {
-  color: #6c757d;  
-}
 
 
 
-h4{
-color: $primary;
-text-align: center;
-align-items: center;
-}
-
-.accordion {
-  text-align: center;
-  align-items: center;
-}
 
 
-.accordion {
-  display: flex;
-  justify-content: center; /* Align horizontally in the center */
-  align-items: center; /* Align vertically in the center */
-  // height: 100vh; /* Full height of the viewport */
-}
 
-.custom-panel {
-  width: 800px; /* Custom width of the panel */
-  max-height: 800px; /* Custom maximum height */
-  // overflow-y: auto; /* Allow scrolling if content exceeds height */
-}
+
+
 .oswald-sharp {
   font-family: "Oswald", sans-serif;
   font-optical-sizing: auto;
