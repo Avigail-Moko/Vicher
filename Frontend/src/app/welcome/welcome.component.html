@@ -30,9 +30,9 @@
       <mat-chip-option color="primary" class="m-1" selected (click)="getAllUsers()">Users</mat-chip-option>
       <mat-chip-option color="primary" class="m-1" (click)="getAllProducts()">Products</mat-chip-option>
     </mat-chip-listbox>
-  </span>
+  
 
-  <div *ngIf="!usersFlag" class=" flex flex-wrap gap-3">
+  <div *ngIf="!usersFlag" class=" flex flex-wrap gap-3 mt-3">
   <h2 class="oswald-sharp w-full">Category Filters</h2>
   
     <p-button size="small" class="bg-white border-round-xl" id="clear" [text]="true" [raised]="true"(click)="selectedCategories = []; applyFilters() ">
@@ -47,6 +47,7 @@
       <i class="pi pi-tag text-sm mr-1"></i> {{ category.name }}
     </p-button>
   </div>
+</span>
 </p-toolbar>
 
 <div class="card" *ngIf="!usersFlag">
