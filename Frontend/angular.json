@@ -19,7 +19,7 @@
           "options": {
             "optimization": true,
             "buildOptimizer": true,
-            "outputPath": "dist/web-site",
+            "outputPath": "dist/Frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
