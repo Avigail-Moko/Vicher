@@ -1,8 +1,7 @@
 {
-  "name": "server",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "user's server",
-  "main": "index.js",
+  "main": "simple.js",
   "scripts": {
     "start": "nodemon simple.js"
   },

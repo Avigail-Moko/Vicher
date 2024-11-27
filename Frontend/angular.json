@@ -35,6 +35,7 @@
               "@angular/material/prebuilt-themes/pink-bluegrey.css",
               "src/styles.scss",
               "src/assets/primeng_theme.css",
+              "src/assets/fonts/fonts.scss",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeflex/primeflex.css"
