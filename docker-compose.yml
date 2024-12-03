@@ -17,8 +17,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MONGO_URL=mongodb://mongo:27017/mydb
-      # - MONGO_URL=mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${CLUSTER_URL}/?retryWrites=true&w=majority
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - CLUSTER_URL=${CLUSTER_URL}
+      - JWT_KEY=${JWT_KEY}
     depends_on:
       - mongo
     restart: always

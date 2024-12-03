@@ -5,6 +5,14 @@
 *.swo
 ~$*
 
+# .env
+.env
+.env.*
+backend/.env
+backend/.env.*
+frontend/.env
+frontend/.env.*
+
 # MongoDB 
 *.lock
 *.ldb
@@ -13,8 +21,6 @@ dump/
 # Node.js (backend)
 backend/node_modules/
 backend/dist/
-backend/.env
-backend/.env.*
 backend/logs/
 backend/tmp/
 
@@ -22,8 +28,6 @@ backend/tmp/
 frontend/node_modules/
 frontend/dist/
 frontend/.angular/
-frontend/.env
-frontend/.env.*
 frontend/tmp/
 
 # Docker specific
