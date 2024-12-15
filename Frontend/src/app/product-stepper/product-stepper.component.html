@@ -3,7 +3,7 @@
     <p-knob [(ngModel)]="value" [step]="stepSize" [readonly]="true" valueTemplate="{value}%" ></p-knob>
 </div>
 
-  <mat-stepper orientation="vertical" class="stepper-container" [linear]="true" #stepper (selectionChange)="onStepChange($event)">
+  <mat-stepper orientation="vertical" class="stepper-container pb-2" [linear]="true" #stepper (selectionChange)="onStepChange($event)">
 
     <mat-step [stepControl]="firstFormGroup">
       <form [formGroup]="firstFormGroup">
