@@ -6,7 +6,7 @@ module.exports={
     createProduct:(req,res)=>{
             const { lesson_title, category, price, length, description, userId,userProfileName,userProfileImage } = req.body;
             if (!req.file) {
-                return res.status(400).json({ message: 'לא נבחר קובץ' });
+                return res.status(400).json({ message: 'No file selected' });
             }
             const product = new Product({
                 _id: new mongoose.Types.ObjectId(),
@@ -31,6 +31,13 @@ module.exports={
                 });
             }).catch(error => {
                 console.error('Error:', error);
+    
+            fs.unlink(req.file.path, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                }
+            });
+
                 res.status(500).json({
                     message: 'product not saved',
                 });

@@ -101,17 +101,16 @@
       <form [formGroup]="sixthFormGroup" >
         <ng-template matStepLabel>Product Image </ng-template>
         <p class="text-white">upload an image to show your product</p>
-        <!-- <mat-form-field> -->
-          <!-- <mat-label>Product Image</mat-label> -->
-          <!-- <input matInput placeholder="Product Image" formControlName="image" required> -->
-           <!-- </mat-form-field> -->
           <button class="my-3 mr-2" [style]="{ backgroundColor:'var(--surface-700)'}" type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
           <input  hidden formControlName="image" (change)="onFileSelected($event)" #fileInput type="file" accept="image/*" required>
-          <mat-error *ngIf="sixthFormGroup.get('image').hasError('sizeLimitExceeded')">{{ validationMessages.image[0].message }}</mat-error>
-          <span>
+          <ng-container *ngFor="let validation of validationMessages.image">
+            <mat-error *ngIf="sixthFormGroup.get('image')?.hasError(validation.type)">
+              {{ validation.message }}
+            </mat-error>
+          </ng-container>
+                    <span>
             {{selectedFile?.name.lastIndexOf('.') > 15 ? selectedFile?.name.slice(0, 15) + '...' + getFileExtension(selectedFile?.name) : selectedFile?.name}}
           </span>
-          <!-- <input type="file" formControlName="image" (change)="onFileSelected($event)" accept="image/*" required> -->
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>

@@ -107,29 +107,28 @@ isCategorySelected(): boolean {
   return this.categories.map(c => c.name).includes(this.secondFormGroup.get('category')?.value);
 }
 
+validateFile(file: File): string | null {
+  if (!file.type.startsWith('image/')) return 'invalidFileType';
+  if (file.size > 3 * 1024 * 1024) return 'sizeLimitExceeded';
+  return null;
+}
 
-  onFileSelected(event: any) {
-    const files = event.target.files;
-    if (files.length > 0) {
-      this.selectedFile = files[0];
+onFileSelected(event: any) {
+  const files = event.target.files;
+  if (files.length > 0) {
+    this.selectedFile = files[0];
+    const error = this.validateFile(this.selectedFile);
 
-      // Check file size
-      if (files[0].size > 3 * 1024 * 1024) {
-        // alert('File size should be less than 3 MB.');
-        this.selectedFile = null;
-        this.sixthFormGroup
-          .get('image')
-          ?.setErrors({ sizeLimitExceeded: true });
-        // Reset file input
-        // this.sixthFormGroup.get('image').setValue('');
-        // return;
-      } else {
-        this.formData.set('image', this.selectedFile, this.selectedFile.name);
-        // File is within the size limit
-        this.sixthFormGroup.get('image')?.setErrors(null);
-      }
+    if (error) {
+      this.sixthFormGroup.get('image')?.setErrors({ [error]: true });
+      this.selectedFile = null;
+    } else {
+      this.sixthFormGroup.get('image')?.setErrors(null);
+      this.formData.set('image', this.selectedFile, this.selectedFile.name);
     }
   }
+}
+
   createProduct() {
     // Adding userId from localStorage
     this.formData.append('userId', localStorage.getItem('userId'));
@@ -166,8 +165,12 @@ isCategorySelected(): boolean {
   }
 
   validationMessages = {
-    image: [{ type: 'sizeLimitExceeded', message: 'הקובץ עולה על 2 MB' }],
+    image: [
+      { type: 'sizeLimitExceeded', message: 'The file exceeds the size limit of 3 MB.' },
+      { type: 'invalidFileType', message: 'Invalid file type. Only image files are allowed.' },
+    ],
   };
+  
 
 
 }
