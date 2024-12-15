@@ -1,9 +1,8 @@
-<!-- <div [hidden]="displayPart !== 'part2'" class="card flex justify-content-center p-2">
-  <p-knob [(ngModel)]="value" [step]="stepSize" [readonly]="true" valueTemplate="{value}%" ></p-knob>
-</div> -->
 
+  <div class="card flex justify-content-center p-2">
+    <p-knob [(ngModel)]="value" [step]="stepSize" [readonly]="true" valueTemplate="{value}%" ></p-knob>
+</div>
 
-<!-- <mat-stepper orientation="vertical" class="stepper-container" [hidden]="displayPart!== 'part1'" [linear]="true" #stepper (selectionChange)="onStepChange($event)"> -->
   <mat-stepper orientation="vertical" class="stepper-container" [linear]="true" #stepper (selectionChange)="onStepChange($event)">
 
     <mat-step [stepControl]="firstFormGroup">

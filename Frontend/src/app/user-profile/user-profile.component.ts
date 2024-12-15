@@ -39,9 +39,6 @@ export class UserProfileComponent {
 
   openProductStepper() {
     const dialogRef = this.dialog.open(ProductStepperComponent, {
-      // data: {
-      //   displayPart: 'part1',
-      // },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
