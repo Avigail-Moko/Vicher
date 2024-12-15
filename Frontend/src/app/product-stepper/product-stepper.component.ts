@@ -29,7 +29,7 @@ import { map, Observable, startWith } from 'rxjs';
 })
 export class ProductStepperComponent {
   @ViewChild('stepper') stepper!: MatStepper;
-  displayPart: any;
+  // displayPart: any;
   categories: any[] = ['']; // Property to hold the categories
   filteredCategories: Observable<string[]>;
   isOptionSelected: boolean = false;
@@ -42,7 +42,7 @@ export class ProductStepperComponent {
     public dialog: MatDialog,
     private http: HttpClient
   ) {
-    this.displayPart = data.displayPart; // השמה של ערך המשתנה שהועבר דרך ה-DATA
+    // this.displayPart = data.displayPart; // השמה של ערך המשתנה שהועבר דרך ה-DATA
   }
 
   errorMessage = '';
