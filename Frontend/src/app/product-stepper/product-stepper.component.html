@@ -1,9 +1,9 @@
 
-  <div class="card flex justify-content-center p-2">
+  <div class="card flex justify-content-center p-2 knob-shadow">
     <p-knob [(ngModel)]="value" [step]="stepSize" [readonly]="true" valueTemplate="{value}%" ></p-knob>
 </div>
 
-  <mat-stepper orientation="vertical" class="stepper-container pb-2" [linear]="true" #stepper (selectionChange)="onStepChange($event)">
+  <mat-stepper orientation="vertical" class="stepper-container pb-2 " [linear]="true" #stepper (selectionChange)="onStepChange($event)">
 
     <mat-step [stepControl]="firstFormGroup">
       <form [formGroup]="firstFormGroup">
@@ -56,7 +56,7 @@
         <p class="text-white">write here the price for your lesson.</p>
         <mat-form-field>
           <mat-label>price</mat-label>
-          <input type="number" matInput placeholder="price ₪" formControlName="price" required >
+          <input type="number" matInput placeholder="price $" formControlName="price" required >
         </mat-form-field>
         <div>
           <button mat-button matStepperPrevious>Back</button>

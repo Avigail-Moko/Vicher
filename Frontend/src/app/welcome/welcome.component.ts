@@ -83,7 +83,7 @@ export class WelcomeComponent {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: `Your Lesson's details have saved successfully! An email will sent to you in a few minutes.`,
+          detail: `Your Lesson's details have saved successfully! You can view all the details in your calendar. Please pay attention to the notification box.`,
         });
       });
     } else if (!this.userId) {

@@ -8,11 +8,29 @@
   }
   
   .product-card{
+  overflow-y: auto;
   background-color:var(--surface-900);
   border:1px solid var(--surface-800);
   height: 100%;
 
   }
+  /*scroll bar design*/
+::ng-deep .product-card{
+  &::-webkit-scrollbar {
+    width: 5px; 
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #2e2e2e; 
+    box-shadow: inset 0 0 5px grey;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--primary); 
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-primary); 
+  }
+}
   
   .header-image{
   width: 100%;

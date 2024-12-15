@@ -126,7 +126,7 @@
             (click)="openProductStepper()"
             icon="pi pi-plus"
           ></p-button>
-          <p-button
+          <p-button *ngIf="productsArray.length!==0"
             matTooltip="Edit Products"
             (onClick)="this.isButtonsVisible=true"
             (onBlur)="this.isButtonsVisible=false"
@@ -181,7 +181,7 @@
                 {{ product.category }}</mat-card-subtitle
               >
               <span class="font-bold text-100">{{
-                "₪" + " " + product.price
+                "$" + " " + product.price
               }}</span>
             </div>
             <mat-card-subtitle

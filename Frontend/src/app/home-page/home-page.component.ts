@@ -96,17 +96,19 @@ this.getNotifications()
     
     navigateToUserProfile() {
       this.router.navigate(['/user-profile']); 
+      this.drawer.close()
     }  
     navigateToWelcomePage(){
       this.router.navigate(['/welcome'])
+      this.drawer.close()
     }
-    navToCalendar(){
+    navigateToCalendar(){
       this.router.navigate(['/calendar'])
-
+      this.drawer.close()
     }
-    navToAvailabilitySchedule(){
+    navigateToAvailabilitySchedule(){
       this.router.navigate(['/availability-schedule'])
-
+      this.drawer.close()
     }
     getNotifications() {
       this.newService.getNote(this.userId).subscribe(
