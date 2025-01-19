@@ -55,6 +55,7 @@ export class DailyPlannerComponent {
   appointmentGuid: number = 1;
   userProfile = JSON.parse(localStorage.getItem('userProfile'));
   messages: Message[] | undefined;
+  hasAgreed: boolean = false;
 
 
   constructor(

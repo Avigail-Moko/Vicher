@@ -1,5 +1,5 @@
 <!-- stepper -->
-<mat-stepper linear class="example-stepper">
+<mat-stepper linear class="example-stepper mat-stepper">
 
   <mat-step [completed]="appointmentGuid == 2">
     <ng-template matStepLabel><i class="pi pi-calendar"></i></ng-template>
@@ -82,16 +82,36 @@
     <p class="line-height-1 text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{ product.lesson_title }}</p>
     <p class="text-2xl pl-4 mt-4 font-bold text-primary">⏳ Duration:</p>
     <p class="text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{product.length}} min</p>
-    <p class="text-2xl pl-4 mt-4 font-bold text-primary">💲 Cost:</p>
-    <p class="text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{product.price}}$</p>
+    <p class="text-2xl pl-4 mt-4 font-bold text-primary"> 💵 Cost:</p>
+    <p class="text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{product.price}}₪ </p>
     <p class="text-2xl pl-4 mt-4 font-bold text-primary">📆 Date and Time:</p>
     <p class="text-2xl pl-4 text-white mt-2 pl-5">&nbsp;{{ this.myDate | date: 'dd MMM yyyy, HH:mm' }}</p>
     <p class="text-2xl text-white mt-4 ">Ready to Dive In?</p>
 <p class="line-height-1 text-2xl text-white my-3">
 Hit "Save Date" to confirm your spot and start your adventure in {{product.category}}!</p>
 
+    <!-- Additional Note -->
+    <div class="mt-4">
+      <p class="text-2xl pl-4 mt-4 font-bold text-primary">ℹ️ Please Note:</p>
+      <p class="line-height-1 text-2xl text-white my-3">
+        It’s up to both the student and teacher to handle payment arrangements directly. 
+        Make sure to exchange phone numbers or emails during the lesson to coordinate smoothly!
+      </p>
+      <div class="mt-3">
+        <input
+          type="checkbox"
+          id="agreement"
+          [(ngModel)]="hasAgreed"
+        />
+        <label for="agreement" class="text-white text-l">
+          I have read and agree to the above note.
+        </label>
+      </div>
+    </div>
+
     <p-button
       (click)="createLesson()"
+      [disabled]="!hasAgreed"
       *ngIf="!(this.lessonsArray.length == this.comparisonArray.length)"
       >Save Date</p-button
     >

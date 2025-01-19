@@ -100,7 +100,9 @@ this.getNotifications()
     }  
     navigateToWelcomePage(){
       this.router.navigate(['/welcome'])
-      this.drawer.close()
+      if(this.drawer){
+              this.drawer.close()
+      }
     }
     navigateToCalendar(){
       this.router.navigate(['/calendar'])

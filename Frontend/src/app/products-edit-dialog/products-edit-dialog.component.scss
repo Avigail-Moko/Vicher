@@ -14,6 +14,12 @@
   height: 100%;
 
   }
+  @media (max-width: 500px) {
+    .product-card {
+      max-height: 600px !important;
+    }
+  }
+
   /*scroll bar design*/
 ::ng-deep .product-card{
   &::-webkit-scrollbar {
