@@ -97,12 +97,12 @@
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="sixthFormGroup">
+    <mat-step [stepControl]="shouldValidateForm ? sixthFormGroup : null">
       <form [formGroup]="sixthFormGroup" >
         <ng-template matStepLabel>Product Image </ng-template>
         <p class="text-white">upload an image to show your product</p>
-          <button class="my-3 mr-2" [style]="{ backgroundColor:'var(--surface-700)'}" type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
-          <input  hidden formControlName="image" (change)="onFileSelected($event)" #fileInput type="file" accept="image/*" required>
+          <button class="my-3 mr-2" [style]="{ backgroundColor:'var(--surface-700)'}" type="button" mat-raised-button (click)="fileInput.click()" [disabled]="!shouldValidateForm">Choose File</button>
+          <input hidden formControlName="image" (change)="onFileSelected($event)" #fileInput type="file" accept="image/*" required>
           <ng-container *ngFor="let validation of validationMessages.image">
             <mat-error *ngIf="sixthFormGroup.get('image')?.hasError(validation.type)">
               {{ validation.message }}
@@ -111,6 +111,9 @@
                     <span>
             {{selectedFile?.name.lastIndexOf('.') > 15 ? selectedFile?.name.slice(0, 15) + '...' + getFileExtension(selectedFile?.name) : selectedFile?.name}}
           </span>
+          <div class="checkbox">
+            <mat-checkbox class="example-margin"  (change)="toggleValidation($event.checked)">Please pick for me the default image.</mat-checkbox>
+          </div>
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
