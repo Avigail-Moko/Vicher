@@ -42,9 +42,15 @@ export class WelcomeComponent {
 
 
   filterObject(event: AutoCompleteCompleteEvent) {
-    this.searchQuery =event?.query?.trim();
-    this.applyFilters(); 
+    this.searchQuery = event?.query?.trim() || '';
+  
+    if (!this.searchQuery) {
+      this.filteredObjects = [...(this.objects || [])]; 
+    } else {
+      this.applyFilters();
+    }
   }
+  
 
   
   onObjectSelect(event: any) {
@@ -167,38 +173,19 @@ toggleCategorySelection(category: string) {
   this.applyFilters(); 
 }
 
-//זה עובד אבל חסר סדר הקדימות
 applyFilters() {
-  this.filteredObjects = (this.objects as any[]).filter(obj => {
-    const matchesCategory = !this.selectedCategories.length || this.selectedCategories.includes(obj.category);
-    const matchesQuery = !this.searchQuery || (this.usersFlag
-      ? obj.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      : obj.lesson_title.toLowerCase().includes(this.searchQuery.toLowerCase()));
-    return matchesCategory && matchesQuery;
-  });
+  const query = this.searchQuery.toLowerCase();
+  const getField = (obj: any) =>
+    (this.usersFlag ? obj.name : obj.lesson_title).toLowerCase();
+
+  this.filteredObjects = (this.objects as any[])
+    .filter(obj =>
+      (!this.selectedCategories.length || this.selectedCategories.includes(obj.category)) &&
+      ( getField(obj).includes(query))
+    )
+    .sort((a, b) => {
+      return Number(getField(b).startsWith(query)) - Number(getField(a).startsWith(query));
+    });
 }
-
-//זה עובד אבל חסר סינון לפי קטגוריה
-// applyFilters() {
-//   if (!this.searchQuery || !this.searchQuery.trim()) {
-//     this.filteredObjects = this.objects;
-//     return;
-//   }
-
-//   const query = this.searchQuery.toLowerCase();
-//   const getField = (obj: any) =>
-//     (this.usersFlag ? obj.name : obj.lesson_title).toLowerCase();
-
-//   this.filteredObjects = (this.objects as any[])
-//     .filter(obj =>
-//       (!this.selectedCategories.length ||
-//         this.selectedCategories.includes(obj.category)) &&
-//       getField(obj).includes(query)
-//     )
-//     .sort((a, b) => {
-//       return Number(getField(b).startsWith(query)) - Number(getField(a).startsWith(query));
-//     });
-// }
-
 
 }
