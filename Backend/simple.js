@@ -5,11 +5,12 @@ const PORT = process.env.PORT || 3000;
 const app = require('./app');
 const server = http.createServer(app);
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 
 const { Server } = require('socket.io');
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost",
+    origin: allowedOrigins,
     methods: ["GET", "POST"]
   }
 });
