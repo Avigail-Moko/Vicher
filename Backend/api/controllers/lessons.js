@@ -32,6 +32,7 @@ module.exports = {
       length,
       teacher_name,
       student_name,
+      student_mail,
       lesson_title
     } = req.body;
     const startDate = new Date(myDate);
@@ -46,6 +47,7 @@ module.exports = {
       student_id,
       teacher_name,
       student_name,
+      student_mail,
       product_id,
       lesson_title
     });
