@@ -101,6 +101,7 @@ export class CalendarComponent {
     if (!tooltipContainerElement) return;
     const lessonTitleEl = tooltipContainerElement.querySelector('#lesson_title');
     const partnerEl = tooltipContainerElement.querySelector('#partner');
+    const emailEl = tooltipContainerElement.querySelector('#email');
 
 
 
@@ -109,12 +110,16 @@ export class CalendarComponent {
       const lesson_title= extendedProps.lesson_title
       const teacher_name= extendedProps.teacher_name
       const student_name= extendedProps.student_name
+      const student_mail= extendedProps.student_mail
       const teacher_id=extendedProps.teacher_id;
       const student_id=extendedProps.student_id;
+
       this.partner_id=userProfile._id===teacher_id?student_id:teacher_id;
       const partner=userProfile.name===teacher_name?student_name:teacher_name;
+      const email=userProfile.name===teacher_name?student_mail:null;
       if (lessonTitleEl) lessonTitleEl.textContent = lesson_title;
       if (partnerEl) partnerEl.textContent = partner;
+      if (emailEl) emailEl.textContent = email;
       tooltipContainerElement.style.display = 'block';
       const rect = eventEl.getBoundingClientRect();
       const tooltipContainerWidth = tooltipContainerElement.offsetWidth;    
@@ -206,6 +211,7 @@ export class CalendarComponent {
             student_name:object.student_name,
             teacher_id:object.teacher_id,
             student_id:object.student_id,
+            student_mail:object.student_mail,
             myDate:object.myDate
           }}
           this.objectsArray.push(newObj);

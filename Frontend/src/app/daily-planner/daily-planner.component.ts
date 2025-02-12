@@ -516,6 +516,7 @@ export class DailyPlannerComponent {
         student_name: this.userProfile.name,
         product_id: this.product._id,
         teacher_id: this.product.userId,
+        student_mail:this.userProfile.email,
         length: this.product.length,
         myDate: this.myDate,
         lesson_title: this.product.lesson_title

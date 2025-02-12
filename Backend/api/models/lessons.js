@@ -11,6 +11,7 @@ const lessonSchema= mongoose.Schema({
     student_id:String,
     teacher_name:String,
     student_name:String,
+    student_mail:String,
     product_id:String,
     lesson_title:String
 })

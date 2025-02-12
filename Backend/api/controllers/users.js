@@ -180,7 +180,7 @@ module.exports = {
     },
     getAllUsers: (req, res) => {
         User.find()
-            .select('_id email profileImage name description totalRating raterCounter') 
+            .select('_id profileImage name description totalRating raterCounter') 
             .exec()
             .then(users => {
                 if (!users || users.length === 0) {
@@ -188,7 +188,6 @@ module.exports = {
                 }
 
                 const formattedUsers = users.map(user => ({
-                    email: user.email,
                     profileImage: user.profileImage,
                     name:user.name,
                     _id:user._id,
@@ -197,7 +196,6 @@ module.exports = {
                     avgRating:(user.raterCounter > 0) ? (user.totalRating / user.raterCounter) : 0
                 }));
                 const usersName=users.map(user=>({
-                    email: user.email,
                     name:user.name,
                 }))
 
