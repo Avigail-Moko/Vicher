@@ -75,7 +75,7 @@ export class VideoChatComponent {
       if (this.allowedUsers.includes(this.userId) && today > startDate) {
         const roomUrl = await this.createRoom();
         if (!roomUrl) {
-          alert('⚠️ לא ניתן ליצור חדר, נסה שוב.');
+          alert('⚠️ Unable to create room, please try again.');
           return;
         }
   
@@ -91,7 +91,7 @@ export class VideoChatComponent {
           hour: '2-digit',
           minute: '2-digit'
         });
-        alert('השיעור עדיין לא התחיל. נסה שוב אחרי ' + formattedStartDate);
+        alert('The class has not started yet. Try again after' + formattedStartDate);
         this.router.navigate(['/']);
       }
     },
@@ -103,7 +103,7 @@ export class VideoChatComponent {
   initializeDailyCall(): void {
     const container = document.getElementById('daily-iframe-container');
     if (!container) {
-      console.error('לא נמצא אלמנט עם המזהה daily-iframe-container');
+      console.error('No element with the ID "daily-iframe-container" was found.');
       return;
     }
     
@@ -167,12 +167,5 @@ export class VideoChatComponent {
       this.dailyCall.destroy();
     }
   }
-  // scrollDown(): void {
-  //   console.log('ffff',window.innerHeight)
-  //   // דוגמה: גלילה למטה ב-10vh (ניתן לשנות את הערך לפי הצורך)
-  //   window.scrollTo({
-  //     top: window.innerHeight * 0.1, 
-  //     behavior: 'smooth'
-  //   });
-  // }
+  
 }
