@@ -12,6 +12,20 @@ module.exports = {
     const exp = Math.floor(Date.now() / 1000) + (length * 60) + 1800;
   
     try {
+      // בדיקה אם החדר כבר קיים
+      const checkResponse = await fetch(`https://api.daily.co/v1/rooms/${roomName}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${process.env.DAILY_API_KEY}`
+        }
+      });
+
+      if (checkResponse.ok) {
+        const existingRoom = await checkResponse.json();
+        console.log('Room already exists:', existingRoom.url);
+        return res.status(200).json({ roomUrl: existingRoom.url });
+      }
+      //  אם החדר לא קיים, יוצרים אותו
       const response = await fetch('https://api.daily.co/v1/rooms', {
         method: 'POST',
         headers: {

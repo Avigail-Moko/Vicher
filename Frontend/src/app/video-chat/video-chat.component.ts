@@ -109,9 +109,10 @@ export class VideoChatComponent {
     
     this.dailyCall = DailyIframe.createFrame(container, {
       iframeStyle: {
-        width: '900px', 
-        height: '500px',
-        border: '0'
+        width: '100%', 
+        height: '100%',
+        border: '0',
+
       },
       showLeaveButton: true 
     });
@@ -166,5 +167,12 @@ export class VideoChatComponent {
       this.dailyCall.destroy();
     }
   }
-
+  // scrollDown(): void {
+  //   console.log('ffff',window.innerHeight)
+  //   // דוגמה: גלילה למטה ב-10vh (ניתן לשנות את הערך לפי הצורך)
+  //   window.scrollTo({
+  //     top: window.innerHeight * 0.1, 
+  //     behavior: 'smooth'
+  //   });
+  // }
 }
