@@ -185,4 +185,8 @@ export class NewService {
     return this.http.get<any>(this.jsonUrl);
   }
 
+  createDailyRoom(values: any) {
+    const url = `http://localhost:3000/daily/createRoom`;
+    return this.http.post(url, values );
+  }
 }

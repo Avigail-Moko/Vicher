@@ -27,6 +27,7 @@ const lessonsRoutes = require("./api/routes/lessons");
 const scheduleRoutes = require("./api/routes/schedule");
 const notificationRoutes = require("./api/routes/notification");
 const busyEventsRoutes = require("./api/routes/busyEvents");
+const dailyRoutes = require("./api/routes/daily");
 
 const checkAuth = require("./api/middlewares/checkAuth");
 
@@ -67,6 +68,7 @@ app.use("/lessons", lessonsRoutes);
 app.use("/schedule", scheduleRoutes);
 app.use("/notification", notificationRoutes);
 app.use("/busyEvents", busyEventsRoutes);
+app.use("/daily", dailyRoutes);
 
 // ניצור מידלוור נוסף
 
