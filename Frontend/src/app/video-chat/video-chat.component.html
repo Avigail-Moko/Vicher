@@ -1,15 +1,13 @@
 <div id="daily-iframe-container" style="width: 100%; height: 80vh; margin: 0 auto;">
-    <!-- כפתור 'Start' יופיע בתוך ה-iframe -->
-<div id="start-button" *ngIf="countdownStarted===false" (click)="startCountdown()">
+
+    <div id="start-button" *ngIf="countdownStarted===false" (click)="startCountdown()">
     <span>Start</span>
   </div>
-  
+
 </div>
 
 
-<div class="controls">
-    <!-- <button *ngIf="!countdownStarted" (click)="startCountdown()">Start</button> -->
-    
+<div class="controls">    
     <div *ngIf="countdownStarted" class="timer-display" [ngClass]="{'red-timer': remainingSeconds <= 10, 'flashing': remainingSeconds <= 0}">        >
       Time remaining: {{ displayTime }}
     </div>
