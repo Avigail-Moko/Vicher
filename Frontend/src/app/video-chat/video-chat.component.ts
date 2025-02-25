@@ -13,7 +13,7 @@ import { firstValueFrom } from 'rxjs';
 export class VideoChatComponent {
 
     // משתנים עבור הספירה לאחור
-    countdownStarted: boolean = false;
+    countdownStarted: boolean | null = null;
     displayTime: string = ''; 
     timerInterval: any;
     remainingSeconds: number; // מספר השניות הנותרות
@@ -143,6 +143,7 @@ export class VideoChatComponent {
   // אירוע - הצטרפות לשיחה
   handleJoinedMeeting = (event: DailyEventObject) => {
     console.log('Joined meeting', event);
+    this.countdownStarted = false;
   }
 
   // אירוע - עזיבת השיחה
