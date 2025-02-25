@@ -54,7 +54,7 @@
     <div class="cards-container"
     >
       <mat-card
-        class="product-card m-2"
+        class="product-card m-2 cursor-pointer"
         *ngFor="
           let product of filteredObjects ? filteredObjects : (objects | paginate : { itemsPerPage: 10, currentPage: p }) "
         (click)="openDailyPlanner(product)"
@@ -108,7 +108,7 @@
   <ng-container *ngIf="objects">
     <div class="cards-container " >
       <mat-card
-        class="product-card m-2"
+        class="product-card m-2 cursor-pointer"
         *ngFor="
           let user of filteredObjects
             ? filteredObjects
