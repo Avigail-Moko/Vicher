@@ -11,6 +11,14 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./video-chat.component.scss']
 })
 export class VideoChatComponent {
+
+    // משתנים עבור הספירה לאחור
+    countdownStarted: boolean = false;
+    displayTime: string = ''; 
+    timerInterval: any;
+    remainingSeconds: number; // מספר השניות הנותרות
+
+
   roomUrl: string; 
   dailyCall: DailyCall; 
   allowedUsers: any[] = [];
@@ -163,9 +171,47 @@ export class VideoChatComponent {
   }
   
   ngOnDestroy(): void {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
     if (this.dailyCall) {
       this.dailyCall.destroy();
     }
+  }
+  
+  // פונקציה להתחלת הספירה לאחור
+  startCountdown(): void {
+    this.countdownStarted = true;
+    // this.remainingSeconds = 14; // שעה = 3600 שניות
+    this.remainingSeconds = this.length * 60;
+
+    this.updateDisplay(this.remainingSeconds);
+  
+    this.timerInterval = setInterval(() => {
+      this.remainingSeconds--;
+      if (this.remainingSeconds > 0) {
+        this.updateDisplay(this.remainingSeconds);
+      } else {
+        clearInterval(this.timerInterval);
+        // עדכון ההודעה ל-0
+        this.displayTime = "Countdown finished, leaving room";
+        setTimeout(() => {
+          this.dailyCall.leave();
+        }, 3000);
+      }
+    }, 1000);
+  }
+  
+  // פונקציה לעדכון הטיימר (פורמט HH:MM:SS)
+  updateDisplay(seconds: number): void {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    this.displayTime = `${this.pad(hrs)}:${this.pad(mins)}:${this.pad(secs)}`;
+  }
+  
+  pad(num: number): string {
+    return num.toString().padStart(2, '0');
   }
   
 }
