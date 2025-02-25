@@ -1,0 +1,23 @@
+// /* סגנונות עבור כפתור גלילה */
+// .scroll-down-btn {
+//     position: fixed;     /* לא תופס מקום בתוך זרימת המסמך */
+//     left: 10px;          /* מרווח קטן מהקצה השמאלי */
+//     top: 50%;            /* מיקום אנכי – במרכז הדף (ניתן לשנות לפי הצורך) */
+//     transform: translateY(-50%); /* ממרכז את הכפתור במדויק ביחס לגובהו */
+//     z-index: 1000;       /* על מנת להופיע מעל אלמנטים אחרים */
+    
+//     background-color: rgba(0, 0, 0, 0.5);  /* רקע שקוף במקצת */
+//     color: #fff;         /* צבע טקסט לבן */
+//     border: none;        /* ללא גבולות */
+//     padding: 0.5rem;     /* ריווח פנימי */
+//     font-size: 1.5rem;   /* גודל גופן */
+//     border-radius: 50%;  /* הופך את הכפתור לעגול */
+//     cursor: pointer;
+//     outline: none;
+//     transition: background-color 0.3s ease;
+//   }
+  
+//   .scroll-down-btn:hover {
+//     background-color: rgba(0, 0, 0, 0.7); /* שינוי צבע בעת מעבר העכבר */
+//   }
+  
