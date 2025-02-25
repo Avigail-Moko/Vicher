@@ -12,13 +12,6 @@ import { firstValueFrom } from 'rxjs';
 })
 export class VideoChatComponent {
 
-    // משתנים עבור הספירה לאחור
-    countdownStarted: boolean | null = null;
-    displayTime: string = ''; 
-    timerInterval: any;
-    remainingSeconds: number; // מספר השניות הנותרות
-
-
   roomUrl: string; 
   dailyCall: DailyCall; 
   allowedUsers: any[] = [];
@@ -28,6 +21,11 @@ export class VideoChatComponent {
   teacher_id: any;
   length:any;
 
+  timerStarted: boolean | null = null;
+  displayTime: string = ''; 
+  timerInterval: any;
+  remainingSeconds: number; 
+  
   constructor(
     private router: Router,
     private newService: NewService,
@@ -143,7 +141,7 @@ export class VideoChatComponent {
   // אירוע - הצטרפות לשיחה
   handleJoinedMeeting = (event: DailyEventObject) => {
     console.log('Joined meeting', event);
-    this.countdownStarted = false;
+    this.timerStarted = false;
   }
 
   // אירוע - עזיבת השיחה
@@ -180,30 +178,27 @@ export class VideoChatComponent {
     }
   }
   
-  // פונקציה להתחלת הספירה לאחור
-  startCountdown(): void {
-    this.countdownStarted = true;
-    // this.remainingSeconds = 14; // שעה = 3600 שניות
+  startTimer(): void {
+    this.timerStarted = true;
+    // this.remainingSeconds = 3; // שעה = 3600 שניות
     this.remainingSeconds = this.length * 60;
 
     this.updateDisplay(this.remainingSeconds);
-  
+
     this.timerInterval = setInterval(() => {
       this.remainingSeconds--;
-      if (this.remainingSeconds > 0) {
+      if (this.remainingSeconds >= 0) {
         this.updateDisplay(this.remainingSeconds);
       } else {
         clearInterval(this.timerInterval);
-        // עדכון ההודעה ל-0
-        this.displayTime = "Countdown finished, leaving room";
+        this.displayTime = "Exiting...";
         setTimeout(() => {
           this.dailyCall.leave();
-        }, 3000);
+        }, 4000);
       }
     }, 1000);
   }
   
-  // פונקציה לעדכון הטיימר 
   updateDisplay(seconds: number): void {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);

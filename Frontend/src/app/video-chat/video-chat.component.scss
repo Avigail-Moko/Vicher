@@ -1,11 +1,12 @@
 .timer-display {
     font-size: 1.5em;
-    /* עיצובים נוספים לפי הצורך */
+    transition: all 1s ease;
+
   }
   
   .red-timer {
-    color: red;
-  }
+    color: red;  
+}
   .flashing {
     animation: flash 1s infinite;
   }
@@ -23,20 +24,47 @@
 }
 
 #start-button {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%; /* חצי מסך שמאלי */
-  height: 100%;
-  background-color: rgba(var(--primary-rgb), 0.2);
-  border: none;
-  font-size: 1.5em;
-  color: var(--primary); /* צבע טקסט */
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-}
+    transform: translateY(-50%);
+    width: 280px;       
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.9), rgba(var(--primary-rgb), 0.7));
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1.2rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  #start-button:hover {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
 
-#start-button:hover {
-    background-color: rgba(var(--primary-rgb), 0.4);
+  .controls {
+    position: absolute;
+    top: 20%;   
+    left: 5%;   
+    transition: top 0.5s ease, left 0.5s ease, background-color 1s ease; 
+  }
+  
+  .controls.timerStarted {
+    top: 7.7px;   
+    left: 7.7px;  
+    background-color: rgb(107 119 133);
+  }
+
+  .controls.timerFinished {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent; 
+    font-size: 4.5em;
+  }
+
+  .controls.timerFinished .timer-display{
+    color: #ff5107;   
 }
+  

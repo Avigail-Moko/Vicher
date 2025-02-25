@@ -1,16 +1,18 @@
 <div id="daily-iframe-container" style="width: 100%; height: 80vh; margin: 0 auto;">
 
-    <div id="start-button" *ngIf="countdownStarted===false" (click)="startCountdown()">
-    <span>Start</span>
+<div class="controls"  [ngClass]="{'timerStarted': timerStarted, 'timerFinished':remainingSeconds < 0}">  
+    <div id="start-button" *ngIf="timerStarted===false" (click)="startTimer()">
+        <span>Start timer</span>
+      </div>  
+    <div *ngIf="timerStarted" class="timer-display" [ngClass]="{'red-timer': remainingSeconds <= 10, 'flashing': remainingSeconds <= 0}">        
+        <span *ngIf="remainingSeconds >= 0">Time remaining: </span>
+         {{ displayTime }}
+    </div>
   </div>
 
 </div>
 
 
-<div class="controls">    
-    <div *ngIf="countdownStarted" class="timer-display" [ngClass]="{'red-timer': remainingSeconds <= 10, 'flashing': remainingSeconds <= 0}">        >
-      Time remaining: {{ displayTime }}
-    </div>
-  </div>
+
     
   
