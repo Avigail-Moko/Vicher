@@ -145,7 +145,7 @@ export class VideoChatComponent {
     console.log('Joined meeting', event);
   }
 
-  // אירוע - עזיבת השיחה (כמו handleClose / videoConferenceLeft)
+  // אירוע - עזיבת השיחה
   handleLeftMeeting = (event: DailyEventObject) => {
     console.log('Left meeting', event);
     if (this.userId !== this.teacher_id) {
@@ -202,7 +202,7 @@ export class VideoChatComponent {
     }, 1000);
   }
   
-  // פונקציה לעדכון הטיימר (פורמט HH:MM:SS)
+  // פונקציה לעדכון הטיימר 
   updateDisplay(seconds: number): void {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
