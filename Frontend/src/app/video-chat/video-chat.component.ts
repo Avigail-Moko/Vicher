@@ -13,19 +13,20 @@ import { firstValueFrom } from 'rxjs';
 export class VideoChatComponent {
 
   roomUrl: string; 
+  exp: number; 
   dailyCall: DailyCall; 
   allowedUsers: any[] = [];
   _id: string;
   userId = localStorage.getItem('userId');
   userProfile = JSON.parse(localStorage.getItem('userProfile'));
   teacher_id: any;
-  length:any;
+  endDate:any;
 
-  timerStarted: boolean | null = null;
+  timer: boolean = false;
   displayTime: string = ''; 
   timerInterval: any;
   remainingSeconds: number; 
-  
+
   constructor(
     private router: Router,
     private newService: NewService,
@@ -35,12 +36,13 @@ export class VideoChatComponent {
   async createRoom() {
     const roomData = {
       roomName: this._id,
-      length: this.length
+      endDate: this.endDate
     };
   
     try {
       const data: any = await firstValueFrom(this.newService.createDailyRoom(roomData));
       console.log('Response:', data);
+      this.exp=data.exp
       return data.roomUrl;
     } catch (error: any) {
       console.error('Error:', error.error?.message || error.message);
@@ -75,7 +77,7 @@ export class VideoChatComponent {
       this.allowedUsers.push(data.lessons[0].teacher_id);
       this.allowedUsers.push(data.lessons[0].student_id);
       this.teacher_id = data.lessons[0].teacher_id;
-      this.length = data.lessons[0].length;
+      this.endDate = data.lessons[0].endDate;
 
   
       if (this.allowedUsers.includes(this.userId) && today > startDate) {
@@ -141,7 +143,8 @@ export class VideoChatComponent {
   // אירוע - הצטרפות לשיחה
   handleJoinedMeeting = (event: DailyEventObject) => {
     console.log('Joined meeting', event);
-    this.timerStarted = false;
+    this.timer = true;
+    this.startTimer()
   }
 
   // אירוע - עזיבת השיחה
@@ -179,22 +182,17 @@ export class VideoChatComponent {
   }
   
   startTimer(): void {
-    this.timerStarted = true;
-    // this.remainingSeconds = 3; // שעה = 3600 שניות
-    this.remainingSeconds = this.length * 60;
-
+    this.remainingSeconds = Math.max(0, this.exp - Math.floor(Date.now() / 1000));
     this.updateDisplay(this.remainingSeconds);
 
     this.timerInterval = setInterval(() => {
       this.remainingSeconds--;
-      if (this.remainingSeconds >= 0) {
+      if (this.remainingSeconds > 300) {
         this.updateDisplay(this.remainingSeconds);
-      } else {
+      }
+       else {
         clearInterval(this.timerInterval);
-        this.displayTime = "Exiting...";
-        setTimeout(() => {
-          this.dailyCall.leave();
-        }, 4000);
+        this.timer=false
       }
     }, 1000);
   }
