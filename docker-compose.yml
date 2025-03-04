@@ -21,6 +21,8 @@ services:
       - MONGO_PASSWORD=${MONGO_PASSWORD}
       - CLUSTER_URL=${CLUSTER_URL}
       - JWT_KEY=${JWT_KEY}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      - DAILY_API_KEY=${DAILY_API_KEY}
     depends_on:
       - mongo
     restart: always
