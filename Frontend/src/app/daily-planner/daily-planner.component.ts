@@ -518,8 +518,8 @@ export class DailyPlannerComponent {
         teacher_id: this.product.userId,
         student_mail:this.userProfile.email,
         length: this.product.length,
-        myDate: this.myDate,
-        // myDate: '2025-02-26T19:10:00Z',
+        // myDate: this.myDate,
+        myDate: '2025-03-05T21:20:00Z',
         lesson_title: this.product.lesson_title
       })
       .subscribe(
