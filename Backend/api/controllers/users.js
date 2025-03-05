@@ -224,9 +224,21 @@ module.exports = {
             });
     },
     rating: (req, res) => {
-        const { rating } = req.body;
+        const { rating,lessonId } = req.body;
         const userId = req.query.teacher_id;
         const ratingNumber = Number(rating);
+
+        if (!req.session.ratedLessons) {
+            req.session.ratedLessons = [];
+        }
+          // בדיקה אם המשתמש כבר דירג את המורה הנוכחי
+          const alreadyRated = req.session.ratedLessons.find(entry =>
+            entry.userId === userId && entry.lessonId === lessonId
+          );
+          
+          if (alreadyRated) {
+            return res.status(400).json({ error: 'You have already rated this teacher for this lesson' });
+          }
 
         User.findById(userId)
             .then(user => {
@@ -247,7 +259,9 @@ module.exports = {
     
                 user.save()
                     .then(() => {
-                        res.status(200).json({ message: 'User rated successfully' });
+                         // הוספת המורה ל־session כך שהתלמיד לא יוכל לדרג שוב
+                         req.session.ratedLessons.push({ userId,lessonId});                        
+                         res.status(200).json({ message: 'User rated successfully' });
                     })
                     .catch(err => {
                         res.status(500).json({ error: 'Server error' });

@@ -1,5 +1,6 @@
 
 const express = require("express");
+const session = require('express-session');
 const app = express();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -33,20 +34,27 @@ const checkAuth = require("./api/middlewares/checkAuth");
 
 
 //
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin,X-Requsted-with,Content-Type,Accept,Authorization"
-  );
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,GET");
-    return res.status(200).json({});
-  }
-  next();
-});
 
-app.use(cors());
+
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin,X-Requsted-with,Content-Type,Accept,Authorization"
+//   );
+//   if (req.method === "OPTIONS") {
+//     res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,GET");
+//     return res.status(200).json({});
+//   }
+//   next();
+// });
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
+
+app.use(cors({
+  origin: allowedOrigins, 
+  credentials: true
+}));
 
 app.use(morgan("dev"));
 
@@ -58,7 +66,14 @@ app.use(
     extended: false,
   })
 );
-
+app.use(session({
+  secret: `${process.env.SESSION_KEY}`, // החליפי במפתח סודי חזק
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 2 * 60 * 60 * 1000 // לדוגמה: 2 שעות
+  }
+}));
 
 //Routes
 

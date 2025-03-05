@@ -172,9 +172,10 @@ export class NewService {
     const url = `http://localhost:3000/users/getRating?userId=${userId}`;
     return this.http.get(url);
   }
-  rating(teacher_id: any,rating:any):Observable<any>{
+  rating(teacher_id: any,rating:any,lessonId:any):Observable<any>{
     const url = `http://localhost:3000/users/rating?teacher_id=${teacher_id}`;
-    return this.http.post(url,{rating});
+    console.log(teacher_id,rating,lessonId )
+    return this.http.post(url,{ rating,lessonId }, { withCredentials: true });
   }
   deleteLesson(_id: any): Observable<any> {
     const url = `http://localhost:3000/lessons/deleteLesson?_id=${_id}`;

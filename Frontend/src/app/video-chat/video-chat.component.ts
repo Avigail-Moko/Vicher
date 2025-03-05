@@ -151,7 +151,7 @@ export class VideoChatComponent {
   handleLeftMeeting = (event: DailyEventObject) => {
     console.log('Left meeting', event);
     if (this.userId !== this.teacher_id) {
-      this.router.navigate(['/end-and-rate'], { state: { teacher_id: this.teacher_id } });
+      this.router.navigate(['/end-and-rate'], { state: { teacher_id: this.teacher_id ,lessonId:this._id} });
     } else {
       this.router.navigate(['/welcome']);
     }
