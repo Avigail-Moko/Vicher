@@ -16,6 +16,6 @@ const notificationSchema = new mongoose.Schema({
     deleteLesson: { type: Boolean, default: false }
 });
 
-notificationSchema.index({ endDate: 1 }, { expireAfterSeconds: 0 });
+// notificationSchema.index({ endDate: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = mongoose.model('Notification', notificationSchema);

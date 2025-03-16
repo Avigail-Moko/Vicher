@@ -204,8 +204,7 @@ module.exports = {
             .catch(err => {
                 res.status(500).json({ error: 'Server error' });
             });
-    }
-    ,
+    },
     updateDescription: (req, res) => {
         const userId = req.query.id;
         const { description } = req.body;
@@ -237,7 +236,7 @@ module.exports = {
           );
           
           if (alreadyRated) {
-            return res.status(400).json({ error: 'You have already rated this teacher for this lesson' });
+            return res.status(400).json({ message: 'You have already rated this teacher for this lesson' });
           }
 
         User.findById(userId)
@@ -287,7 +286,20 @@ module.exports = {
             .catch(err => {
                 res.status(500).json({ error: 'Server error' });
             });
-    }
+    },
+    // endRating: (req, res) => {
+    //     const { userId,lessonId } = req.body;
+
+    //     if (!req.session || !req.session.ratedLessons) {
+    //         return res.status(400).json({ message: 'No rating data found in session' });
+    //     }
+    
+    //     req.session.ratedLessons = req.session.ratedLessons.filter(
+    //         (entry) => !(entry.userId === userId && entry.lessonId === lessonId)
+    //     );
+    
+    //       res.json({ message: 'Session data for lesson rating has been successfully cleared' });
+    // }
     
     
 }

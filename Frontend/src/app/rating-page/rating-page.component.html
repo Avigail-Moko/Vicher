@@ -5,8 +5,9 @@
   <h2>Please rate your experience by selecting the number of stars below.</h2>
   <h3>Your feedback is valuable to us!</h3>
   <p-rating [(ngModel)]="value" [cancel]="false"/>
+  <p style="color: red; padding-top: 15px;" *ngIf="rated">You have already rated this lesson. Your rating was not submitted.</p>
   <div class="card flex justify-content-center ">
-  <button mat-raised-button color="primary" class="mr-5 mt-4" (click)="onRate()">Submit</button>
+  <button mat-raised-button color="primary" class="mr-5 mt-4" [disabled]="rated" (click)="onRate()">Submit</button>
   </div>
   <div class="card flex justify-content-end">
   <button mat-button color="accent" class="mt-4" [routerLink]="['/welcome']"> <span class="button-content">Skip<mat-icon>navigate_next</mat-icon></span></button>
