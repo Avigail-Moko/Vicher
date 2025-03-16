@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class SocketService {
   private alertsSubject = new BehaviorSubject<any[]>([]);
   alerts$ = this.alertsSubject.asObservable();
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   connect(): void {
     this.socket = io('http://localhost:3000');
@@ -85,14 +86,22 @@ export class SocketService {
           }
           break;
           case 'deleteNotification':
-            const deleteNotificationAlert = alerts.find(
-              (alert) => alert._id === notification._id
-            );
-            if (deleteNotificationAlert !== -1) {
-              alerts.splice(deleteNotificationAlert, 1);
+            const index = alerts.findIndex(alert => alert._id === notification._id);
+            if (index !== -1) {
+              alerts.splice(index, 1);
             }
-            break;
-      
+            // this.http.post('http://localhost:3000/users/endRating', {
+            //   userId: notification.userId,
+            //   lessonId: notification.lessonId,
+            // }, { withCredentials: true }).subscribe(
+            //   (response: any) => {
+            //     console.log(response.message);
+            //   },
+            //   (error) => {
+            //     console.error('Error clearing session:', error);
+            //   }
+            // );
+            break;          
     }
     this.alertsSubject.next(alerts);
   }

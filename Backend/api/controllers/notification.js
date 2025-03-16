@@ -30,6 +30,20 @@ agenda.define("update startLesson", async (job) => {
     note: updatedNotification,
   });
 });
+
+agenda.define("delete notification", async (job) => {
+  const { notificationId } = job.attrs.data;
+  const notification = await Notification.findById(notificationId);
+  if (!notification) return;
+  await Notification.deleteOne({ _id: notificationId });
+  io.emit("notification", {
+    type: "deleteNotification",
+    _id: notificationId,
+    // userId: notification.teacher_id,
+    // lessonId: notification.lesson_id,
+  });
+});
+
 agenda.on("complete", async (job) => {
   await job.remove();
   console.log(`Job ${job.attrs.name} completed and removed`);
@@ -41,6 +55,7 @@ agenda.on("fail", async (err, job) => {
 });
 
 agenda.start();
+
 
 const deleteNotification = (_id) =>{
   Notification.deleteOne({ _id: _id })
@@ -82,8 +97,15 @@ module.exports = {
     await note.save({ session });
     io.emit("notification", { type: "new", note });
 
+    // תזמון התחלת שיעור
     const scheduleTime = new Date(myDate).getTime() - 15 * 60 * 1000;
     agenda.schedule(new Date(scheduleTime), "update startLesson", {
+      notificationId: note._id,
+    });
+
+    // תזמון מחיקת שיעור
+    const deleteTime = new Date(endDate).getTime();
+    agenda.schedule(new Date(deleteTime), "delete notification", {
       notificationId: note._id,
     });
   },

@@ -10,9 +10,12 @@ import { Location } from '@angular/common';
   styleUrls: ['./rating-page.component.scss'],
 })
 export class RatingPageComponent {
+
   value!: number;
   teacher_id: any;
   lessonId:any;
+  rated:boolean=false;
+
   constructor(
     private newService: NewService,
     private router: Router,
@@ -37,6 +40,7 @@ export class RatingPageComponent {
       },
       (error) => {
         console.error('Error:', error.error.message);
+        this.rated=true;
       }
     );
   }
