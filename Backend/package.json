@@ -1,9 +1,8 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "simple.js",
   "scripts": {
-    "start": "nodemon simple.js"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",

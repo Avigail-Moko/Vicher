@@ -37,3 +37,61 @@ services:
 
 volumes:
   mongo-data:
+
+# version: "3.8"
+
+# services:
+#   frontend:
+#     build:
+#       context: ./Frontend
+#       dockerfile: Dockerfile
+#     ports:
+#       - "80:80"
+#     depends_on:
+#       - backend
+#     restart: always
+#     networks:
+#       - internal
+
+#   backend:
+#     build:
+#       context: ./Backend
+#       dockerfile: Dockerfile
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - MONGO_USERNAME=${MONGO_USERNAME}
+#       - MONGO_PASSWORD=${MONGO_PASSWORD}
+#       - CLUSTER_URL=${CLUSTER_URL}
+#       - JWT_KEY=${JWT_KEY}
+#       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+#       - DAILY_API_KEY=${DAILY_API_KEY}
+#     depends_on:
+#       mongo:
+#         condition: service_healthy
+#     restart: always
+#     networks:
+#       - internal
+#     healthcheck:
+#       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+#       interval: 30s
+#       retries: 3
+
+#   mongo:
+#     image: mongo:5
+#     volumes:
+#       - mongo-data:/data/db
+#     restart: always
+#     networks:
+#       - internal
+#     healthcheck:
+#       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+#       interval: 10s
+#       retries: 5
+
+# volumes:
+#   mongo-data:
+
+# networks:
+#   internal:
+#     driver: bridge
