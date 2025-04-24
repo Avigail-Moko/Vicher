@@ -76,7 +76,9 @@ app.use(session({
 }));
 
 //Routes
-
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 app.use("/users", usersRoutes);
 app.use("/products", productsRoutes);
 app.use("/lessons", lessonsRoutes);
