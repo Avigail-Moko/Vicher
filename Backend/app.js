@@ -1,106 +1,85 @@
+// הגדרת האפליקציה: security, parsers, CORS, session, routes, error handling
 
-const express = require("express");
+const express = require('express');
 const session = require('express-session');
-const app = express();
-const morgan = require("morgan");
-const mongoose = require("mongoose");
-const cors = require("cors");
+const { RedisStore } = require('connect-redis');
+const redis  = require('redis');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
+const {
+  NODE_ENV,
+  SESSION_KEY,
+  ALLOWED_ORIGINS,
+  REDIS_PASSWORD,
+} = require('./config/env');
 
+const app = express();
 
-mongoose.connect(
-  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.CLUSTER_URL}/?retryWrites=true&w=majority`,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+// 1) Security headers
+app.use(helmet());
 
-mongoose.connection.on("connected", () => {
-  console.log("MongoDB Connected!");
-});
+// 2) Body parsers with size limit
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: false }));
 
-const usersRoutes = require("./api/routes/users");
-const productsRoutes = require("./api/routes/products");
-const lessonsRoutes = require("./api/routes/lessons");
-const scheduleRoutes = require("./api/routes/schedule");
-const notificationRoutes = require("./api/routes/notification");
-const busyEventsRoutes = require("./api/routes/busyEvents");
-const dailyRoutes = require("./api/routes/daily");
+// 3) CORS
+const origins = ALLOWED_ORIGINS.split(',');
+app.use(cors({ origin: origins, credentials: true }));
 
-const checkAuth = require("./api/middlewares/checkAuth");
+// 4) Logging
+app.use(morgan(NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-
-//
-
-
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin,X-Requsted-with,Content-Type,Accept,Authorization"
-//   );
-//   if (req.method === "OPTIONS") {
-//     res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,GET");
-//     return res.status(200).json({});
-//   }
-//   next();
-// });
-
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
-
-app.use(cors({
-  origin: allowedOrigins, 
-  credentials: true
+// 5) Rate limiting
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 דקות
+  max: 100,                 // 100 בקשות לכל IP
 }));
 
-app.use(morgan("dev"));
+// 6) Static files
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-app.use("/uploads", express.static("uploads"));
-
-app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: false,
-  })
-);
+// 7) Session with Redis store
+const client = redis.createClient({
+  username: 'default',
+  password: REDIS_PASSWORD,
+  socket: {
+      host: 'redis-14295.crce197.us-east-2-1.ec2.redns.redis-cloud.com',
+      port: 14295
+  }
+});
 app.use(session({
-  secret: `${process.env.SESSION_KEY}`, // החליפי במפתח סודי חזק
+  store: new RedisStore({ client: client }),
+  secret: SESSION_KEY,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
-    maxAge: 2 * 60 * 60 * 1000 // לדוגמה: 2 שעות
-  }
+    maxAge: 2 * 60 * 60 * 1000,       // שעתיים
+    secure: NODE_ENV === 'production',
+    sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
+    httpOnly: true,
+  },
 }));
 
-//Routes
-app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
-});
-app.use("/users", usersRoutes);
-app.use("/products", productsRoutes);
-app.use("/lessons", lessonsRoutes);
-app.use("/schedule", scheduleRoutes);
-app.use("/notification", notificationRoutes);
-app.use("/busyEvents", busyEventsRoutes);
-app.use("/daily", dailyRoutes);
+// 8) Health-check
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
-// ניצור מידלוור נוסף
+// 9) Routes
+app.use('/users', require('./api/routes/users'));
+app.use('/products', require('./api/routes/products'));
+app.use('/lessons', require('./api/routes/lessons'));
+app.use('/schedule', require('./api/routes/schedule'));
+app.use('/notification', require('./api/routes/notification'));
+app.use('/busyEvents', require('./api/routes/busyEvents'));
+app.use('/daily', require('./api/routes/daily'));
 
-app.use((req, res, next) => {
-  const error = new Error("Not Found");
-  error.status = 404;
-  next(error); //נעבור למידלוור הבא
+// 10) 404 + Global error handler
+app.use((req, res, next) => next(Object.assign(new Error('Not Found'), { status: 404 })));
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({ error: { message: err.message } });
 });
 
-app.use((error, req, res, next) => {
-  res.status(error.status || 500);
-  res.json({
-    error: {
-      message: error.message,
-    },
-  });
-});
 module.exports = app;
