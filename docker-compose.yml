@@ -28,6 +28,5 @@ networks:
   app-network:
     driver: bridge
     
-# version: "3.8"
-#     healthcheck:
+
 
