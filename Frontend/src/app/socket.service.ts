@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,14 @@ export class SocketService {
   constructor(private http: HttpClient) {}
 
   connect(): void {
-    this.socket = io('http://localhost:3000');
+    const isDev = !environment.production;
+    const socketUrl = isDev ? 'http://localhost:3000' : window.location.origin;
+
+    this.socket = io(socketUrl, {
+      transports: ['websocket'],
+      withCredentials: true,
+    });
+
     this.socket.on('notification', (notification: any) => {
       this.handleNotification(notification);
     });
@@ -25,7 +33,7 @@ export class SocketService {
     if (this.socket) {
       this.socket.disconnect();
     }
-    console.log('disconnect socket'); 
+    console.log('disconnect socket');
   }
 
   private handleNotification(notification: any): void {
@@ -34,8 +42,12 @@ export class SocketService {
 
     switch (notification.type) {
       case 'new':
-        if (notification.note.student_id === userId || notification.note.teacher_id === userId){
-        alerts.unshift(notification.note);}
+        if (
+          notification.note.student_id === userId ||
+          notification.note.teacher_id === userId
+        ) {
+          alerts.unshift(notification.note);
+        }
         break;
       case 'studentReadStatus':
         const studentReadStatusAlert = alerts.find(
@@ -54,13 +66,13 @@ export class SocketService {
         }
         break;
       case 'studentDeleteStatus':
-        if (notification.studentId === userId){
-        alerts = alerts.filter(alert => alert._id !== notification._id);
-      }
+        if (notification.studentId === userId) {
+          alerts = alerts.filter((alert) => alert._id !== notification._id);
+        }
         break;
       case 'teacherDeleteStatus':
-        if (notification.teacherId === userId){
-          alerts = alerts.filter(alert => alert._id !== notification._id);
+        if (notification.teacherId === userId) {
+          alerts = alerts.filter((alert) => alert._id !== notification._id);
         }
         break;
       case 'startLesson':
@@ -69,41 +81,48 @@ export class SocketService {
         );
         if (startLessonAlert) {
           startLessonAlert.startLesson = notification.startLesson;
-        }else if (notification.note.student_id === userId || notification.note.teacher_id === userId) {
+        } else if (
+          notification.note.student_id === userId ||
+          notification.note.teacher_id === userId
+        ) {
           alerts.unshift(notification.note);
         }
         break;
-        case 'deleteLesson':
-          const deleteLessonAlert = alerts.find(
-            (alert) => alert._id === notification.note._id
-          );
-          if (deleteLessonAlert) {
-            deleteLessonAlert.deleteLesson = notification.deleteLesson;
-            deleteLessonAlert.teacherStatus = notification.note.teacherStatus;
-            deleteLessonAlert.studentStatus = notification.note.studentStatus;
-          }else if (notification.note.student_id === userId || notification.note.teacher_id === userId) {
-            alerts.unshift(notification.note);
-          }
-          break;
-          case 'deleteNotification':
-            const index = alerts.findIndex(alert => alert._id === notification._id);
-            if (index !== -1) {
-              alerts.splice(index, 1);
-            }
-            // this.http.post('http://localhost:3000/users/endRating', {
-            //   userId: notification.userId,
-            //   lessonId: notification.lessonId,
-            // }, { withCredentials: true }).subscribe(
-            //   (response: any) => {
-            //     console.log(response.message);
-            //   },
-            //   (error) => {
-            //     console.error('Error clearing session:', error);
-            //   }
-            // );
-            break;          
+      case 'deleteLesson':
+        const deleteLessonAlert = alerts.find(
+          (alert) => alert._id === notification.note._id
+        );
+        if (deleteLessonAlert) {
+          deleteLessonAlert.deleteLesson = notification.deleteLesson;
+          deleteLessonAlert.teacherStatus = notification.note.teacherStatus;
+          deleteLessonAlert.studentStatus = notification.note.studentStatus;
+        } else if (
+          notification.note.student_id === userId ||
+          notification.note.teacher_id === userId
+        ) {
+          alerts.unshift(notification.note);
+        }
+        break;
+      case 'deleteNotification':
+        const index = alerts.findIndex(
+          (alert) => alert._id === notification._id
+        );
+        if (index !== -1) {
+          alerts.splice(index, 1);
+        }
+        // this.http.post('http://localhost:3000/users/endRating', {
+        //   userId: notification.userId,
+        //   lessonId: notification.lessonId,
+        // }, { withCredentials: true }).subscribe(
+        //   (response: any) => {
+        //     console.log(response.message);
+        //   },
+        //   (error) => {
+        //     console.error('Error clearing session:', error);
+        //   }
+        // );
+        break;
     }
     this.alertsSubject.next(alerts);
   }
-
 }

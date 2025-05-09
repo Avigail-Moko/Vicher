@@ -13,7 +13,6 @@ const path = require('path');
 const {
   NODE_ENV,
   SESSION_KEY,
-  ALLOWED_ORIGINS,
   REDIS_PASSWORD,
 } = require('./config/env');
 
@@ -27,8 +26,12 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: false }));
 
 // 3) CORS
-const origins = ALLOWED_ORIGINS.split(',');
-app.use(cors({ origin: origins, credentials: true }));
+if (NODE_ENV === 'development') {
+  app.use(cors({
+    origin: 'http://localhost:4200',
+    credentials: true
+  }));
+}
 
 // 4) Logging
 app.use(morgan(NODE_ENV === 'production' ? 'combined' : 'dev'));
@@ -59,15 +62,13 @@ app.use(session({
   cookie: {
     maxAge: 2 * 60 * 60 * 1000,       // שעתיים
     secure: NODE_ENV === 'production',
-    sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
+    sameSite: 'lax',
     httpOnly: true,
   },
 }));
 
-// 8) Health-check
-app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
-// 9) Routes
+// 8) Routes
 app.use('/users', require('./api/routes/users'));
 app.use('/products', require('./api/routes/products'));
 app.use('/lessons', require('./api/routes/lessons'));
@@ -76,7 +77,7 @@ app.use('/notification', require('./api/routes/notification'));
 app.use('/busyEvents', require('./api/routes/busyEvents'));
 app.use('/daily', require('./api/routes/daily'));
 
-// 10) 404 + Global error handler
+// 9) 404 + Global error handler
 app.use((req, res, next) => next(Object.assign(new Error('Not Found'), { status: 404 })));
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: { message: err.message } });
