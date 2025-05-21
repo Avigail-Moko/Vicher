@@ -16,8 +16,8 @@ services:
       dockerfile: Dockerfile
     expose:
       - "3000"
-    env_file:
-      - ./env
+    # env_file:
+      # - ./env
     restart: always
     networks:
       - app-network
