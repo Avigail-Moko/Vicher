@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:24-slim
 RUN addgroup --system appgroup && adduser --system appuser --ingroup appgroup
 WORKDIR /app
 COPY package*.json ./
