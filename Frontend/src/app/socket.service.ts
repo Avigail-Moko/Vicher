@@ -15,12 +15,12 @@ export class SocketService {
   constructor(private http: HttpClient) {}
 
   connect(): void {
-    const isDev = !environment.production;
-    const socketUrl = isDev ? 'http://localhost:3000' : window.location.origin;
+    // const isDev = !environment.production;
+    // const socketUrl = isDev ? 'http://localhost:3000' : window.location.origin;
 
-    this.socket = io(socketUrl, {
+    this.socket = io( {
       transports: ['websocket'],
-      withCredentials: true,
+      path: '/socket.io'  
     });
 
     this.socket.on('notification', (notification: any) => {
