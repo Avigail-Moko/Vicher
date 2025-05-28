@@ -18,6 +18,8 @@ const {
 
 const app = express();
 
+app.set('trust proxy', true); 
+
 // 1) Security headers
 app.use(helmet());
 
