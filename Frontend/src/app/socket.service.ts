@@ -18,9 +18,9 @@ export class SocketService {
     // const isDev = !environment.production;
     // const socketUrl = isDev ? 'http://localhost:3000' : window.location.origin;
 
-this.socket = io('wss://vicherapp.com', {
+this.socket = io('https://vicherapp.com', {
   transports: ['websocket'],
-  path: '/socket.io'
+  path: '/socket.io/'
 });
 
 

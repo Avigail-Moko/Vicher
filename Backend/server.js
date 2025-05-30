@@ -1,72 +1,73 @@
 // נקודת הכניסה: dotenv, loadSecrets, DB, app, Socket.IO, graceful shutdown
 
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
 
 async function loadEnvOrSecrets() {
-  const dotenvPath = path.resolve(__dirname, '../.env');
+  const dotenvPath = path.resolve(__dirname, "../.env");
   if (fs.existsSync(dotenvPath)) {
-    require('dotenv').config({ path: dotenvPath });
+    require("dotenv").config({ path: dotenvPath });
   } else {
-    const { loadSecrets } = require('./config/secrets');
+    const { loadSecrets } = require("./config/secrets");
     const secrets = await loadSecrets();
     Object.assign(process.env, secrets);
   }
 }
 
-
 (async () => {
   try {
-    
-   // טעינת משתני סביבה או סודות
-   await loadEnvOrSecrets();
+    // טעינת משתני סביבה או סודות
+    await loadEnvOrSecrets();
 
-   const env = require('./config/env');
-   const { connectDB } = require('./config/db');
+    const env = require("./config/env");
+    const { connectDB } = require("./config/db");
 
-   // חיבור ל-MongoDB
-   await connectDB();
+    // חיבור ל-MongoDB
+    await connectDB();
 
     // אפליקציה + שרת HTTP
-    const app = require('./app');
+    const app = require("./app");
     const server = http.createServer(app);
 
     // Socket.IO
-    const { Server } = require('socket.io');
+    const { Server } = require("socket.io");
     const io = new Server(server, {
-      path: '/socket.io',
+      path: "/socket.io",
       cors: {
-      origin: true,
-      methods: ['GET', 'POST']
-      }
+        origin: true,
+        methods: ["GET", "POST"],
+      },
     });
-   
-    require('./api/controllers/notification').setIo(io);
-    require('./api/controllers/lessons').setIo(io);
-    io.on('connection', sock => {
-      console.log('New client:', sock.id);
-      sock.on('disconnect', () => console.log('Client disconnected:', sock.id));
+
+    require("./api/controllers/notification").setIo(io);
+    require("./api/controllers/lessons").setIo(io);
+
+    io.on("connection", (sock) => {
+      console.log("Socket.IO client connected:", sock.id);
+      sock.on("disconnect", () => {
+        console.log("Socket.IO client disconnected:", sock.id);
+      });
     });
 
     // Start listening
-    
-    server.listen(env.PORT, () => console.log(`Server listening on port ${env.PORT}`));
+
+    server.listen(env.PORT, () =>
+      console.log(`Server listening on port ${env.PORT}`)
+    );
 
     // Graceful shutdown
     const shutdown = async () => {
-      console.log('Shutting down...');
+      console.log("Shutting down...");
       io.close();
       server.close();
-      await require('mongoose').disconnect();
+      await require("mongoose").disconnect();
       process.exit(0);
     };
-    process.on('SIGINT', shutdown);
-    process.on('SIGTERM', shutdown);
-
+    process.on("SIGINT", shutdown);
+    process.on("SIGTERM", shutdown);
   } catch (err) {
-    console.error('Startup failed:', err);
+    console.error("Startup failed:", err);
     process.exit(1);
   }
 })();
