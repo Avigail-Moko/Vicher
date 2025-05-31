@@ -20,7 +20,7 @@ export class SocketService {
 
 this.socket = io('https://vicherapp.com', {
   path: '/socket.io',
-  // transports: [ 'websocket','polling']
+  transports: [ 'websocket','polling']
 });
 
 this.socket.on('connect', () => {
