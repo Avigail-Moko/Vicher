@@ -19,10 +19,13 @@ export class SocketService {
     // const socketUrl = isDev ? 'http://localhost:3000' : window.location.origin;
 
 this.socket = io('https://vicherapp.com', {
-  transports: ['websocket'],
-  path: '/socket.io/'
+  path: '/socket.io',
+  // transports: [ 'websocket','polling']
 });
 
+this.socket.on('connect', () => {
+  console.log('Connected via transport:', this.socket.io.engine.transport.name);
+});
 
     this.socket.on('notification', (notification: any) => {
       this.handleNotification(notification);
