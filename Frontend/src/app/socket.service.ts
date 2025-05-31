@@ -15,12 +15,12 @@ export class SocketService {
   constructor(private http: HttpClient) {}
 
   connect(): void {
-    // const isDev = !environment.production;
-    // const socketUrl = isDev ? 'http://localhost:3000' : window.location.origin;
+    const isDev = !environment.production;
+    const socketUrl = isDev ? 'http://localhost:3000' : window.location.origin;
 
-this.socket = io('https://vicherapp.com', {
+this.socket = io(socketUrl, {
   path: '/socket.io',
-  transports: [ 'websocket','polling']
+  transports: [ 'polling' ,'websocket']
 });
 
 this.socket.on('connect', () => {
