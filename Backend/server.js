@@ -31,24 +31,39 @@ async function loadEnvOrSecrets() {
     const server = http.createServer(app);
 
     // Socket.IO
-    const { Server } = require("socket.io");
+    const { Server } = require('socket.io');
     const io = new Server(server, {
-      path: "/socket.io",
-      cors: {
-        origin: true,
-        methods: ["GET", "POST"],
-      },
+        path: '/socket.io',
+        cors: {
+          origin: 'https://vicherapp.com',
+          methods: ['GET', 'POST'],
+          credentials: true
+        },
+        transports: ['websocket', 'polling']
     });
+
+
 
     require("./api/controllers/notification").setIo(io);
     require("./api/controllers/lessons").setIo(io);
 
     io.on("connection", (sock) => {
-      console.log("Socket.IO client connected:", sock.id);
-      sock.on("disconnect", () => {
-        console.log("Socket.IO client disconnected:", sock.id);
-      });
+        console.log("Socket.IO client connected:", sock.id);
+        console.log('WebSocket Transport:', sock.conn.transport.name);
+
+        sock.conn.on("close", (reason) => {
+          console.log(`WebSocket closed: ${reason}`);
+        });
+
+        sock.conn.on("error", (err) => {
+          console.error("WebSocket error:", err);
+        });
+
+        sock.on("disconnect", () => {
+          console.log("Socket.IO client disconnected:", sock.id);
+        });
     });
+
 
     // Start listening
 
