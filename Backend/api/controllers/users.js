@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { createCanvas } = require('@napi-rs/canvas');
 
+
 //פונקציה המגרילה צבע רנדומלי
 function getRandomColor() {
     const minBrightness = 100; 
@@ -29,7 +30,7 @@ function createBlueProfileImage(name) {
 
  //רקע בנוי משם המשתמש 
     context.fillStyle = 'white';
-    context.font = '15px  Georgia, Times New Roman, Times, serif';
+    context.font = '15px  Tinos,Georgia';
     context.textAlign = 'left';
     context.textBaseline = 'top';
 
@@ -48,7 +49,7 @@ function createBlueProfileImage(name) {
  //יצירת מופע עבור האות הראשונה משם המשתמש
   const firstLetter = name.charAt(0).toUpperCase();
   context.fillStyle = 'black';
-  context.font=('120px  Georgia, Times New Roman, Times, serif');
+  context.font=('120px  Tinos,Georgia');
 //   context.font=('120px  Gabriola');
 
   context.textAlign = 'center';
