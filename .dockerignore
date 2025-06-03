@@ -5,6 +5,10 @@
 *.swo
 ~$*
 
+# nginx & certbot
+nginx
+certbot
+
 # .env
 .env
 .env.*
