@@ -130,3 +130,4 @@ this.socket.on('connect', () => {
     this.alertsSubject.next(alerts);
   }
 }
+
