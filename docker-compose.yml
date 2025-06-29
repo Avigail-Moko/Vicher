@@ -5,8 +5,10 @@ services:
     build:
       context: ./Backend
       dockerfile: Dockerfile
+      volumes:
+      - ./Backend/uploads:/app/uploads
     expose:
-    - "3000"
+      - "3000"
     # env_file:
       # - ./env
     restart: always
@@ -24,6 +26,7 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
+      - ./Backend/uploads:/usr/share/nginx/uploads
     depends_on:
       - backend
     restart: always

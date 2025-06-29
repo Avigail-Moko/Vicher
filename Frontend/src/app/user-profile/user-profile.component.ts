@@ -14,7 +14,7 @@ import { DeleteItemComponent } from '../delete-item/delete-item.component';
 })
 export class UserProfileComponent {
   rating!: number;
-  raterCounter:any;
+  raterCounter: any;
   productsArray: any[] = [];
   userProfile: any;
   inputValue: string = '';
@@ -22,7 +22,7 @@ export class UserProfileComponent {
   isButtonsVisible: boolean = false;
   editUserProfile: boolean = false;
   responsiveOptions: any[] | undefined;
-  
+
   constructor(
     private newService: NewService,
     public dialog: MatDialog,
@@ -38,8 +38,10 @@ export class UserProfileComponent {
   }
 
   openProductStepper() {
-    const dialogRef = this.dialog.open(ProductStepperComponent, {
-    });
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    const dialogRef = this.dialog.open(ProductStepperComponent, {});
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
@@ -49,24 +51,24 @@ export class UserProfileComponent {
   ngOnInit() {
     this.responsiveOptions = [
       {
-          breakpoint: '1430px',
-          numVisible: 2,
-          numScroll: 2
+        breakpoint: '1430px',
+        numVisible: 2,
+        numScroll: 2,
       },
       {
-          breakpoint: '1170px',
-          numVisible: 1,
-          numScroll: 1
-      }
-  ];
+        breakpoint: '1170px',
+        numVisible: 1,
+        numScroll: 1,
+      },
+    ];
 
     const userId = localStorage.getItem('userId');
     this.userProfile = JSON.parse(localStorage.getItem('userProfile'));
     this.inputValue = this.userProfile.description;
 
     this.newService.getRating(userId).subscribe((data) => {
-      this.rating=data.avgRating
-      this.raterCounter=data.raterCounter
+      this.rating = data.avgRating;
+      this.raterCounter = data.raterCounter;
       console.log('Response:', this.rating);
     });
 
@@ -87,17 +89,19 @@ export class UserProfileComponent {
     ],
   };
 
-
   onDivMouseDown(event: MouseEvent): void {
     if (this.isButtonsVisible) {
       event.preventDefault();
     }
   }
   openProductsEditDialog(product: any, userProfile: any): void {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     const dialogRef = this.dialog.open(ProductsEditDialogComponent, {
       width: '300px',
       height: '640px',
-      panelClass: 'custom-container', 
+      panelClass: 'custom-container',
       data: {
         product: product,
         userProfile: userProfile,
@@ -119,25 +123,22 @@ export class UserProfileComponent {
       },
     });
 
-  
-
     dialogRef.afterClosed().subscribe((result) => {
       dialogRef2.close();
-      this.isButtonsVisible=true
+      this.isButtonsVisible = true;
       console.log('The dialog was closed1');
-      window.location.reload();   
+      window.location.reload();
     });
   }
-  
+
   confirm(product: any) {
     const dialog = this.dialog.open(DeleteItemComponent, {
       data: { product: product },
       panelClass: 'delete-item-dialog',
-
     });
     dialog.afterClosed().subscribe((result) => {
       dialog.close();
-      this.isButtonsVisible=true
+      this.isButtonsVisible = true;
       console.log('The dialog was closed2');
     });
   }

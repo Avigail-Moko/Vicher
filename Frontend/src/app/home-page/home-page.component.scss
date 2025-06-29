@@ -124,3 +124,35 @@ text-align: left;
 .navbar{
   box-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
 }
+
+
+.auth-btn {
+  padding: 6px 18px;
+  border-radius: 6px;
+  margin-left: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.auth-btn:hover {
+  box-shadow: 0 4px 10px rgba(55, 55, 55, 0.4);
+}
+
+/* ברירת מחדל – מצב דסקטופ */
+.desktop-only {
+  display: flex;
+}
+.mobile-only {
+  display: none;
+}
+
+/* מצב מובייל */
+@media (max-width: 600px) {
+  .desktop-only {
+    display: none;
+  }
+  .mobile-only {
+    display: flex;
+  }
+
+}

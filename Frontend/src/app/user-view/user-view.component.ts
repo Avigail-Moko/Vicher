@@ -8,7 +8,7 @@ import { DailyPlannerComponent } from '../daily-planner/daily-planner.component'
 @Component({
   selector: 'app-user-view',
   templateUrl: './user-view.component.html',
-  styleUrls: ['./user-view.component.scss']
+  styleUrls: ['./user-view.component.scss'],
 })
 export class UserViewComponent {
   rating!: number;
@@ -16,24 +16,24 @@ export class UserViewComponent {
   category: string | undefined;
   description: string | undefined;
   price: string | undefined;
-  productsArray: any[] = []; 
-  partner_id:any;
+  productsArray: any[] = [];
+  partner_id: any;
   message = '';
   responsiveOptions: any[] | undefined;
-  userProfile:any
+  userProfile: any;
   userId = localStorage.getItem('userId');
-
 
   constructor(
     private newService: NewService,
     public dialog: MatDialog,
     private messageService: MessageService,
     public confirmDialog: MatDialog,
-    public router:Router,
+    public router: Router
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.userProfile = navigation?.extras.state?.['userProfile'];
-    this.partner_id = navigation?.extras.state?.['partner_id'];}
+    this.partner_id = navigation?.extras.state?.['partner_id'];
+  }
   showSuccess() {
     this.messageService.add({
       severity: 'success',
@@ -42,9 +42,7 @@ export class UserViewComponent {
     });
   }
 
- 
   ngOnInit() {
-
     const profilePromise = new Promise<void>((resolve, reject) => {
       if (!this.userProfile && this.partner_id) {
         this.newService.getProfile(this.partner_id).subscribe(
@@ -59,49 +57,52 @@ export class UserViewComponent {
           }
         );
       } else {
-        resolve(); 
+        resolve();
       }
     });
-  
-    profilePromise.then(() => {
-      if (this.userProfile) {
-        this.rating = this.userProfile.avgRating;
-        this.newService.getProduct(this.userProfile._id).subscribe(
-          (data) => {
-            this.productsArray = data.product;
-          },
-          (error) => {
-            console.error('Error:', error.error.message);
-          }
-        );
-      } else {
-        console.error('UserProfile is not available');
-      }
-    }).catch((error) => {
-      console.error('Profile fetch failed:', error);
-    });
+
+    profilePromise
+      .then(() => {
+        if (this.userProfile) {
+          this.rating = this.userProfile.avgRating;
+          this.newService.getProduct(this.userProfile._id).subscribe(
+            (data) => {
+              this.productsArray = data.product;
+            },
+            (error) => {
+              console.error('Error:', error.error.message);
+            }
+          );
+        } else {
+          console.error('UserProfile is not available');
+        }
+      })
+      .catch((error) => {
+        console.error('Profile fetch failed:', error);
+      });
 
     this.responsiveOptions = [
       {
-          breakpoint: '1430px',
-          numVisible: 2,
-          numScroll: 1
+        breakpoint: '1430px',
+        numVisible: 2,
+        numScroll: 1,
       },
       {
-          breakpoint: '1170px',
-          numVisible: 1,
-          numScroll: 1
-      }
-  ];
-
+        breakpoint: '1170px',
+        numVisible: 1,
+        numScroll: 1,
+      },
+    ];
   }
 
   openDailyPlanner(product: any) {
     if (this.userId && this.userId != product.userId) {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
       const dialogRef = this.dialog.open(DailyPlannerComponent, {
-
         data: {
-          product: product
+          product: product,
         },
       });
 
@@ -126,5 +127,4 @@ export class UserViewComponent {
       });
     }
   }
-  
-  }
+}

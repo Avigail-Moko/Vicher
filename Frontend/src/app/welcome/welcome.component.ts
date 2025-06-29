@@ -76,7 +76,11 @@ export class WelcomeComponent {
   }
 
   openDailyPlanner(product: any) {
+
     if (this.userId && this.userId != product.userId) {
+        if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
       const dialogRef = this.dialog.open(DailyPlannerComponent, {
         width: '100vw',
         height: '95%',

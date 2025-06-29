@@ -171,7 +171,9 @@ export class ProductStepperComponent {
       this.formData.append(key, value);
     });
 
-    // console.log('data',this.fifthFormGroup.value)
+for (const [key, value] of (this.formData as any).entries()) {
+  console.log(`${key}: ${value}`);
+}
 
     this.newService.createProduct(this.formData).subscribe(
       (data) => {

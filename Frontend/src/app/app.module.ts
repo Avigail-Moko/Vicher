@@ -58,6 +58,8 @@ import {NgxPaginationModule} from 'ngx-pagination'
 import {MatExpansionModule} from '@angular/material/expansion';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { MatMenuModule } from '@angular/material/menu';
+
 
 @NgModule({
   declarations: [
@@ -132,7 +134,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     MatExpansionModule,
     ScrollingModule,
     SelectButtonModule,
-    
+    MatMenuModule,
 
   ],
 })
