@@ -43,8 +43,8 @@ import { DeleteItemComponent } from './delete-item/delete-item.component';
 import { AvailabilityScheduleComponent } from './availability-schedule/availability-schedule.component';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
-import { DatePipe } from '@angular/common'; 
-import { UserViewComponent } from './user-view/user-view.component';  
+import { DatePipe } from '@angular/common';
+import { UserViewComponent } from './user-view/user-view.component';
 import { BadgeModule } from 'primeng/badge';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TagModule } from 'primeng/tag';
@@ -54,13 +54,14 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DeleteLessonDialogComponent } from './delete-lesson-dialog/delete-lesson-dialog.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import {NgxPaginationModule} from 'ngx-pagination'
-import {MatExpansionModule} from '@angular/material/expansion';
-import {ScrollingModule} from '@angular/cdk/scrolling';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { MatMenuModule } from '@angular/material/menu';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
-
+import { SupportComponent } from './support/support.component';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -83,8 +84,7 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
     RatingPageComponent,
     DeleteLessonDialogComponent,
     VerifyEmailComponent,
-    
-    
+    SupportComponent,
   ],
   providers: [
     MessageService,
@@ -137,7 +137,7 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
     ScrollingModule,
     SelectButtonModule,
     MatMenuModule,
-
+    RecaptchaModule,
   ],
 })
 export class AppModule {}

@@ -1,0 +1,46 @@
+<section id="Support">
+  <h1 class="text-6xl quattrocento-sans-regular line-height-1">Support</h1>
+  <p>
+    If you have any questions, suggestions, technical issues, or feedback about
+    our platform — feel free to contact us using the form below. We'll get back
+    to you as soon as possible.
+  </p>
+
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Full Name</mat-label>
+      <input matInput formControlName="name" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" required type="email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Subject</mat-label>
+      <input matInput formControlName="subject" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Message</mat-label>
+      <textarea matInput formControlName="message" required rows="5"></textarea>
+    </mat-form-field>
+
+    <re-captcha
+      siteKey="6LdC7HwrAAAAAD2PavAmcdFfQAw2EM4UlN3e3hjq"
+      (resolved)="onCaptchaResolved($event)"
+    >
+    </re-captcha>
+
+    <button
+      mat-raised-button
+      class="mt-3"
+      color="primary"
+      type="submit"
+      [disabled]="!contactForm.valid || !captchaResolved"
+    >
+      Send Message
+    </button>
+  </form>
+</section>

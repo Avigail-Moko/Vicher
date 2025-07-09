@@ -25,7 +25,6 @@ export class NewService {
     private router: Router
   ) {}
 
-
   getAuthStatusListener() {
     return this.authStatusListener.asObservable();
   }
@@ -34,7 +33,6 @@ export class NewService {
     const token = localStorage.getItem('token');
     const isTokenExpired = this.jwtHelper.isTokenExpired(token || '');
 
-    
     if (isTokenExpired !== this.previousAuthenticationState) {
       this.previousAuthenticationState = isTokenExpired;
 
@@ -49,7 +47,6 @@ export class NewService {
     }
     return !isTokenExpired;
   }
-
 
   Login(values: any): Observable<any> {
     const url = `${this.apiUrl}/users/login`;
@@ -75,17 +72,20 @@ export class NewService {
     this.authStatusListener.next(false); // עדכון על התנתקות
   }
 
- 
   Signup(values: any): Observable<any> {
     const url = `${this.apiUrl}/users/signup`;
     return this.http.post(url, values);
   }
 
   verifyEmail(token: string) {
-  const url = `${this.apiUrl}/email/verifyEmail?token=${token}`;
-  return this.http.get(url);
-}
+    const url = `${this.apiUrl}/email/verifyEmail?token=${token}`;
+    return this.http.get(url);
+  }
 
+  contact(values: any) {
+    const url = `${this.apiUrl}/email/contact`;
+    return this.http.post(url, values);
+  }
 
   createProduct(values: any): Observable<any> {
     console.log(values);
@@ -130,15 +130,18 @@ export class NewService {
     const url = `${this.apiUrl}/lessons/getLesson?teacher_id=${teacher_id}`;
     return this.http.get(url);
   }
-  
+
   getLessonById(_id: any): Observable<any> {
     const url = `${this.apiUrl}/lessons/getLesson?_id=${_id}`;
     return this.http.get(url);
   }
-  getLessonByTeacherAndStudentId(teacher_id: any, student_id: any): Observable<any> {
+  getLessonByTeacherAndStudentId(
+    teacher_id: any,
+    student_id: any
+  ): Observable<any> {
     const url = `${this.apiUrl}/lessons/getLesson?teacher_id=${teacher_id}&student_id=${student_id}`;
     return this.http.get(url);
-}
+  }
 
   createSchedule(objectsArray: any, teacher_id: any) {
     const url = `${this.apiUrl}/schedule/createSchedule?teacher_id=${teacher_id}`;
@@ -156,18 +159,18 @@ export class NewService {
     const url = `${this.apiUrl}/notification/getNote?userId=${userId}`;
     return this.http.get(url);
   }
-  markNotificationsAsDelete(_id: any,userId:any): Observable<any> {
+  markNotificationsAsDelete(_id: any, userId: any): Observable<any> {
     const url = `${this.apiUrl}/notification/markNotificationsAsDelete?_id=${_id}`;
     return this.http.patch(url, { userId });
   }
-  markNotificationsAsRead(_id: any,userId:any): Observable<any> {
+  markNotificationsAsRead(_id: any, userId: any): Observable<any> {
     const url = `${this.apiUrl}/notification/markNotificationsAsRead?_id=${_id}`;
     return this.http.patch(url, { userId });
   }
 
   createBusyEvent(values: any) {
     const url = `${this.apiUrl}/busyEvents/createBusyEvent`;
-    return this.http.post(url, values );
+    return this.http.post(url, values);
   }
   getAllTeacherBusyEvents(teacher_id: any): Observable<any> {
     const url = `${this.apiUrl}/busyEvents/getAllTeacherBusyEvents?teacher_id=${teacher_id}`;
@@ -177,14 +180,14 @@ export class NewService {
     const url = `${this.apiUrl}/busyEvents/deleteBusyEvent?_id=${_id}`;
     return this.http.delete(url);
   }
-  getRating(userId: any):Observable<any>{
+  getRating(userId: any): Observable<any> {
     const url = `${this.apiUrl}/users/getRating?userId=${userId}`;
     return this.http.get(url);
   }
-  rating(teacher_id: any,rating:any,lessonId:any):Observable<any>{
+  rating(teacher_id: any, rating: any, lessonId: any): Observable<any> {
     const url = `${this.apiUrl}/users/rating?teacher_id=${teacher_id}`;
-    console.log(teacher_id,rating,lessonId )
-    return this.http.post(url,{ rating,lessonId }, { withCredentials: true });
+    console.log(teacher_id, rating, lessonId);
+    return this.http.post(url, { rating, lessonId }, { withCredentials: true });
   }
   deleteLesson(_id: any): Observable<any> {
     const url = `${this.apiUrl}/lessons/deleteLesson?_id=${_id}`;
@@ -197,6 +200,6 @@ export class NewService {
 
   createDailyRoom(values: any) {
     const url = `${this.apiUrl}/daily/createRoom`;
-    return this.http.post(url, values );
+    return this.http.post(url, values);
   }
 }

@@ -10,6 +10,7 @@ import { UserViewComponent } from './user-view/user-view.component';
 import { VideoChatComponent } from './video-chat/video-chat.component';
 import { RatingPageComponent } from './rating-page/rating-page.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
+import { SupportComponent } from './support/support.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' }, 
@@ -22,6 +23,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'about', component: AboutComponent },
+  { path: 'support', component: SupportComponent },
+  
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
   {
     path: 'availability-schedule',

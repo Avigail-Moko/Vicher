@@ -57,6 +57,7 @@ export class HomePageComponent {
     this.items = [
       { label: 'Home', icon: 'pi pi-fw pi-home', routerLink: '/welcome' },
       { label: 'About Us', icon: 'pi pi-fw pi-id-card', routerLink: '/about' },
+      { label: 'Support', icon: 'pi pi-fw pi-envelope', routerLink: '/support' },
     ];
     this.activeItem = this.items[0];
   }
