@@ -126,57 +126,59 @@ module.exports = {
       });
     });
   },
-  login: (req, res) => {
-    const { email, password } = req.body;
+  login: async (req, res) => {
+  const { email, password } = req.body;
 
-    User.find({ email }).then((users) => {
-      if (users.length === 0) {
-        return res.status(401).json({
-          message: "no such a user",
-        });
-      }
-
-      const [user] = users;
-      const userId = user._id;
-
-      bcryptjs.compare(password, user.password, (error, result) => {
-        if (error) {
-          return res.status(401).json({
-            message: "bcryptjs error",
-          });
-        }
-        if (result) {
-          const token = jwt.sign(
-            {
-              id: user._id,
-              email: user.email,
-            },
-            process.env.JWT_KEY
-            // {
-            //     expiresIn: "1H"
-            // }
-          );
-          return res.status(200).json({
-            message: "Auth successful",
-            token,
-            userId,
-            user: {
-              name: user.name,
-              email: user.email,
-              profileImage: user.profileImage,
-              description: user.description,
-              totalRating: user.totalRating,
-              raterCounter: user.raterCounter,
-            },
-          });
-        }
-
-        res.status(401).json({
-          message: "Auth failed",
-        });
+  try {
+    const existingPending = await PendingUser.findOne({ email });
+    if (existingPending) {
+      return res.status(409).json({
+        message: "Email already awaiting verification",
       });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({
+        message: "no such a user",
+      });
+    }
+
+    const passwordMatch = await bcryptjs.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({
+        message: "Auth failed",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+      },
+      process.env.JWT_KEY
+    );
+
+    return res.status(200).json({
+      message: "Auth successful",
+      token,
+      userId: user._id,
+      user: {
+        name: user.name,
+        email: user.email,
+        profileImage: user.profileImage,
+        description: user.description,
+        totalRating: user.totalRating,
+        raterCounter: user.raterCounter,
+      },
     });
-  },
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+},
   getProfile: (req, res) => {
     const userId = req.query._id;
 
