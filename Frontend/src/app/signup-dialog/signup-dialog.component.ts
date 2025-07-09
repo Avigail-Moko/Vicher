@@ -32,31 +32,17 @@ export class SignupDialogComponent {
     this.loading = true;
 
     const formValues = this.mySingupForm.value;
-    const loginValues = {
-      email: formValues.email,
-      password: formValues.password,
-    };
+    // const loginValues = {
+    //   email: formValues.email,
+    //   password: formValues.password,
+    // };
     this.newService.Signup(formValues).subscribe(
       (response) => {
         console.log('Response:', response);
-        console.log(formValues, loginValues);
-
-        this.newService.Login(loginValues).subscribe(
-          (data) => {
-            this.loading = false;
-            console.log('Response:', data);
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('userId', data.userId);
-            localStorage.setItem('userProfile', JSON.stringify(data.user));
-            window.dispatchEvent(new Event('userProfileUpdated'));
-            this.dialog.closeAll();
-          },
-          (error) => {
-            this.loading = false;
-            console.error('Error:', error.error.message);
-            this.errorMessage = error.error.message;
-          }
-        );
+        // console.log(formValues, loginValues);
+      this.loading = false;
+      this.dialog.closeAll();
+      alert('Registration successful. Please check your email to verify your account.');
       },
       (error) => {
         this.loading = false;

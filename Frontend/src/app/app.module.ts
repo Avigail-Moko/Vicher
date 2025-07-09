@@ -59,6 +59,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { MatMenuModule } from '@angular/material/menu';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 
 @NgModule({
@@ -81,6 +82,7 @@ import { MatMenuModule } from '@angular/material/menu';
     VideoChatComponent,
     RatingPageComponent,
     DeleteLessonDialogComponent,
+    VerifyEmailComponent,
     
     
   ],

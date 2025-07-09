@@ -81,6 +81,12 @@ export class NewService {
     return this.http.post(url, values);
   }
 
+  verifyEmail(token: string) {
+  const url = `${this.apiUrl}/email/verifyEmail?token=${token}`;
+  return this.http.get(url);
+}
+
+
   createProduct(values: any): Observable<any> {
     console.log(values);
     const url = `${this.apiUrl}/products/createProduct`;

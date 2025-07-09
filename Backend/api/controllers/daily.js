@@ -41,7 +41,8 @@ module.exports = {
             enable_chat: true,
             eject_at_room_exp: true, 
             enable_knocking: false,
-            owner_only_broadcast: false
+            owner_only_broadcast: false,
+            max_participants: 2  
           }
         })
       });

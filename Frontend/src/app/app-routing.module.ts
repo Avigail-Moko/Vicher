@@ -9,6 +9,7 @@ import { AvailabilityScheduleComponent } from './availability-schedule/availabil
 import { UserViewComponent } from './user-view/user-view.component';
 import { VideoChatComponent } from './video-chat/video-chat.component';
 import { RatingPageComponent } from './rating-page/rating-page.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' }, 
@@ -37,6 +38,8 @@ const routes: Routes = [
     component: RatingPageComponent,
     canActivate: [AuthGuard],
   },
+  { path: 'verify-email', component: VerifyEmailComponent },
+
 ];
 
 @NgModule({

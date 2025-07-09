@@ -78,6 +78,7 @@ app.use('/schedule', require('./api/routes/schedule'));
 app.use('/notification', require('./api/routes/notification'));
 app.use('/busyEvents', require('./api/routes/busyEvents'));
 app.use('/daily', require('./api/routes/daily'));
+app.use('/email', require('./api/routes/email'));
 
 // 9) 404 + Global error handler
 app.use((req, res, next) => next(Object.assign(new Error('Not Found'), { status: 404 })));

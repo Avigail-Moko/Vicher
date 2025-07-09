@@ -10,8 +10,9 @@ const schema = Joi.object({
   CLUSTER_URL: Joi.string().required(),
   SESSION_KEY: Joi.string().min(32).required(),
   REDIS_PASSWORD: Joi.string().min(32).required(),
-  JWT_KEY: Joi.string().min(32).required(),       // מפתח JWT
-  DAILY_API_KEY: Joi.string().required(),         // מפתח Daily API
+  JWT_KEY: Joi.string().min(32).required(),     
+  DAILY_API_KEY: Joi.string().required(),       
+  GMAIL_PASS: Joi.string().required(), 
 }).unknown(); // מאפשר env-vars נוספים בלי לשבור את הבדיקה
 
 const { error, value: validatedEnv } = schema.validate(process.env);
