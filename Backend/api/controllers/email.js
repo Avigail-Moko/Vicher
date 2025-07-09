@@ -14,7 +14,7 @@ module.exports = {
       }
     });
 
-    const link = NODE_ENV === 'production'?  `https://vicherapp.com/verify-email?token=${token}`:`http://localhost:4200/verify-email?token=${token}`;
+    const link = process.env.NODE_ENV === 'production'?  `https://vicherapp.com/verify-email?token=${token}`:`http://localhost:4200/verify-email?token=${token}`;
 
     await transporter.sendMail({
       from: 'Vicher App <vicherapp.info@gmail.com>',
