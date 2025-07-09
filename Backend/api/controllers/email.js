@@ -121,6 +121,7 @@ module.exports = {
 
       await transporter.sendMail({
         from: `${cleanName} <${cleanEmail}>`,
+        replyTo: `${cleanEmail}`,
         to: "vicherapp.info@gmail.com",
         subject: `New Message from Contact Form`,
         html: `
