@@ -111,7 +111,7 @@ module.exports = {
         try {
           await pendingUser.save();
           const token = jwt.sign({ email }, process.env.JWT_KEY, {
-            expiresIn: "330",
+            expiresIn: 330,
           });
           await sendVerification(email, token, name);
 
