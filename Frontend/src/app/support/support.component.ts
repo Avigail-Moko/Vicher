@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NewService } from '../new.service';
 import { Message, MessageService } from 'primeng/api';
+import { ViewChild } from '@angular/core';
+import { RecaptchaComponent } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-support',
@@ -10,6 +12,8 @@ import { Message, MessageService } from 'primeng/api';
   styleUrls: ['./support.component.scss'],
 })
 export class SupportComponent {
+  @ViewChild(RecaptchaComponent) captcha!: RecaptchaComponent;
+
   captchaResolved = false;
   errorMessage = '';
   messages: Message[] | undefined;
@@ -41,7 +45,15 @@ export class SupportComponent {
       (data) => {
         console.log('Response:', data);
         this.contactForm.reset();
+        Object.keys(this.contactForm.controls).forEach((key) => {
+          const control = this.contactForm.get(key);
+          control?.setErrors(null);
+          control?.markAsPristine();
+          control?.markAsUntouched();
+        });
         this.captchaResolved = false;
+        this.captcha.reset();
+
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
