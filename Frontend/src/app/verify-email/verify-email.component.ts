@@ -22,7 +22,7 @@ export class VerifyEmailComponent implements OnInit {
       this.newService.verifyEmail(token).subscribe(
         () => {
           this.message = 'Your email has been successfully verified. You may now proceed to log in.';
-          setTimeout(() => this.router.navigate(['/']), 2000);
+          setTimeout(() => this.router.navigate(['/']), 5000);
         },
         (error) => {
           this.message = `Email verification failed: ${error.error?.message || 'An unexpected error occurred.'}`;
