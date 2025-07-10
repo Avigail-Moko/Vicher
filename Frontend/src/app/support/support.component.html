@@ -26,13 +26,14 @@
       <mat-label>Message</mat-label>
       <textarea matInput formControlName="message" required rows="5"></textarea>
     </mat-form-field>
+<div class="recaptcha-container">
 
     <re-captcha
       siteKey="6LdC7HwrAAAAAD2PavAmcdFfQAw2EM4UlN3e3hjq"
       (resolved)="onCaptchaResolved($event)"
     >
     </re-captcha>
-
+</div>
     <button
       mat-raised-button
       class="mt-3"
