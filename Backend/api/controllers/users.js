@@ -127,58 +127,58 @@ module.exports = {
     });
   },
   login: async (req, res) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  try {
-    const existingPending = await PendingUser.findOne({ email });
-    if (existingPending) {
-      return res.status(409).json({
-        message: "Email already awaiting verification",
+    try {
+      const existingPending = await PendingUser.findOne({ email });
+      if (existingPending) {
+        return res.status(409).json({
+          message: "Email already awaiting verification",
+        });
+      }
+
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(401).json({
+          message: "no such a user",
+        });
+      }
+
+      const passwordMatch = await bcryptjs.compare(password, user.password);
+      if (!passwordMatch) {
+        return res.status(401).json({
+          message: "Auth failed",
+        });
+      }
+
+      const token = jwt.sign(
+        {
+          id: user._id,
+          email: user.email,
+        },
+        process.env.JWT_KEY
+      );
+
+      return res.status(200).json({
+        message: "Auth successful",
+        token,
+        userId: user._id,
+        user: {
+          name: user.name,
+          email: user.email,
+          profileImage: user.profileImage,
+          description: user.description,
+          totalRating: user.totalRating,
+          raterCounter: user.raterCounter,
+        },
+      });
+    } catch (err) {
+      console.error("Login error:", err);
+      res.status(500).json({
+        message: "Server error",
       });
     }
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({
-        message: "no such a user",
-      });
-    }
-
-    const passwordMatch = await bcryptjs.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({
-        message: "Auth failed",
-      });
-    }
-
-    const token = jwt.sign(
-      {
-        id: user._id,
-        email: user.email,
-      },
-      process.env.JWT_KEY
-    );
-
-    return res.status(200).json({
-      message: "Auth successful",
-      token,
-      userId: user._id,
-      user: {
-        name: user.name,
-        email: user.email,
-        profileImage: user.profileImage,
-        description: user.description,
-        totalRating: user.totalRating,
-        raterCounter: user.raterCounter,
-      },
-    });
-  } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({
-      message: "Server error",
-    });
-  }
-},
+  },
   getProfile: (req, res) => {
     const userId = req.query._id;
 
@@ -241,25 +241,93 @@ module.exports = {
         res.status(500).json({ error: "Server error" });
       });
   },
-  updateDescription: (req, res) => {
-    const userId = req.query.id;
-    const { description } = req.body;
+updateDescription: async (req, res) => {
+  const userId = req.query.id;
+  const { description } = req.body;
 
-    User.findByIdAndUpdate(userId, { description: description }, { new: true })
-      .select("description")
-      .exec()
-      .then((user) => {
-        if (!user) {
-          return res.status(404).json({ message: "User not found" });
-        }
-        res
-          .status(200)
-          .json({ message: "Description updated successfully", user: user });
-      })
-      .catch((err) => {
-        res.status(500).json({ error: "Server error" });
-      });
+  if (!description) {
+    return res.status(400).json({ message: "Missing description" });
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { description },
+      { new: true, select: "description" }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Description updated successfully",
+      description: user.description,
+    });
+  } catch (err) {
+    console.error("Description update error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+},
+  changePassword: async (req, res) => {
+    const userId = req.query.id;
+    const { currentPassword, newPassword } = req.body;
+
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const isMatch = await bcryptjs.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res
+          .status(401)
+          .json({ message: "Current password is incorrect" });
+      }
+
+      const hashedNewPassword = await bcryptjs.hash(newPassword, 10);
+      user.password = hashedNewPassword;
+      await user.save();
+
+      res.status(200).json({ message: "Password updated successfully" });
+    } catch (err) {
+      console.error("Password change error:", err);
+      res.status(500).json({ error: "Server error" });
+    }
   },
+    changeUsername: async (req, res) => {
+  const userId = req.query.id;
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ message: "Missing name" });
+  }
+
+  const profileImage = createBlueProfileImage(name);
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { name, profileImage },
+      { new: true }
+    ).select('name profileImage');
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Display name updated successfully",
+      name: user.name,
+      profileImage: user.profileImage,
+
+    });
+  } catch (err) {
+    console.error("Display name change error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+},
   rating: (req, res) => {
     const { rating, lessonId } = req.body;
     const userId = req.query.teacher_id;
@@ -344,4 +412,14 @@ module.exports = {
 
   //       res.json({ message: 'Session data for lesson rating has been successfully cleared' });
   // }
+  deleteUser: async (req, res) => {
+    // const userId = req.params.userId || req.query.userId;
+    // try {
+    //   const result = await User.findByIdAndDelete(userId);
+    //   if (!result) return res.status(404).json({ message: "User not found" });
+    //   res.status(200).json({ message: "User deleted successfully" });
+    // } catch (err) {
+    //   res.status(500).json({ error: "Server error" });
+    // }
+  },
 };

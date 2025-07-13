@@ -1,45 +1,113 @@
 <section id="Settings">
-  <h1 class="text-6xl quattrocento-sans-regular line-height-1" > Settings</h1>
+  <h1 class="text-6xl quattrocento-sans-regular line-height-1">Settings</h1>
 
-
-<h3>Change Password</h3>
-<p>
-  Update your account password regularly to maintain optimal security. Ensure your new password is strong and confidential to protect your personal information.
+  <h3>Change display name</h3>
+  <p>
+    You can update your display name. This is the name others will see on your
+    profile.
+  </p>
+<p style="font-style: italic;">
+  <span style="color: #f44336;">Please note:</span> Changing your name will also update your profile picture accordingly.<br />
+  Additionally, altering your name may affect your discoverability within the system; please proceed with caution.
 </p>
+
+  <form [formGroup]="usernameForm" (ngSubmit)="onChangeUsername()" novalidate>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>display name</mat-label>
+      <input matInput formControlName="username" (blur)="onUsernameBlur()" />
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="accent"
+      type="submit"
+      [disabled]="
+        usernameForm.invalid ||
+        usernameForm.get('username')?.value === userProfile.name
+      "
+    >
+      Update name
+    </button>
+  </form>
+
+  <hr style="margin: 30px 0" />
+
+  <h3>Change Password</h3>
+  <p>
+    Update your account password regularly to maintain optimal security. Ensure
+    your new password is strong and confidential to protect your personal
+    information.
+  </p>
   <!-- טופס שינוי סיסמה -->
   <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" novalidate>
-<mat-form-field appearance="outline">
-  <mat-label>Current Password</mat-label>
-  <input matInput [type]="hideCurrent ? 'password' : 'text'" formControlName="currentPassword" required />
-  <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
-    <mat-icon>{{ hideCurrent ? 'visibility_off' : 'visibility' }}</mat-icon>
-  </button>
-</mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Current Password</mat-label>
+      <input
+        matInput
+        [type]="hideCurrent ? 'password' : 'text'"
+        formControlName="currentPassword"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hideCurrent = !hideCurrent"
+        [attr.aria-label]="'Toggle password visibility'"
+        [attr.aria-pressed]="hideCurrent"
+      >
+        <mat-icon>{{ hideCurrent ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+    </mat-form-field>
 
-<mat-form-field appearance="outline">
-  <mat-label>New Password</mat-label>
-  <input matInput [type]="hideNew ? 'password' : 'text'" formControlName="newPassword" required />
-  <button mat-icon-button matSuffix (click)="hideNew = !hideNew" [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideNew">
-    <mat-icon>{{ hideNew ? 'visibility_off' : 'visibility' }}</mat-icon>
-  </button>
-</mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>New Password</mat-label>
+      <input
+        matInput
+        [type]="hideNew ? 'password' : 'text'"
+        formControlName="newPassword"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hideNew = !hideNew"
+        [attr.aria-label]="'Toggle password visibility'"
+        [attr.aria-pressed]="hideNew"
+      >
+        <mat-icon>{{ hideNew ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+      <mat-error
+        *ngIf="
+          passwordForm.get('newPassword')?.hasError('minlength') &&
+          passwordForm.get('newPassword')?.touched
+        "
+      >
+        Password must be at least 6 characters long
+      </mat-error>
+    </mat-form-field>
 
-
-    <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="passwordForm.invalid"
+    >
       Change Password
     </button>
   </form>
 
-  <hr style="margin: 30px 0;" />
+  <hr style="margin: 30px 0" />
 
-<h3>Delete Account</h3>
-<p>
-  Permanently delete your account and all associated data from our system. This irreversible action should be undertaken with caution, as it cannot be undone.
-</p>
+  <h3>Delete Account</h3>
+  <p>
+    Permanently delete your account and all associated data from our system.
+    This irreversible action should be undertaken with caution, as it cannot be
+    undone.
+  </p>
   <!-- כפתור מחיקת משתמש -->
   <button mat-raised-button color="warn" (click)="onDeleteAccount()">
     Delete Account
   </button>
 </section>
 
-<p-toast></p-toast>
+<p-toast [life]="5000"></p-toast>

@@ -48,7 +48,9 @@ mat-form-field{
 ::ng-deep input{
   border-color: var(--primary) !important;
 }
-
+h3{
+  color: var(--primary);
+}
 // @media (max-width: 1408px) {
 // #Settings {
 //   margin-left: 0 ;

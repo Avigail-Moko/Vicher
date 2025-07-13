@@ -147,7 +147,7 @@ export class UserProfileComponent {
     const userId = localStorage.getItem('userId');
     this.newService.updateDescription(userId, data).subscribe(
       (response) => {
-        this.userProfile.description = this.inputValue;
+        this.userProfile.description = response.description;
         localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
 
         this.editUserProfile = false;

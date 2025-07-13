@@ -81,10 +81,25 @@ export class NewService {
     const url = `${this.apiUrl}/email/verifyEmail?token=${token}`;
     return this.http.get(url);
   }
-
   contact(values: any) {
     const url = `${this.apiUrl}/email/contact`;
     return this.http.post(url, values);
+  }
+  changePassword(id: any, values: any): Observable<any> {
+    const url = `${this.apiUrl}/users/changePassword?id=${id}`;
+    return this.http.patch(url, values);
+  }
+  changeUsername(id: any, values: any): Observable<any> {
+    const url = `${this.apiUrl}/users/changeUsername?id=${id}`;
+    return this.http.patch(url, values);
+  }
+  updateDescription(id: any, values: any): Observable<any> {
+    const url = `${this.apiUrl}/users/updateDescription?id=${id}`;
+    return this.http.patch(url, values);
+  }
+  deleteUser(id: any) {
+    const url = `${this.apiUrl}/users/deleteUser?id=${id}`;
+    return this.http.delete(url);
   }
 
   createProduct(values: any): Observable<any> {
@@ -95,7 +110,7 @@ export class NewService {
   }
 
   getProduct(userId: any): Observable<any> {
-    const url = `${this.apiUrl}/products/getProduct?userId=${userId}`; //בגרשיים אחודות ולא רגילות, אפשר לשלב משתנים ישירות בתוך המחרוזת
+    const url = `${this.apiUrl}/products/getProduct?userId=${userId}`; 
     return this.http.get(url);
   }
 
@@ -151,10 +166,7 @@ export class NewService {
     const url = `${this.apiUrl}/schedule/getSchedule?teacher_id=${teacher_id}`;
     return this.http.get(url);
   }
-  updateDescription(id: any, values: any): Observable<any> {
-    const url = `${this.apiUrl}/users/updateDescription?id=${id}`;
-    return this.http.patch(url, values);
-  }
+
   getNote(userId: any): Observable<any> {
     const url = `${this.apiUrl}/notification/getNote?userId=${userId}`;
     return this.http.get(url);
@@ -202,13 +214,4 @@ export class NewService {
     const url = `${this.apiUrl}/daily/createRoom`;
     return this.http.post(url, values);
   }
-
-//   changePassword(data: { currentPassword: string, newPassword: string }) {
-//   return this.http.post('/api/users/change-password', data);
-// }
-
-// deleteAccount() {
-//   return this.http.delete('/api/users/delete');
-// }
-
 }
