@@ -1,19 +1,20 @@
+
 .quattrocento-sans-regular {
   font-family: "Quattrocento Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
 
-#about {
+#Settings {
   max-width: 1200px;
-  // margin-left: 40px ;
+//   margin-left: 40px ;
   margin: 0 auto;
   padding: 0 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #fff;
 }
 
-#about h1 {
+#Settings h1 {
     display: inline-block;
   font-weight: 400;
   margin-bottom: 24px;
@@ -21,14 +22,35 @@
   padding-bottom: 8px;
 }
 
-#about p {
+#Settings p {
   font-size: 18px;
   line-height: 1.6;
   margin-bottom: 20px;
 }
+
+form{
+  padding: 30px 25px;
+  background-color: #424242;
+  border: 1px solid #626262;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+}
+mat-form-field{
+    display: block;
+}
+::ng-deep .mat-mdc-text-field-wrapper{
+    background: #3c3939;
+}
+
+::ng-deep input{
+  border-color: var(--primary) !important;
+}
+
 // @media (max-width: 1408px) {
-// #about {
+// #Settings {
 //   margin-left: 0 ;
-//   // padding: 0 20px;
 // }
 // }

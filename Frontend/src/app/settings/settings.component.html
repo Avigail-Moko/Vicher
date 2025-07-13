@@ -1,0 +1,45 @@
+<section id="Settings">
+  <h1 class="text-6xl quattrocento-sans-regular line-height-1" > Settings</h1>
+
+
+<h3>Change Password</h3>
+<p>
+  Update your account password regularly to maintain optimal security. Ensure your new password is strong and confidential to protect your personal information.
+</p>
+  <!-- טופס שינוי סיסמה -->
+  <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" novalidate>
+<mat-form-field appearance="outline">
+  <mat-label>Current Password</mat-label>
+  <input matInput [type]="hideCurrent ? 'password' : 'text'" formControlName="currentPassword" required />
+  <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
+    <mat-icon>{{ hideCurrent ? 'visibility_off' : 'visibility' }}</mat-icon>
+  </button>
+</mat-form-field>
+
+<mat-form-field appearance="outline">
+  <mat-label>New Password</mat-label>
+  <input matInput [type]="hideNew ? 'password' : 'text'" formControlName="newPassword" required />
+  <button mat-icon-button matSuffix (click)="hideNew = !hideNew" [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideNew">
+    <mat-icon>{{ hideNew ? 'visibility_off' : 'visibility' }}</mat-icon>
+  </button>
+</mat-form-field>
+
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">
+      Change Password
+    </button>
+  </form>
+
+  <hr style="margin: 30px 0;" />
+
+<h3>Delete Account</h3>
+<p>
+  Permanently delete your account and all associated data from our system. This irreversible action should be undertaken with caution, as it cannot be undone.
+</p>
+  <!-- כפתור מחיקת משתמש -->
+  <button mat-raised-button color="warn" (click)="onDeleteAccount()">
+    Delete Account
+  </button>
+</section>
+
+<p-toast></p-toast>

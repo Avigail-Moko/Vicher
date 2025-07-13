@@ -110,6 +110,10 @@ export class HomePageComponent {
     this.router.navigate(['/availability-schedule']);
     this.drawer.close();
   }
+    navigateToSettings() {
+    this.router.navigate(['/settings']);
+    this.drawer.close();
+  }
   getNotifications() {
     this.newService.getNote(this.userId).subscribe(
       (data) => {

@@ -202,4 +202,13 @@ export class NewService {
     const url = `${this.apiUrl}/daily/createRoom`;
     return this.http.post(url, values);
   }
+
+//   changePassword(data: { currentPassword: string, newPassword: string }) {
+//   return this.http.post('/api/users/change-password', data);
+// }
+
+// deleteAccount() {
+//   return this.http.delete('/api/users/delete');
+// }
+
 }

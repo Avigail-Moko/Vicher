@@ -11,6 +11,7 @@ import { VideoChatComponent } from './video-chat/video-chat.component';
 import { RatingPageComponent } from './rating-page/rating-page.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { SupportComponent } from './support/support.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' }, 
@@ -29,6 +30,11 @@ const routes: Routes = [
   {
     path: 'availability-schedule',
     component: AvailabilityScheduleComponent,
+    canActivate: [AuthGuard],
+  },
+    {
+    path: 'settings',
+    component: SettingsComponent,
     canActivate: [AuthGuard],
   },
   {

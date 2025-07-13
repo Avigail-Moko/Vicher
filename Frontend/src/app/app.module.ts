@@ -62,6 +62,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { SupportComponent } from './support/support.component';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { RecaptchaModule } from 'ng-recaptcha';
     DeleteLessonDialogComponent,
     VerifyEmailComponent,
     SupportComponent,
+    SettingsComponent,
   ],
   providers: [
     MessageService,
