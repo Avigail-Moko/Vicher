@@ -16,7 +16,7 @@
       <input matInput [type]="hide ? 'password' : 'text'" name="password" formControlName="password" required minlength="6">
       <mat-error *ngIf="mySingupForm.get('password').hasError('required')">{{ validationMessages.password[0].message }}</mat-error>
       <mat-error *ngIf="mySingupForm.get('password').hasError('minlength')">{{ validationMessages.password[1].message }}</mat-error>
-      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+      <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
     </mat-form-field>
