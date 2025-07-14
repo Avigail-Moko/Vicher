@@ -14,6 +14,7 @@ export class SettingsComponent {
   userName = this.userProfile.name; // או תביא מהשרת אם צריך
   hideCurrent = true;
   hideNew = true;
+  loading: boolean = false;
 
   usernameForm = this.fb.group({
     username: [this.userName, Validators.required],
@@ -52,6 +53,7 @@ export class SettingsComponent {
 
   onChangeUsername() {
     if (this.usernameForm.invalid) return;
+    this.loading=true
     const username = this.usernameForm.get('username')?.value;
     const userId = localStorage.getItem('userId');
     console.log(username, userId);
@@ -61,6 +63,7 @@ export class SettingsComponent {
         this.userProfile.profileImage = response.profileImage;
         localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
         localStorage.setItem('nameChanged', 'true');
+        this.loading=false
         window.location.reload(); 
       },
       (err) => {

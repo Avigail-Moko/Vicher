@@ -63,6 +63,8 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { SupportComponent } from './support/support.component';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { SettingsComponent } from './settings/settings.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 @NgModule({
   declarations: [
@@ -140,6 +142,7 @@ import { SettingsComponent } from './settings/settings.component';
     SelectButtonModule,
     MatMenuModule,
     RecaptchaModule,
+   MatProgressSpinnerModule
   ],
 })
 export class AppModule {}
