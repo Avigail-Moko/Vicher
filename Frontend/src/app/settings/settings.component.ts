@@ -28,30 +28,40 @@ export class SettingsComponent {
     private newService: NewService,
     private messageService: MessageService
   ) {}
-onUsernameBlur() {
-  const current = this.usernameForm.get('username')?.value;
 
-  if (current === '') {
-    this.usernameForm.get('username')?.setValue(this.userProfile.name);
-  }
-}
-
-  onChangeUsername() {
-    if (this.usernameForm.invalid) return;
-    const username = this.usernameForm.get('username')?.value;
-    const userId = localStorage.getItem('userId');
-    console.log(username,userId)
-    this.newService.changeUsername(userId, { name: username }).subscribe(
-      (response) => {
-        this.userProfile.name = response.name;
-        this.userProfile.profileImage = response.profileImage;
-        localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
-        // window.location.reload();
+  ngOnInit(): void {
+    if (localStorage.getItem('nameChanged') === 'true') {
+      setTimeout(() => {
         this.messageService.add({
           severity: 'success',
           summary: 'Name Changed',
           detail: 'Your name has been updated.',
         });
+        localStorage.removeItem('nameChanged');
+      }, 0);
+    }
+  }
+
+  onUsernameBlur() {
+    const current = this.usernameForm.get('username')?.value;
+
+    if (current === '') {
+      this.usernameForm.get('username')?.setValue(this.userProfile.name);
+    }
+  }
+
+  onChangeUsername() {
+    if (this.usernameForm.invalid) return;
+    const username = this.usernameForm.get('username')?.value;
+    const userId = localStorage.getItem('userId');
+    console.log(username, userId);
+    this.newService.changeUsername(userId, { name: username }).subscribe(
+      (response) => {
+        this.userProfile.name = response.name;
+        this.userProfile.profileImage = response.profileImage;
+        localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
+        localStorage.setItem('nameChanged', 'true');
+        window.location.reload(); 
       },
       (err) => {
         this.messageService.add({
@@ -59,7 +69,8 @@ onUsernameBlur() {
           summary: 'Error',
           detail: err.error.message || 'Failed to change name.',
         });
-      });
+      }
+    );
   }
   onChangePassword() {
     if (this.passwordForm.invalid) return;
@@ -73,6 +84,12 @@ onUsernameBlur() {
           detail: 'Your password has been updated.',
         });
         this.passwordForm.reset();
+        Object.keys(this.passwordForm.controls).forEach((key) => {
+          const control = this.passwordForm.get(key);
+          control?.setErrors(null);
+          control?.markAsPristine();
+          control?.markAsUntouched();
+        });
       },
       (err) => {
         this.messageService.add({

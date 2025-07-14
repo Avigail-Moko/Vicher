@@ -52,7 +52,7 @@ function createBlueProfileImage(name) {
     for (let j = 0; j <= textRepeatX; j++) {
       context.fillText(
         name,
-        j * (textWidth + context.measureText(" ").width),
+        context.measureText(" ").width + j * (textWidth + context.measureText(" ").width),
         i * textHeight
       );
     }
