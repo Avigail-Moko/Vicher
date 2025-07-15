@@ -2,9 +2,36 @@ const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const Lesson = require("../models/lessons");
+const Notification = require("../models/notification");
+const Product = require("../models/products");
+const Schedule = require("../models/schedule");
+const BusyEvent = require("../models/busyEvents");
+const Agenda = require("agenda");
+
+const fs = require("fs");
+const path = require("path");
+
 const { createCanvas } = require("@napi-rs/canvas");
 const PendingUser = require("../models/PendingUser");
 const { sendVerification } = require("./email");
+
+// socket
+let io;
+
+const setIo = (socketIo) => {
+  io = socketIo;
+};
+
+// agenda
+const mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.CLUSTER_URL}/?retryWrites=true&w=majority`;
+
+const agenda = new Agenda({
+  db: { address: mongoUri, collection: "notificationJobs" },
+});
+agenda.start();
+
+
 
 //פונקציה המגרילה צבע רנדומלי
 function getRandomColor() {
@@ -75,6 +102,8 @@ function createBlueProfileImage(name) {
 }
 
 module.exports = {
+  setIo,
+
   signup: (req, res) => {
     const { name, email, password } = req.body;
 
@@ -108,21 +137,24 @@ module.exports = {
           profileImage,
         });
 
-        try {
-          await pendingUser.save();
-          const token = jwt.sign({ email }, process.env.JWT_KEY, {
-            expiresIn: 330,
-          });
-          await sendVerification(email, token, name);
+       try {
+  await pendingUser.save();
+  const token = jwt.sign({ email }, process.env.JWT_KEY, {
+    expiresIn: 330,
+  });
+  await sendVerification(email, token, name);
 
-          res.status(200).json({
-            message: "Verification email sent",
-          });
-        } catch (err) {
-          res.status(500).json({
-            message: "Failed to create pending user",
-          });
-        }
+  res.status(200).json({
+    message: "Verification email sent",
+  });
+} catch (err) {
+  console.error("Failed to create pending user:", err);  // לוג שגיאה
+  res.status(500).json({
+    message: "Failed to create pending user",
+    error: err.message,
+  });
+}
+
       });
     });
   },
@@ -412,14 +444,85 @@ updateDescription: async (req, res) => {
 
   //       res.json({ message: 'Session data for lesson rating has been successfully cleared' });
   // }
-  deleteUser: async (req, res) => {
-    // const userId = req.params.userId || req.query.userId;
-    // try {
-    //   const result = await User.findByIdAndDelete(userId);
-    //   if (!result) return res.status(404).json({ message: "User not found" });
-    //   res.status(200).json({ message: "User deleted successfully" });
-    // } catch (err) {
-    //   res.status(500).json({ error: "Server error" });
-    // }
-  },
+  deleteAccount: async (req, res) => {
+  const userId = req.query.userId;
+  const socketId = req.query.socketId;
+  const socket = io.sockets.sockets.get(socketId);
+
+  const emitProgress = (step) => {
+    if (socket) {
+      socket.emit("delete-step-done", step);
+    }
+  };
+
+  try {
+    // שלב 1 - מחיקת המשתמש
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    emitProgress("account");
+
+    // שלב 2 - מחיקת שיעורים ושליחת התראות מתאימות
+    const lessonsToDelete = await Lesson.find({
+      $or: [{ teacher_id: userId }, { student_id: userId }],
+    });
+
+    for (const lesson of lessonsToDelete) {
+      await Lesson.deleteOne({ _id: lesson._id });
+
+      const updateFields =
+        lesson.teacher_id.toString() === userId
+          ? { deleteLesson: "true", teacherStatus: "delete", studentStatus: "unread" }
+          : { deleteLesson: "true", teacherStatus: "unread", studentStatus: "delete" };
+
+      const updatedNotification = await Notification.findOneAndUpdate(
+        { lesson_id: lesson._id },
+        { $set: updateFields },
+        { new: true }
+      );
+
+      if (updatedNotification) {
+        io.emit("notification", {
+          type: "deleteLesson",
+          deleteLesson: "true",
+          note: updatedNotification,
+        });
+
+        await agenda.cancel({ "data.notificationId": updatedNotification._id });
+      }
+    }
+
+    emitProgress("lessons");
+
+    // שלב 3 - מחיקת כל המוצרים והתמונות שלהם
+    const products = await Product.find({ userId });
+    for (const product of products) {
+      if (product.image?.path) {
+        const imagePath = path.resolve(product.image.path);
+        fs.unlink(imagePath, (err) => {
+          if (err) console.warn("Image not deleted:", imagePath, err.message);
+        });
+      }
+    }
+    await Product.deleteMany({ userId });
+    emitProgress("products");
+
+    // שלב 4 - מחיקת Schedule ו BusyEvent
+    await Schedule.deleteMany({ teacher_id: userId });    
+
+    await BusyEvent.deleteMany({ teacher_id: userId });
+    emitProgress("calendar");
+
+
+    emitProgress("done");
+
+    return res.status(200).json({
+      message: "User and related data deleted successfully",
+    });
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
+},
+
+
 };

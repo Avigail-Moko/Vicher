@@ -3,7 +3,6 @@ const Lesson = require("../models/lessons");
 const Notification = require("../models/notification");
 const { createNote } = require("./notification");
 const Agenda = require("agenda");
-const lessons = require("../models/lessons");
 
 // socket
 let io;

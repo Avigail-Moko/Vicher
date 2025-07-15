@@ -1,6 +1,6 @@
 const express=require('express');
 const router=express.Router();
-const { signup, login ,getProfile, getAllUsers,updateDescription,changePassword,changeUsername,deleteUser,rating,getRating}= require('../controllers/users');
+const { signup, login ,getProfile, getAllUsers,updateDescription,changePassword,changeUsername,deleteAccount,rating,getRating}= require('../controllers/users');
 
 router.get('/getProfile', getProfile);
 
@@ -16,7 +16,7 @@ router.patch('/changePassword',changePassword);
 
 router.patch('/changeUsername',changeUsername);
 
-router.delete('/deleteUser',deleteUser);
+router.delete('/deleteAccount',deleteAccount);
 
 router.post('/rating', rating);
 

@@ -12,6 +12,7 @@ import { RatingPageComponent } from './rating-page/rating-page.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { SupportComponent } from './support/support.component';
 import { SettingsComponent } from './settings/settings.component';
+import { DeletingAccountComponent } from './deleting-account/deleting-account.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' }, 
@@ -35,6 +36,11 @@ const routes: Routes = [
     {
     path: 'settings',
     component: SettingsComponent,
+    canActivate: [AuthGuard],
+  },
+    {
+    path: 'deleting-account',
+    component: DeletingAccountComponent,
     canActivate: [AuthGuard],
   },
   {

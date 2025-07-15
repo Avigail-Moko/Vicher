@@ -97,8 +97,8 @@ export class NewService {
     const url = `${this.apiUrl}/users/updateDescription?id=${id}`;
     return this.http.patch(url, values);
   }
-  deleteUser(id: any) {
-    const url = `${this.apiUrl}/users/deleteUser?id=${id}`;
+  deleteAccount(userId: string, socketId: string) {
+    const url = `${this.apiUrl}/users/deleteAccount?userId=${userId}&socketId=${socketId}`;
     return this.http.delete(url);
   }
 
@@ -110,7 +110,7 @@ export class NewService {
   }
 
   getProduct(userId: any): Observable<any> {
-    const url = `${this.apiUrl}/products/getProduct?userId=${userId}`; 
+    const url = `${this.apiUrl}/products/getProduct?userId=${userId}`;
     return this.http.get(url);
   }
 

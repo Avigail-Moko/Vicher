@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -18,14 +19,18 @@ export class SocketService {
     const isDev = !environment.production;
     const socketUrl = isDev ? 'http://localhost:3000' : window.location.origin;
 
-this.socket = io(socketUrl, {
-  path: '/socket.io',
-  transports: [ 'polling' ,'websocket']
-});
+    this.socket = io(socketUrl, {
+      path: '/socket.io',
+      transports: ['polling', 'websocket'],
+      // transports: ['websocket'],
+    });
 
-this.socket.on('connect', () => {
-  console.log('Connected via transport:', this.socket.io.engine.transport.name);
-});
+    this.socket.on('connect', () => {
+      console.log(
+        'Connected via transport:',
+        this.socket.io.engine.transport.name
+      );
+    });
 
     this.socket.on('notification', (notification: any) => {
       this.handleNotification(notification);
@@ -38,6 +43,26 @@ this.socket.on('connect', () => {
       this.socket.disconnect();
     }
     console.log('disconnect socket');
+  }
+
+  getSocketId(): string {
+    console.log('dddd')
+    return this.socket?.id || '';
+  }
+
+  onDeleteStepDone(): Observable<string> {
+    return new Observable<string>((observer) => {
+      if (!this.socket) {
+        observer.error('Socket not connected');
+      return () => {};
+      }
+      const handler = (step: string) => observer.next(step);
+      this.socket.on('delete-step-done', handler);
+
+      return () => {
+        this.socket.off('delete-step-done', handler);
+      };
+    });
   }
 
   private handleNotification(notification: any): void {
@@ -130,5 +155,3 @@ this.socket.on('connect', () => {
     this.alertsSubject.next(alerts);
   }
 }
-
-

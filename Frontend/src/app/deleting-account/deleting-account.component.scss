@@ -1,0 +1,21 @@
+.deletion-container {
+  max-width: 500px;
+  margin: auto;
+  padding: 2rem;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    text-align: left;
+    padding-left: 0;
+    list-style: none;
+
+    li {
+      padding: 0.5rem 0;
+      font-size: 1.1rem;
+    }
+  }
+}

@@ -64,6 +64,7 @@ import { SupportComponent } from './support/support.component';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { SettingsComponent } from './settings/settings.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { DeletingAccountComponent } from './deleting-account/deleting-account.component';
 
 
 @NgModule({
@@ -89,6 +90,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     VerifyEmailComponent,
     SupportComponent,
     SettingsComponent,
+    DeletingAccountComponent,
   ],
   providers: [
     MessageService,

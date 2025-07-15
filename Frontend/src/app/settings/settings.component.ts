@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NewService } from '../new.service';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
+import { SocketService } from '../socket.service';
 
 @Component({
   selector: 'app-settings',
@@ -27,7 +29,9 @@ export class SettingsComponent {
   constructor(
     private fb: FormBuilder,
     private newService: NewService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router,
+    private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +57,7 @@ export class SettingsComponent {
 
   onChangeUsername() {
     if (this.usernameForm.invalid) return;
-    this.loading=true
+    this.loading = true;
     const username = this.usernameForm.get('username')?.value;
     const userId = localStorage.getItem('userId');
     console.log(username, userId);
@@ -63,8 +67,8 @@ export class SettingsComponent {
         this.userProfile.profileImage = response.profileImage;
         localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
         localStorage.setItem('nameChanged', 'true');
-        this.loading=false
-        window.location.reload(); 
+        this.loading = false;
+        window.location.reload();
       },
       (err) => {
         this.messageService.add({
@@ -104,30 +108,15 @@ export class SettingsComponent {
     );
   }
 
-  onDeleteAccount() {
-    if (
-      !confirm(
-        'Are you sure you want to delete your account? This cannot be undone.'
-      )
-    )
-      return;
-    const userId = localStorage.getItem('userId');
-    this.newService.deleteUser(userId).subscribe(
-      () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Account Deleted',
-          detail: 'Your account has been removed.',
-        });
-        // TODO: ניתוב החוצה, ניתוק מהמערכת וכו'
-      },
-      (err) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: err.error.message || 'Failed to delete account.',
-        });
-      }
-    );
-  }
+  navigateToDeleteAccount() {
+  if (
+    !confirm('Are you sure you want to delete your account? This cannot be undone.')
+  ) return;
+
+  const socketId = this.socketService.getSocketId();
+  this.router.navigate(['/deleting-account'], {
+    queryParams: { socketId },
+  });
+}
+
 }

@@ -46,6 +46,7 @@ async function loadEnvOrSecrets() {
 
     require("./api/controllers/notification").setIo(io);
     require("./api/controllers/lessons").setIo(io);
+    require("./api/controllers/users").setIo(io);
 
     io.on("connection", (sock) => {
         console.log("Socket.IO client connected:", sock.id);
