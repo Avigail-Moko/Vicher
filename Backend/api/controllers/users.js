@@ -13,7 +13,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { createCanvas } = require("@napi-rs/canvas");
-const PendingUser = require("../models/PendingUser");
+const PendingUser = require("../models/pendingUser");
 const { sendVerification } = require("./email");
 
 // socket

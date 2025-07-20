@@ -1,4 +1,3 @@
-// models/PendingUser.js
 const mongoose = require('mongoose');
 
 const pendingUserSchema = mongoose.Schema({

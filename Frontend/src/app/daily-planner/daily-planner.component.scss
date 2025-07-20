@@ -117,3 +117,44 @@ full-calendar {
   color: hsla(0, 5%, 29%, 0.621) !important; /* צבע טקסט לתאריכים מחוץ לטווח */
   // pointer-events: none; /* מניעת אינטראקציה עם התאריכים */
 }
+
+
+
+.recaptcha-container {
+  transform-origin: 0 0;
+}
+// @media (max-width: 1408px) {
+// #Support {
+//   margin-left: 0 ;
+// }
+// }
+@media (max-width: 485px) {
+  .recaptcha-container {
+    transform: scale(0.9);
+  }
+}
+@media (max-width: 450px) {
+  .recaptcha-container {
+    transform: scale(0.75);
+  }
+}
+@media (max-width: 410px) {
+  .recaptcha-container {
+    transform: scale(0.7);
+  }
+}
+@media (max-width: 380px) {
+  .recaptcha-container {
+    transform: scale(0.65);
+  }
+}
+@media (max-width: 365px) {
+  .recaptcha-container {
+    transform: scale(0.6);
+  }
+}
+@media (max-width: 355px) {
+  .recaptcha-container {
+    transform: scale(0.57);
+  }
+}

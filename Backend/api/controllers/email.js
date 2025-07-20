@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
-const PendingUser = require("../models/PendingUser");
+const PendingUser = require("../models/pendingUser");
 const User = require("../models/user");
-const createDOMPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
+const createDOMPurify = require("dompurify");
+const { JSDOM } = require("jsdom");
 
 // הגדרה של חלון וירטואלי ל-DOMPurify
-const window = new JSDOM('').window;
+const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 
 module.exports = {
@@ -24,12 +24,12 @@ module.exports = {
       process.env.NODE_ENV === "production"
         ? `https://vicherapp.com/verify-email?token=${token}`
         : `http://localhost:4200/verify-email?token=${token}`;
-
-    await transporter.sendMail({
-      from: "Vicher App <vicherapp.info@gmail.com>",
-      to,
-      subject: "Email Verification Request",
-      html: `
+    try {
+      await transporter.sendMail({
+        from: "Vicher App <vicherapp.info@gmail.com>",
+        to,
+        subject: "Email Verification Request",
+        html: `
   <div style="font-family: Arial, sans-serif; color: #333;">
     <p>Dear ${name},</p>
     <p>Thank you for registering with <strong>Vicher App</strong>. To complete your registration, please verify your email address by clicking the button below:</p>
@@ -57,7 +57,11 @@ module.exports = {
     <p style="font-size: 12px; color: #999;">This email was sent to you by Vicher App. If you have any questions, please contact our support team.</p>
   </div>
 `,
-    });
+      });
+      console.log("Verification email sent to:", to);
+    } catch (err) {
+      console.error("Failed to send verification email:", err.message);
+    }
   },
 
   verifyEmail: async (req, res) => {
@@ -113,7 +117,7 @@ module.exports = {
           pass: process.env.GMAIL_PASS,
         },
       });
-      
+
       const cleanName = DOMPurify.sanitize(name);
       const cleanEmail = DOMPurify.sanitize(email);
       const cleanSubject = DOMPurify.sanitize(subject);

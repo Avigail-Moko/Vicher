@@ -31,6 +31,7 @@ export class DailyPlannerComponent {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
   stepperOrientation: Observable<StepperOrientation>;
 
+  captchaResolved = false;
   selectedLesson: string | null = null;
   hasSelectedLessons: boolean = false;
   lessonsArray: any[] = [];
@@ -509,6 +510,9 @@ export class DailyPlannerComponent {
   }
 
   createLesson() {
+        if (!this.hasAgreed ||!this.captchaResolved) {
+      return;
+    }
     this.newService
       .createLesson({
         student_id: this.userId,
@@ -519,7 +523,7 @@ export class DailyPlannerComponent {
         student_mail:this.userProfile.email,
         length: this.product.length,
         myDate: this.myDate,
-        // myDate: '2025-03-16T04:ז25:00Z',
+        // myDate: '2025-07-20T09:40:00Z',
         lesson_title: this.product.lesson_title
       })
       .subscribe(
@@ -540,5 +544,7 @@ export class DailyPlannerComponent {
         }
       );
   }
-
+  onCaptchaResolved(token: string) {
+    this.captchaResolved = !!token;
+  }
 }
