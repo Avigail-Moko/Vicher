@@ -17,10 +17,11 @@ module.exports = {
     if (!req.file) {
       return res.status(400).json({ message: "No file selected" });
     }
-const proto = req.headers['x-forwarded-proto'] || req.protocol;
-const protocol = proto === "https" ? "https" : "http";
-const host = req.get("host");
-const src = `${protocol}://${host}/uploads/${req.file.filename}`;
+    
+// const proto = req.headers['x-forwarded-proto'] || req.protocol;
+// const protocol = proto === "https" ? "https" : "http";
+// const host = req.get("host");
+// const src = `${protocol}://${host}/uploads/${req.file.filename}`;
 
 
     const product = new Product({

@@ -6,7 +6,9 @@ const roomUsageSchema = new mongoose.Schema({
   totalSeconds: {
     type: Number,
     default: 0
-  }
+  },
+  warningSent: { type: Boolean, default: false }
+
 });
 
 module.exports = mongoose.model("MonthlyRoomUsage ", roomUsageSchema);

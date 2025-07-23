@@ -1,10 +1,12 @@
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const PendingUser = require("../models/pendingUser");
 const User = require("../models/user");
 const createDOMPurify = require("dompurify");
 const { JSDOM } = require("jsdom");
+
+const { Resend } = require("resend");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // הגדרה של חלון וירטואלי ל-DOMPurify
 const window = new JSDOM("").window;
@@ -12,24 +14,12 @@ const DOMPurify = createDOMPurify(window);
 
 module.exports = {
   sendVerification: async (to, token, name) => {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "vicherapp.info@gmail.com",
-        pass: process.env.GMAIL_PASS,
-      },
-    });
-
     const link =
       process.env.NODE_ENV === "production"
         ? `https://vicherapp.com/verify-email?token=${token}`
         : `http://localhost:4200/verify-email?token=${token}`;
-    try {
-      await transporter.sendMail({
-        from: "Vicher App <vicherapp.info@gmail.com>",
-        to,
-        subject: "Email Verification Request",
-        html: `
+
+    const html = `
   <div style="font-family: Arial, sans-serif; color: #333;">
     <p>Dear ${name},</p>
     <p>Thank you for registering with <strong>Vicher App</strong>. To complete your registration, please verify your email address by clicking the button below:</p>
@@ -56,11 +46,20 @@ module.exports = {
     <hr style="border: none; border-top: 1px solid #ddd; margin-top: 40px;">
     <p style="font-size: 12px; color: #999;">This email was sent to you by Vicher App. If you have any questions, please contact our support team.</p>
   </div>
-`,
+`;
+    try {
+      const { data, error } = await resend.emails.send({
+        from: "Vicher App <noreply@vicherapp.com>",
+        to,
+        subject: "Email Verification Request",
+        html,
       });
+
+      if (error) throw error;
+
       console.log("Verification email sent to:", to);
     } catch (err) {
-      console.error("Failed to send verification email:", err.message);
+      console.error("Failed to send verification email:", err.stack);
     }
   },
 
@@ -109,35 +108,32 @@ module.exports = {
     if (!name || !email || !subject || !message) {
       return res.status(400).json({ message: "Please fill all fields" });
     }
-    try {
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "vicherapp.info@gmail.com",
-          pass: process.env.GMAIL_PASS,
-        },
-      });
 
-      const cleanName = DOMPurify.sanitize(name);
-      const cleanEmail = DOMPurify.sanitize(email);
-      const cleanSubject = DOMPurify.sanitize(subject);
-      const cleanMessage = DOMPurify.sanitize(message).replace(/\n/g, "<br/>");
+    const cleanName = DOMPurify.sanitize(name);
+    const cleanEmail = DOMPurify.sanitize(email);
+    const cleanSubject = DOMPurify.sanitize(subject);
+    const cleanMessage = DOMPurify.sanitize(message).replace(/\n/g, "<br/>");
 
-      await transporter.sendMail({
-        from: `${cleanName} <${cleanEmail}>`,
-        replyTo: `${cleanEmail}`,
-        to: "vicherapp.info@gmail.com",
-        subject: `New Message from Contact Form`,
-        html: `
+    const html = `
       <div style="font-family: Arial, sans-serif; color: #333;">
         <p><strong>Name:</strong> ${cleanName}</p>
         <p><strong>Email:</strong> ${cleanEmail}</p>
-        <p><strong>subject:</strong> ${cleanSubject}</p>
+        <p><strong>Subject:</strong> ${cleanSubject}</p>
         <p><strong>Message:</strong></p>
         <p>${cleanMessage}</p>
       </div>
-      `,
+      `;
+    try {
+      const { error } = await resend.emails.send({
+        from: `${cleanName} <support@vicherapp.com>`,
+        reply_to: cleanEmail,
+        to: "vicher062023@gmail.com",
+        subject: `New Message from support Form`,
+        html,
       });
+
+      if (error) throw error;
+
       res.status(200).json({ message: "Message sent successfully" });
     } catch (err) {
       console.error(err);
