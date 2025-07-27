@@ -522,6 +522,7 @@ export class DailyPlannerComponent {
         teacher_id: this.product.userId,
         student_mail:this.userProfile.email,
         length: this.product.length,
+        // length: '9900',
         myDate: this.myDate,
         // myDate: '2025-07-20T09:40:00Z',
         lesson_title: this.product.lesson_title
