@@ -13,6 +13,9 @@ export class SocketService {
   private alertsSubject = new BehaviorSubject<any[]>([]);
   alerts$ = this.alertsSubject.asObservable();
 
+  private socketConnectedSubject = new BehaviorSubject<boolean>(false);
+  socketConnected$ = this.socketConnectedSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   connect(): void {
@@ -30,6 +33,7 @@ export class SocketService {
         'Connected via transport:',
         this.socket.io.engine.transport.name
       );
+      this.socketConnectedSubject.next(true);
     });
 
     this.socket.on('notification', (notification: any) => {
@@ -44,9 +48,20 @@ export class SocketService {
     }
     console.log('disconnect socket');
   }
+  waitForConnection(): Promise<void> {
+    return new Promise((resolve) => {
+      if (this.socket?.connected) return resolve();
+
+      const sub = this.socketConnected$.subscribe((connected) => {
+        if (connected) {
+          resolve();
+          sub.unsubscribe();
+        }
+      });
+    });
+  }
 
   getSocketId(): string {
-    console.log('dddd')
     return this.socket?.id || '';
   }
 
@@ -54,7 +69,7 @@ export class SocketService {
     return new Observable<string>((observer) => {
       if (!this.socket) {
         observer.error('Socket not connected');
-      return () => {};
+        return () => {};
       }
       const handler = (step: string) => observer.next(step);
       this.socket.on('delete-step-done', handler);

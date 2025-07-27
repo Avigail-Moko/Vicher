@@ -108,15 +108,31 @@ export class SettingsComponent {
     );
   }
 
-  navigateToDeleteAccount() {
-  if (
-    !confirm('Are you sure you want to delete your account? This cannot be undone.')
-  ) return;
+sendDeleteAccountLink() {
+  if (!confirm('Are you sure you want to delete your account? A confirmation link will be sent to your email.')) return;
 
-  const socketId = this.socketService.getSocketId();
-  this.router.navigate(['/deleting-account'], {
-    queryParams: { socketId },
-  });
+  const user = JSON.parse(localStorage.getItem('userProfile') || '{}');
+
+  this.newService.sendDeleteAccountLink({
+    email: user.email,
+    name: user.name,
+    userId: localStorage.getItem('userId')
+  }).subscribe(
+    () => {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Check your email',
+        detail: 'We sent you a link to confirm account deletion.'
+      });
+    },
+    (err) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: err.error.message || 'Failed to send email.'
+      });
+    }
+  );
 }
 
 }

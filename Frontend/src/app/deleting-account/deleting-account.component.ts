@@ -23,22 +23,34 @@ export class DeletingAccountComponent {
     private newService: NewService
   ) {}
 
-  ngOnInit(): void {
-    this.userId = localStorage.getItem('userId')!;
-    this.route.queryParams.subscribe((params) => {
-      this.socketId = params['socketId'];
-      if (!this.socketId || !this.userId) {
-        this.steps.push('Missing user or socket ID');
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 2500);
-        return;
-      }
 
-      this.listenToSteps();
-      this.startDeletion();
-    });
-  }
+  ngOnInit(): void {
+  this.route.queryParams.subscribe((params) => {
+    const token = params['token'];
+    if (!token) {
+      this.steps.push('❌ Missing token');
+      setTimeout(() => this.router.navigate(['/']), 2500);
+      return;
+    }
+
+    this.newService.verifyDeleteAccount(token).subscribe(
+     async  (res: any) => {
+        this.userId = res.userId;
+
+        await this.socketService.waitForConnection();
+
+        this.socketId = this.socketService.getSocketId();
+        this.listenToSteps();
+        this.startDeletion();
+      },
+      (err) => {
+        this.steps.push('❌ Token invalid or expired');
+        setTimeout(() => this.router.navigate(['/']), 2500);
+      }
+    );
+  });
+}
+
 
   listenToSteps() {
     this.socketSub = this.socketService.onDeleteStepDone().subscribe((step) => {

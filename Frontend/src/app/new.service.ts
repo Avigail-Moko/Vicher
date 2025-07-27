@@ -81,6 +81,10 @@ export class NewService {
     const url = `${this.apiUrl}/email/verifyEmail?token=${token}`;
     return this.http.get(url);
   }
+  verifyDeleteAccount(token: string) {
+    const url = `${this.apiUrl}/email/verifyDeleteAccount?token=${token}`;
+    return this.http.get(url);
+  }
   contact(values: any) {
     const url = `${this.apiUrl}/email/contact`;
     return this.http.post(url, values);
@@ -97,6 +101,11 @@ export class NewService {
     const url = `${this.apiUrl}/users/updateDescription?id=${id}`;
     return this.http.patch(url, values);
   }
+  sendDeleteAccountLink(values: any) {
+    const url = `${this.apiUrl}/email/sendDeleteAccountLink`;
+    return this.http.post(url, values);
+  }
+
   deleteAccount(userId: string, socketId: string) {
     const url = `${this.apiUrl}/users/deleteAccount?userId=${userId}&socketId=${socketId}`;
     return this.http.delete(url);

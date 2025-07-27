@@ -44,7 +44,9 @@ module.exports = {
     <br/>
     <p>Best regards,<br/>The Vicher App Team</p>
     <hr style="border: none; border-top: 1px solid #ddd; margin-top: 40px;">
-    <p style="font-size: 12px; color: #999;">This email was sent to you by Vicher App. If you have any questions, please contact our support team.</p>
+    <p style="font-size: 12px; color: #999;">This email was sent to you by Vicher App. If you have any questions, please contact our 
+      <a href="https://vicherapp.com/support" style="color: #999; text-decoration: underline;">support team</a>.
+    </p>
   </div>
 `;
     try {
@@ -102,6 +104,76 @@ module.exports = {
       res.status(400).json({ message: "Invalid or expired token" });
     }
   },
+  verifyDeleteAccount: async (req, res) => {
+    const { token } = req.query;
+    if (!token) return res.status(400).json({ message: "Missing token" });
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_KEY);
+      res.status(200).json({ message: "Token valid", userId: decoded.userId });
+    } catch (err) {
+      res.status(400).json({ message: "Invalid or expired token" });
+    }
+  },
+  sendDeleteAccountLink: async (req, res) => {
+    const { email, userId, name } = req.body;
+
+    if (!email || !userId || !name)
+      return res.status(400).json({ message: "Missing data" });
+
+    try {
+      const token = jwt.sign({ email, userId }, process.env.JWT_KEY, {
+        expiresIn: "10m",
+      });
+
+      const link =
+        process.env.NODE_ENV === "production"
+          ? `https://vicherapp.com/deleting-account?token=${token}`
+          : `http://localhost:4200/deleting-account?token=${token}`;
+
+      const html = `
+      <div style="font-family: Arial, sans-serif; color: #333;">
+        <p>Hello ${name},</p>
+        <p>We received a request to delete your Vicher account.</p>
+        <p>If you want to proceed, please click the button below. This link is valid for <strong>10 minutes</strong>.</p>
+        <p style="text-align: center;">
+          <a href="${link}" 
+          style="
+          display: inline-block;
+          padding: 14px 28px;
+          font-size: 16px;
+          font-weight: 600;
+          color: #ffffff;
+          background-color: #d32f2f;
+          text-decoration: none;
+          border-radius: 6px;">
+            Confirm Account Deletion
+          </a>
+        </p>
+        <p>If you didn't request this, you can ignore this email.</p>
+        <p>– The Vicher App Team</p>
+        <hr style="border: none; border-top: 1px solid #ddd; margin-top: 40px;">
+        <p style="font-size: 12px; color: #999;">This email was sent to you by Vicher App. If you have any questions, please contact our 
+          <a href="https://vicherapp.com/support" style="color: #999; text-decoration: underline;">support team</a>.
+        </p>
+      </div>
+    `;
+
+      const { error } = await resend.emails.send({
+        from: "Vicher App <noreply@vicherapp.com>",
+        to: email,
+        subject: "Confirm Your Account Deletion",
+        html,
+      });
+
+      if (error) throw error;
+
+      res.status(200).json({ message: "Deletion link sent to email" });
+    } catch (err) {
+      console.error("Error sending deletion email:", err);
+      res.status(500).json({ message: "Failed to send email" });
+    }
+  },
   contact: async (req, res) => {
     const { name, email, subject, message } = req.body;
 
@@ -125,7 +197,7 @@ module.exports = {
       `;
     try {
       const { error } = await resend.emails.send({
-        from: `${cleanName} <support@vicherapp.com>`,
+        from: `Support Form <support@vicherapp.com>`,
         reply_to: cleanEmail,
         to: "vicher062023@gmail.com",
         subject: `New Message from support Form`,
