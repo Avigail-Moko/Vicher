@@ -125,11 +125,11 @@ sendDeleteAccountLink() {
         detail: 'We sent you a link to confirm account deletion.'
       });
     },
-    (err) => {
+    (error) => {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
-        detail: err.error.message || 'Failed to send email.'
+        detail: error.error.message || error.error || 'error.'
       });
     }
   );

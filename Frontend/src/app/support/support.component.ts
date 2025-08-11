@@ -15,7 +15,6 @@ export class SupportComponent {
   @ViewChild(RecaptchaComponent) captcha!: RecaptchaComponent;
 
   captchaResolved = false;
-  errorMessage = '';
   messages: Message[] | undefined;
 
   contactForm = this.fb.group({
@@ -65,9 +64,8 @@ export class SupportComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: error.error.message,
+        detail: error.error.message || error.error || 'error.'
         });
-        this.errorMessage = error.error.message;
       }
     );
   }
