@@ -65,7 +65,8 @@ import { RecaptchaModule } from 'ng-recaptcha';
 import { SettingsComponent } from './settings/settings.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DeletingAccountComponent } from './deleting-account/deleting-account.component';
-
+import { ForgotPasswordDialogComponent } from './forgot-password-dialog/forgot-password-dialog.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,8 @@ import { DeletingAccountComponent } from './deleting-account/deleting-account.co
     SupportComponent,
     SettingsComponent,
     DeletingAccountComponent,
+    ForgotPasswordDialogComponent,
+    ResetPasswordComponent,
   ],
   providers: [
     MessageService,
@@ -144,7 +147,7 @@ import { DeletingAccountComponent } from './deleting-account/deleting-account.co
     SelectButtonModule,
     MatMenuModule,
     RecaptchaModule,
-   MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
 })
 export class AppModule {}

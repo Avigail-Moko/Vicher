@@ -71,7 +71,7 @@ export class HomePageComponent {
       document.activeElement.blur();
     }
     const dialogRef = this.dialog.open(SignupDialogComponent, {
-      width: '250px',
+      width: '320px',
     });
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
@@ -83,7 +83,7 @@ export class HomePageComponent {
       document.activeElement.blur();
     }
     const dialogRef = this.dialog.open(LoginDialogComponent, {
-      width: '250px',
+      width: '320px',
     });
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NewService } from '../new.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
+import { ForgotPasswordDialogComponent } from '../forgot-password-dialog/forgot-password-dialog.component';
 
 @Component({
   selector: 'app-login-dialog',
@@ -48,6 +49,12 @@ export class LoginDialogComponent {
         this.loading = false;
       }
     );
+  }
+  openForgotPasswordDialog() {
+    this.dialog.closeAll();
+    this.dialog.open(ForgotPasswordDialogComponent, {
+      width: '350px',
+    });
   }
 
   validationMessages = {

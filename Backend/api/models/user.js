@@ -9,6 +9,8 @@ const userSchema = mongoose.Schema({
           unique:true,
         match:/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ },
     password: {type: String, require: true},
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     name:{type:String, require: true},
     description: { type: String },
     raterCounter:Number,

@@ -7,7 +7,7 @@ const { createRoom } = require("../controllers/daily");
 const createRoomLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, 
   max: 3,
-  message: { error: 'Too many room creation requests, please try again later.' },
+  message:"Too many room creation requests, please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
 });

@@ -89,6 +89,13 @@ export class NewService {
     const url = `${this.apiUrl}/email/contact`;
     return this.http.post(url, values);
   }
+  sendResetPasswordLink(values: any) {
+  const url = `${this.apiUrl}/email/sendResetPasswordLink`;
+  return this.http.post(url, values);
+}
+resetPassword(token: string, values: any) {
+  return this.http.post(`${this.apiUrl}/users/resetPassword?token=${token}`, values);
+}
   changePassword(id: any, values: any): Observable<any> {
     const url = `${this.apiUrl}/users/changePassword?id=${id}`;
     return this.http.patch(url, values);

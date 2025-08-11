@@ -13,9 +13,11 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { SupportComponent } from './support/support.component';
 import { SettingsComponent } from './settings/settings.component';
 import { DeletingAccountComponent } from './deleting-account/deleting-account.component';
+import { ForgotPasswordDialogComponent } from './forgot-password-dialog/forgot-password-dialog.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'welcome', pathMatch: 'full' }, 
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeComponent },
   { path: 'user-view', component: UserViewComponent },
 
@@ -26,19 +28,19 @@ const routes: Routes = [
   },
   { path: 'about', component: AboutComponent },
   { path: 'support', component: SupportComponent },
-  
+
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
   {
     path: 'availability-schedule',
     component: AvailabilityScheduleComponent,
     canActivate: [AuthGuard],
   },
-    {
+  {
     path: 'settings',
     component: SettingsComponent,
     canActivate: [AuthGuard],
   },
-    {
+  {
     path: 'deleting-account',
     component: DeletingAccountComponent,
     canActivate: [AuthGuard],
@@ -54,7 +56,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'verify-email', component: VerifyEmailComponent },
-
+  { path: 'forgot-password-dialog', component: ForgotPasswordDialogComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
 ];
 
 @NgModule({

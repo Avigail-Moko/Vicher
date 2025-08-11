@@ -1,3 +1,5 @@
+<h2 mat-dialog-title class="mt-2">Login</h2>
+<mat-dialog-content class="pt-3" >
 <form #form="ngForm" [formGroup]="myLoginForm" (ngSubmit)="onLogin()">
       <mat-form-field appearance="outline">
         <mat-label>Email-Address</mat-label>
@@ -5,7 +7,7 @@
         <mat-error *ngIf="myLoginForm.get('email').hasError('required')">{{ validationMessages.email[0].message }}</mat-error>
         <mat-error *ngIf="myLoginForm.get('email').hasError('email')">{{ validationMessages.email[1].message }}</mat-error>
         </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="mb-4">
         <mat-label>password</mat-label>
         <input matInput [type]="hide ? 'password' : 'text'" name="password" formControlName="password" required>
         <mat-error *ngIf="myLoginForm.get('password').hasError('required')">{{ validationMessages.password[0].message }}</mat-error>
@@ -18,9 +20,19 @@
       label="Login"
       [loading]="loading"
     ></p-button>
+
+<p-button 
+  label="Forgot Password?" 
+  [link]="true" 
+  (onClick)="openForgotPasswordDialog()" 
+  styleClass="mt-2 block p-0 text-sm text-300">
+</p-button>
+
+
       <div class="error-message mt-2 text-white">{{ errorMessage }}</div>
       
     </form>
-  
+  </mat-dialog-content>
+
 
     

@@ -212,4 +212,70 @@ module.exports = {
       res.status(500).json({ message: "Failed to send message" });
     }
   },
+  sendResetPasswordLink: async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: "Email is required" });
+
+  const user = await User.findOne({ email });
+if (!user) {
+  return res.status(200).json({ message: "If this email exists, a reset link has been sent" });
+}
+  if (user.resetPasswordToken && user.resetPasswordExpires > Date.now()) {
+    return res.status(429).json({ message: "Please check your email. Password reset email has been sent successfully." });
+  }
+
+  const token = jwt.sign({ email }, process.env.JWT_KEY, { expiresIn: '10m' });
+  
+   user.resetPasswordToken = token;
+  user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 דקות
+  await user.save();
+
+  const link = `${process.env.NODE_ENV === 'production'
+    ? 'https://vicherapp.com'
+    : 'http://localhost:4200'
+  }/reset-password?token=${token}`;
+
+  const html = `
+  <div style="font-family: Arial, sans-serif; color: #333;">
+    <p>Hello ${user.name},</p>
+    <p>We received a request to reset your password for your Vicher account.</p>
+    <p>If you want to proceed, please click the button below. This link is valid for <strong>10 minutes</strong>.</p>
+    <p style="text-align: center;">
+          <a href="${link}" 
+          style="
+          display: inline-block;
+          padding: 14px 28px;
+          font-size: 16px;
+          font-weight: 600;
+          color: #ffffff;
+          background-color: #d32f2f;
+          text-decoration: none;
+          border-radius: 6px;">
+            Reset Password
+          </a>
+    </p>
+    <p>If you didn't request this, you can ignore this email.</p>
+    <p>– The Vicher App Team</p>
+    <hr style="border: none; border-top: 1px solid #ddd; margin-top: 40px;">
+    <p style="font-size: 12px; color: #999;">This email was sent to you by Vicher App. If you have any questions, please contact our 
+      <a href="https://vicherapp.com/support" style="color: #999; text-decoration: underline;">support team</a>.
+    </p>
+  </div>
+  `;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: "Vicher App <noreply@vicherapp.com>",
+      to: email,
+      subject: "Password Reset",
+      html
+    });
+    if (error) throw error;
+
+    res.status(200).json({ message: "If this email exists, a reset link has been sent" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to send reset email" });
+  }
+}
+
 };

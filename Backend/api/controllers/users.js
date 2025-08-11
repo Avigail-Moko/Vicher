@@ -524,5 +524,28 @@ updateDescription: async (req, res) => {
   }
 },
 
+resetPassword : async (req, res) => {
+  const { token } = req.query;
+  const { newPassword } = req.body;
 
+  if (!token) return res.status(400).json({ message: "Missing token" });
+  if (!newPassword) return res.status(400).json({ message: "Missing new password" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+
+await User.updateOne(
+  { email: decoded.email },
+  { 
+    password: hashedPassword,
+    resetPasswordToken: undefined,
+    resetPasswordExpires: undefined
+  }
+);
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (err) {
+    res.status(400).json({ message: "Invalid or expired token" });
+  }
+}
 };
